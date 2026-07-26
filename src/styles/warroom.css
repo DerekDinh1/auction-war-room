@@ -62,25 +62,25 @@ p.brand-sub { margin: 0; }
 /* ---- command strip ---- */
 .topbar { position: sticky; top: 0; z-index: 40; background: rgba(13,18,25,.94); backdrop-filter: blur(10px);
   border-bottom: 1px solid var(--line); }
-.command { padding: 14px clamp(12px, 3vw, 28px) 12px; display: flex; flex-direction: column; gap: 12px; }
+.command { padding: 8px clamp(12px, 3vw, 28px) 8px; display: flex; flex-direction: column; gap: 8px; }
 .command > * { max-width: 1600px; width: 100%; margin-left: auto; margin-right: auto; }
-.command-top { display: grid; grid-template-columns: minmax(160px, auto) minmax(280px, 1fr) auto; align-items: center; gap: 14px 20px; }
+.command-top { display: grid; grid-template-columns: minmax(160px, auto) minmax(280px, 1fr) auto; align-items: center; gap: 10px 16px; }
 .brand { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
-.brand-title { font-family: var(--font-disp); font-style: italic; font-size: 18px; font-weight: 800;
+.brand-title { font-family: var(--font-disp); font-style: italic; font-size: 16px; font-weight: 800;
   letter-spacing: .03em; text-transform: uppercase; display: flex; align-items: center; gap: 7px; line-height: 1.1; }
 .brand-bolt { color: var(--accent); font-size: 15px; }
-.brand-sub { color: var(--muted); font-size: 11.5px; }
+.brand-sub { color: var(--muted); font-size: 11px; }
 
 /* ---- season switcher / projects ---- */
-.season-switcher { position: relative; margin-top: 6px; }
+.season-switcher { position: relative; margin-top: 4px; }
 .season-trigger {
   display: inline-flex; align-items: center; gap: 8px;
   background: var(--panel-2); border: 1px solid var(--line); border-radius: 8px;
-  color: var(--ink); padding: 5px 10px 5px 10px; cursor: pointer; font: inherit;
+  color: var(--ink); padding: 3px 8px; cursor: pointer; font: inherit;
 }
 .season-trigger:hover { border-color: var(--muted); }
 .season-kicker { font-size: 10px; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
-.season-label { font-family: var(--font-disp); font-style: italic; font-weight: 700; font-size: 15px; letter-spacing: .02em; }
+.season-label { font-family: var(--font-disp); font-style: italic; font-weight: 700; font-size: 13.5px; letter-spacing: .02em; }
 .season-caret { color: var(--muted); font-size: 11px; }
 .season-menu {
   position: absolute; top: calc(100% + 6px); left: 0; z-index: 80; min-width: 240px;
@@ -111,10 +111,10 @@ p.brand-sub { margin: 0; }
 .season-card-actions { display: flex; gap: 8px; flex: none; }
 .seasons-actions { margin-bottom: 10px; }
 
-.meta-strip { display: flex; align-items: center; flex-wrap: wrap; gap: 6px 0; color: var(--muted); font-size: 12px; justify-self: end; }
+.meta-strip { display: flex; align-items: center; flex-wrap: wrap; gap: 6px 0; color: var(--muted); font-size: 11.5px; justify-self: end; }
 .meta-strip > span { display: inline-flex; align-items: baseline; gap: 5px; padding: 0 10px; border-left: 1px solid var(--line); }
 .meta-strip > span:first-child { border-left: none; padding-left: 0; }
-.meta-strip strong { font-family: var(--font-disp); font-style: italic; font-size: 15px; font-weight: 700;
+.meta-strip strong { font-family: var(--font-disp); font-style: italic; font-size: 14px; font-weight: 700;
   color: var(--ink); font-variant-numeric: tabular-nums; }
 .meta-strip em { font-style: normal; color: var(--muted); font-size: 11.5px; }
 .meta-grade strong { letter-spacing: .04em; }
@@ -122,13 +122,13 @@ p.brand-sub { margin: 0; }
 /* Compact budget vitals — sits in the header row */
 .budget-vitals { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; min-width: 0; max-width: 420px; width: 100%; justify-self: center; }
 .vital { display: flex; align-items: center; justify-content: space-between; gap: 10px;
-  background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 6px 12px 7px; min-width: 0; }
+  background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 4px 10px 5px; min-width: 0; }
 .vital.prime { border-color: var(--accent); background: linear-gradient(180deg, #1a2130, #12161d); }
 .vital-copy { display: flex; flex-direction: column; gap: 1px; min-width: 0; }
 .vital-label { font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); white-space: nowrap; }
 .vital-foot { font-size: 10.5px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .vital-num { font-family: var(--font-disp); font-style: italic; font-variant-numeric: tabular-nums;
-  font-size: 26px; font-weight: 800; line-height: 1; letter-spacing: .01em; color: var(--green); flex: none; }
+  font-size: 22px; font-weight: 800; line-height: 1; letter-spacing: .01em; color: var(--green); flex: none; }
 .vital.warn .vital-num { color: var(--amber); }
 .vital.danger .vital-num { color: var(--red); }
 .vital.prime .vital-num { color: var(--accent); }
@@ -140,10 +140,11 @@ p.brand-sub { margin: 0; }
 .quick-ac { flex: 1; }
 .quick-ac .quick-input { width: 100%; }
 .quick-ac .ac-item { font-size: 14.5px; padding: 11px 14px; }
-.quick-input { flex: 1; background: var(--panel-2); border: 1px solid var(--line); border-radius: 10px; color: var(--ink);
-  padding: 12px 14px; font-size: 15px; }
+.quick-input { flex: 1; background: var(--panel-2); border: 1px solid var(--line); border-radius: 8px; color: var(--ink);
+  padding: 8px 12px; font-size: 14px; }
 .quick-input:focus { outline: 2px solid var(--accent); outline-offset: 0; border-color: transparent; }
-.ticker { border-radius: 8px; padding: 8px 12px; font-size: 13px; font-weight: 600; }
+.quickbar .btn.big { padding: 8px 16px; font-size: 14px; }
+.ticker { border-radius: 8px; padding: 6px 10px; font-size: 12px; font-weight: 600; }
 .ticker.warn { background: rgba(243,182,75,.12); color: var(--amber); border: 1px solid rgba(243,182,75,.4); }
 .ticker.danger { background: rgba(241,101,95,.12); color: var(--red); border: 1px solid rgba(241,101,95,.45); }
 
@@ -229,6 +230,25 @@ tfoot td { border-top: 2px solid var(--line); border-bottom: none; padding-top: 
 .icon-btn:hover { color: var(--ink); border-color: var(--muted); }
 .icon-btn:active { transform: translateY(1px); }
 .icon-btn.danger:hover { color: var(--red); border-color: var(--red); }
+.icon-btn.ok:hover { color: var(--green); border-color: var(--green); }
+
+/* ---- inline roster edit ---- */
+tr.roster-editing td { vertical-align: top; background: rgba(210,245,60,.05); }
+tr.roster-editing td.slot { padding-top: 6px; }
+.roster-edit-player { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; min-width: 0; }
+.roster-edit-player > .roster-inline { flex: 1 1 8rem; min-width: 0; }
+.roster-edit-player > .roster-inline-pos { flex: 0 0 4.25rem; }
+.roster-edit-extra { display: none; width: 100%; gap: 6px; }
+.roster-edit-extra > .roster-inline { flex: 1 1 0; min-width: 0; }
+.roster-inline {
+  padding: 6px 8px; font-size: 13px; border-radius: 6px; min-height: 32px;
+}
+.roster-inline-num { text-align: right; font-variant-numeric: tabular-nums; }
+.roster .col-slot .roster-inline { width: 100%; max-width: 100%; padding-left: 4px; padding-right: 2px; font-size: 11px; }
+.roster .col-team .roster-inline,
+.roster .col-bye .roster-inline,
+.roster .col-paid .roster-inline,
+.roster .col-value .roster-inline { width: 100%; }
 
 /* ---- forms ---- */
 .add-form { margin-top: 14px; border-top: 1px dashed var(--line); padding-top: 12px; }
@@ -626,26 +646,12 @@ button, select { touch-action: manipulation; }
 .data-actions .btn { flex: 1 1 140px; }
 
 /* ---- draft room density: keep nomination + needs above the fold ---- */
-.root.view-room .command { padding: 8px clamp(12px, 3vw, 28px) 8px; gap: 8px; }
-.root.view-room .command-top { gap: 10px 16px; }
-.root.view-room .brand-title { font-size: 16px; }
-.root.view-room .brand-sub { font-size: 11px; }
-.root.view-room .season-switcher { margin-top: 4px; }
-.root.view-room .season-trigger { padding: 3px 8px; }
-.root.view-room .season-label { font-size: 13.5px; }
-.root.view-room .vital { padding: 4px 10px 5px; }
-.root.view-room .vital-num { font-size: 22px; }
-.root.view-room .meta-strip { font-size: 11.5px; }
-.root.view-room .meta-strip strong { font-size: 14px; }
-.root.view-room .quick-input { padding: 8px 12px; border-radius: 8px; }
-.root.view-room .quickbar .btn.big { padding: 8px 16px; font-size: 14px; }
-.root.view-room .ticker { padding: 6px 10px; font-size: 12px; }
+/* Header chrome is compact on every view; only Draft Room content densifies further */
 
 /* Desktop-only density for top underline nav — never fight the mobile bottom bar */
 @media (min-width: 601px) {
-  .root.view-room .viewnav { padding-top: 0; }
-  .root.view-room .navbtn { padding: 8px 14px 7px; min-height: 36px; font-size: 13.5px; }
-  .root.view-room .quick-input { padding: 8px 12px; font-size: 14px; border-radius: 8px; }
+  .viewnav { padding-top: 0; }
+  .navbtn { padding: 8px 14px 7px; min-height: 36px; font-size: 13.5px; }
 }
 
 .root.view-room .layout.view-room {
@@ -756,7 +762,7 @@ button, select { touch-action: manipulation; }
   input, select, textarea { font-size: 16px !important; }
   .command-top { grid-template-columns: 1fr; gap: 10px; }
   .budget-vitals { max-width: none; justify-self: stretch; }
-  .vital-num { font-size: 24px; }
+  .vital-num { font-size: 22px; }
   .meta-strip { width: 100%; justify-self: start; }
   .meta-strip > span { padding: 0 10px; }
   .verdict { font-size: 30px; }
@@ -835,6 +841,12 @@ button, select { touch-action: manipulation; }
     overflow: hidden;
     text-overflow: ellipsis;
   }
+  .roster-edit-extra { display: flex; }
+  .roster tr.roster-editing .col-team,
+  .roster tr.roster-editing .col-bye { display: none; }
+  .roster tr.roster-editing .col-slot { width: 4.5rem; }
+  .roster tr.roster-editing td { overflow: visible; }
+  .roster tr.roster-editing .roster-inline { min-height: 40px; font-size: 16px; padding: 8px; }
   .empty-full { display: none; }
   .empty-short { display: inline; }
   .roster .empty-cell { font-size: 12px; }
@@ -934,7 +946,7 @@ button, select { touch-action: manipulation; }
   }
 
   .toast { bottom: calc(72px + env(safe-area-inset-bottom, 0px)); }
-  .command { padding: 10px 10px 12px; gap: 10px; }
+  .command { padding: 8px 10px; gap: 8px; }
   .command-top { gap: 8px; }
   .brand-title { font-size: 14px; }
   .brand-sub { display: none; }
@@ -942,12 +954,12 @@ button, select { touch-action: manipulation; }
   .meta-strip > span { padding: 0 8px; }
   .meta-strip strong { font-size: 14px; }
   .budget-vitals { gap: 6px; }
-  .vital { padding: 5px 10px 6px; }
+  .vital { padding: 4px 10px 5px; }
   .vital-foot { display: none; }
   .vital-num { font-size: 22px; }
   .quickbar { gap: 8px; align-items: stretch; }
-  .quick-input { padding: 12px; min-height: 44px; }
-  .quickbar .btn.big { padding: 11px 14px; font-size: 14px; min-height: 44px; }
+  .quick-input { padding: 10px 12px; min-height: 44px; }
+  .quickbar .btn.big { padding: 10px 14px; font-size: 14px; min-height: 44px; }
   .ticker { font-size: 12px; padding: 6px 10px; }
   .layout { padding: 12px 10px 8px; gap: 12px; }
   .panel { padding: 12px; border-radius: 10px; }

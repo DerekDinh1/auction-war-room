@@ -507,6 +507,7 @@ export default function AuctionWarRoom() {
 
   const changeView = useCallback((next) => {
     setView(next);
+    if (next !== "team") setEditRow(null);
     window.scrollTo(0, 0);
   }, []);
 
@@ -537,6 +538,7 @@ export default function AuctionWarRoom() {
     setNextPick(typeof d.nextPick === "number" ? d.nextPick : 1);
     setAssistant(d.assistant);
     setPlan(d.plan);
+    setEditRow(null);
     setView(d.view);
     setSettings(normalizeSettings(d.settings || DEFAULT_SETTINGS));
     setActiveSeasonIdState(season.id);
@@ -1064,6 +1066,7 @@ export default function AuctionWarRoom() {
       if (!b[k] || b[k].status !== "mine") return b;
       return { ...b, [k]: { ...b[k], status: "available", price: null } };
     });
+    setEditRow((r) => (r && r.id === id ? null : r));
     showToast(`${p.name} removed — ${money(p.price)} refunded.`, "ok");
   };
 
@@ -1475,36 +1478,177 @@ export default function AuctionWarRoom() {
                     </tr>
                   );
                 } else {
+                  const editing = editRow?.id === p.id;
                   const v = p.proj != null ? Number(p.proj) - p.price : null;
                   const meta = [p.team || null, p.bye ? `Bye ${p.bye}` : null].filter(Boolean).join(" · ");
-                  rows.push(
-                    <tr key={s.id}>
-                      <td className="slot col-slot">
-                        <span className="slot-full">{s.label}</span>
-                        <span className="slot-short">{s.starter ? s.label : s.id.replace(/^B/, "BN")}</span>
-                      </td>
-                      <td className="pname col-player">
-                        <span className="pname-main">{p.name}</span>
-                        <span className={`pos-chip p-${p.pos}`}>{p.pos}</span>
-                        {p.bye && byeInfo.groups[p.bye]?.length >= 3 ? <span className="bye-flag" title="Bye-week pileup"><Ic name="flag" fb="⚑" /></span> : null}
-                        {meta ? <span className="pname-meta">{meta}</span> : null}
-                      </td>
-                      <td className="col-team">{p.team || "—"}</td>
-                      <td className="col-bye">{p.bye || "—"}</td>
-                      <td className="num money col-paid">{money(p.price)}</td>
-                      <td className={`num val hide-xs col-value ${v == null ? "" : valueTone(v)}`}>{v == null ? "—" : v > 0 ? `+$${v}` : money(v)}</td>
-                      <td className="actions col-actions">
-                        <select className="move" value="" aria-label={`Move ${p.name} to another slot`} onChange={(e) => { movePlayer(p.id, e.target.value); e.target.value = ""; }} title="Move player">
-                          <option value="" disabled>Move</option>
-                          {SLOTS.filter((t2) => t2.id !== s.id && t2.accepts.includes(p.pos)).map((t2) => (
-                            <option key={t2.id} value={t2.id}>{t2.label}{occupied.has(t2.id) ? " (swap)" : ""}</option>
-                          ))}
-                        </select>
-                        <button className="icon-btn" title="Edit" aria-label={`Edit ${p.name}`} onClick={() => setEditRow({ ...p, proj: p.proj == null ? "" : String(p.proj) })}><Ic name="pencil" fb="✎" /></button>
-                        <button className="icon-btn danger" title="Delete and refund" aria-label={`Delete ${p.name} and refund`} onClick={() => deletePlayer(p.id)}><Ic name="cross-small" fb="✕" /></button>
-                      </td>
-                    </tr>
-                  );
+                  const patchEdit = (patch) => setEditRow((r) => (r && r.id === p.id ? { ...r, ...patch } : r));
+                  const onEditKey = (e) => {
+                    if (e.key === "Enter") { e.preventDefault(); saveEdit(editRow); }
+                    if (e.key === "Escape") { e.preventDefault(); setEditRow(null); }
+                  };
+                  if (editing) {
+                    const editVal = editRow.proj === "" || editRow.proj == null || !Number.isFinite(Number(editRow.proj))
+                      ? null
+                      : Number(editRow.proj) - (Number(editRow.price) || 0);
+                    rows.push(
+                      <tr key={s.id} className="roster-editing">
+                        <td className="slot col-slot">
+                          <select
+                            className="field roster-inline"
+                            aria-label="Roster slot"
+                            value={editRow.slot}
+                            onChange={(e) => patchEdit({ slot: e.target.value })}
+                            onKeyDown={onEditKey}
+                          >
+                            {SLOTS.filter((t2) => t2.accepts.includes(editRow.pos)).map((t2) => {
+                              const occ = occupied.get(t2.id);
+                              return <option key={t2.id} value={t2.id}>{t2.label}{occ && occ.id !== editRow.id ? ` (swap)` : ""}</option>;
+                            })}
+                          </select>
+                        </td>
+                        <td className="pname col-player">
+                          <div className="roster-edit-player">
+                            <input
+                              className="field roster-inline"
+                              aria-label="Player name"
+                              value={editRow.name}
+                              onChange={(e) => patchEdit({ name: e.target.value })}
+                              onKeyDown={onEditKey}
+                              autoFocus
+                            />
+                            <select
+                              className="field roster-inline roster-inline-pos"
+                              aria-label="Position"
+                              value={editRow.pos}
+                              onChange={(e) => {
+                                const pos = e.target.value;
+                                const keep = SLOT_BY_ID[editRow.slot]?.accepts.includes(pos);
+                                const slot = keep
+                                  ? editRow.slot
+                                  : (SLOTS.find((t2) => t2.accepts.includes(pos) && (!occupied.has(t2.id) || occupied.get(t2.id)?.id === editRow.id))?.id
+                                    || SLOTS.find((t2) => t2.accepts.includes(pos))?.id
+                                    || editRow.slot);
+                                patchEdit({ pos, slot });
+                              }}
+                              onKeyDown={onEditKey}
+                            >
+                              {POSITIONS.map((pos) => <option key={pos}>{pos}</option>)}
+                            </select>
+                            <div className="roster-edit-extra">
+                              <select
+                                className="field roster-inline"
+                                aria-label="NFL team"
+                                value={editRow.team}
+                                onChange={(e) => patchEdit({ team: e.target.value, bye: e.target.value ? String(TEAM_BYES[e.target.value]) : editRow.bye })}
+                                onKeyDown={onEditKey}
+                              >
+                                <option value="">Team</option>
+                                {TEAMS.map((t) => <option key={t}>{t}</option>)}
+                              </select>
+                              <input
+                                className="field roster-inline"
+                                inputMode="numeric"
+                                aria-label="Bye week"
+                                placeholder="Bye"
+                                value={editRow.bye || ""}
+                                onChange={(e) => patchEdit({ bye: e.target.value })}
+                                onKeyDown={onEditKey}
+                              />
+                              <input
+                                className="field roster-inline roster-inline-num"
+                                inputMode="numeric"
+                                aria-label="Projected value in dollars"
+                                placeholder="Proj $"
+                                value={editRow.proj}
+                                onFocus={(e) => e.target.select()}
+                                onChange={(e) => patchEdit({ proj: e.target.value })}
+                                onKeyDown={onEditKey}
+                              />
+                            </div>
+                          </div>
+                        </td>
+                        <td className="col-team">
+                          <select
+                            className="field roster-inline"
+                            aria-label="NFL team"
+                            value={editRow.team}
+                            onChange={(e) => patchEdit({ team: e.target.value, bye: e.target.value ? String(TEAM_BYES[e.target.value]) : editRow.bye })}
+                            onKeyDown={onEditKey}
+                          >
+                            <option value="">—</option>
+                            {TEAMS.map((t) => <option key={t}>{t}</option>)}
+                          </select>
+                        </td>
+                        <td className="col-bye">
+                          <input
+                            className="field roster-inline"
+                            inputMode="numeric"
+                            aria-label="Bye week"
+                            value={editRow.bye || ""}
+                            onChange={(e) => patchEdit({ bye: e.target.value })}
+                            onKeyDown={onEditKey}
+                          />
+                        </td>
+                        <td className="num col-paid">
+                          <input
+                            className="field roster-inline roster-inline-num"
+                            inputMode="numeric"
+                            aria-label="Auction price paid in dollars"
+                            value={editRow.price}
+                            onFocus={(e) => e.target.select()}
+                            onChange={(e) => patchEdit({ price: e.target.value })}
+                            onKeyDown={onEditKey}
+                          />
+                        </td>
+                        <td className="num hide-xs col-value">
+                          <input
+                            className="field roster-inline roster-inline-num"
+                            inputMode="numeric"
+                            aria-label="Projected value in dollars"
+                            placeholder="Proj"
+                            value={editRow.proj}
+                            onFocus={(e) => e.target.select()}
+                            onChange={(e) => patchEdit({ proj: e.target.value })}
+                            onKeyDown={onEditKey}
+                            title={editVal == null ? "Projected $" : `Value ${editVal > 0 ? `+$${editVal}` : money(editVal)}`}
+                          />
+                        </td>
+                        <td className="actions col-actions">
+                          <button className="icon-btn ok" title="Save" aria-label={`Save ${editRow.name}`} onClick={() => saveEdit(editRow)}><span aria-hidden="true">✓</span></button>
+                          <button className="icon-btn" title="Cancel" aria-label="Cancel edit" onClick={() => setEditRow(null)}><Ic name="cross-small" fb="✕" /></button>
+                        </td>
+                      </tr>
+                    );
+                  } else {
+                    rows.push(
+                      <tr key={s.id}>
+                        <td className="slot col-slot">
+                          <span className="slot-full">{s.label}</span>
+                          <span className="slot-short">{s.starter ? s.label : s.id.replace(/^B/, "BN")}</span>
+                        </td>
+                        <td className="pname col-player">
+                          <span className="pname-main">{p.name}</span>
+                          <span className={`pos-chip p-${p.pos}`}>{p.pos}</span>
+                          {p.bye && byeInfo.groups[p.bye]?.length >= 3 ? <span className="bye-flag" title="Bye-week pileup"><Ic name="flag" fb="⚑" /></span> : null}
+                          {meta ? <span className="pname-meta">{meta}</span> : null}
+                        </td>
+                        <td className="col-team">{p.team || "—"}</td>
+                        <td className="col-bye">{p.bye || "—"}</td>
+                        <td className="num money col-paid">{money(p.price)}</td>
+                        <td className={`num val hide-xs col-value ${v == null ? "" : valueTone(v)}`}>{v == null ? "—" : v > 0 ? `+$${v}` : money(v)}</td>
+                        <td className="actions col-actions">
+                          <select className="move" value="" aria-label={`Move ${p.name} to another slot`} onChange={(e) => { movePlayer(p.id, e.target.value); e.target.value = ""; }} title="Move player">
+                            <option value="" disabled>Move</option>
+                            {SLOTS.filter((t2) => t2.id !== s.id && t2.accepts.includes(p.pos)).map((t2) => (
+                              <option key={t2.id} value={t2.id}>{t2.label}{occupied.has(t2.id) ? " (swap)" : ""}</option>
+                            ))}
+                          </select>
+                          <button className="icon-btn" title="Edit" aria-label={`Edit ${p.name}`} onClick={() => setEditRow({ ...p, proj: p.proj == null ? "" : String(p.proj) })}><Ic name="pencil" fb="✎" /></button>
+                          <button className="icon-btn danger" title="Delete and refund" aria-label={`Delete ${p.name} and refund`} onClick={() => deletePlayer(p.id)}><Ic name="cross-small" fb="✕" /></button>
+                        </td>
+                      </tr>
+                    );
+                  }
                 }
                 return rows;
               })}
@@ -1723,7 +1867,12 @@ export default function AuctionWarRoom() {
                         <td className="num money">{money(p.price)}</td>
                         <td className={`num val hide-xs ${v == null ? "" : valueTone(v)}`}>{v == null ? "—" : v > 0 ? `+$${v}` : money(v)}</td>
                         <td className="actions">
-                          <button className="icon-btn" title="Edit" aria-label={`Edit ${p.name}`} onClick={() => setEditRow({ ...p, proj: p.proj == null ? "" : String(p.proj) })}><Ic name="pencil" fb="✎" /></button>
+                          <button className="icon-btn" title="Edit" aria-label={`Edit ${p.name}`} onClick={() => {
+                            setEditRow({ ...p, proj: p.proj == null ? "" : String(p.proj) });
+                            requestAnimationFrame(() => {
+                              document.querySelector("tr.roster-editing")?.scrollIntoView({ block: "nearest", behavior: "smooth" });
+                            });
+                          }}><Ic name="pencil" fb="✎" /></button>
                           <button className="icon-btn danger" title="Undo pick" aria-label={`Undo pick: ${p.name}`} onClick={() => deletePlayer(p.id)}><Ic name="cross-small" fb="✕" /></button>
                         </td>
                       </tr>
@@ -2022,29 +2171,6 @@ export default function AuctionWarRoom() {
               proj: t.proj !== "" && t.proj != null ? String(t.proj) : (t.targetPrice != null ? String(t.targetPrice) : ""),
             }, clearAssistant);
           }} />
-      )}
-
-      {editRow && (
-        <Modal title={`Edit pick — ${editRow.name}`} onClose={() => setEditRow(null)}>
-          <div className="edit-grid">
-            <label>Name<input className="field" value={editRow.name} onChange={(e) => setEditRow((r) => ({ ...r, name: e.target.value }))} /></label>
-            <label>Pos<select className="field" value={editRow.pos} onChange={(e) => setEditRow((r) => ({ ...r, pos: e.target.value }))}>{POSITIONS.map((p) => <option key={p}>{p}</option>)}</select></label>
-            <label>Team<select className="field" value={editRow.team} onChange={(e) => setEditRow((r) => ({ ...r, team: e.target.value, bye: e.target.value ? String(TEAM_BYES[e.target.value]) : r.bye }))}><option value="">—</option>{TEAMS.map((t) => <option key={t}>{t}</option>)}</select></label>
-            <label>Bye<input className="field" inputMode="numeric" value={editRow.bye || ""} onChange={(e) => setEditRow((r) => ({ ...r, bye: e.target.value }))} /></label>
-            <label>Price $<input className="field" inputMode="numeric" value={editRow.price} onChange={(e) => setEditRow((r) => ({ ...r, price: e.target.value }))} /></label>
-            <label>Proj $<input className="field" inputMode="numeric" value={editRow.proj} onChange={(e) => setEditRow((r) => ({ ...r, proj: e.target.value }))} /></label>
-            <label>Slot<select className="field" value={editRow.slot} onChange={(e) => setEditRow((r) => ({ ...r, slot: e.target.value }))}>
-              {SLOTS.filter((s) => s.accepts.includes(editRow.pos)).map((s) => {
-                const occ = occupied.get(s.id);
-                return <option key={s.id} value={s.id}>{s.label}{occ && occ.id !== editRow.id ? ` (swap ${occ.name})` : ""}</option>;
-              })}
-            </select></label>
-          </div>
-          <div className="modal-actions">
-            <button className="btn" onClick={() => setEditRow(null)}>Cancel</button>
-            <button className="btn primary" onClick={() => saveEdit(editRow)}>Save changes</button>
-          </div>
-        </Modal>
       )}
 
       <div
