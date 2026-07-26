@@ -411,6 +411,7 @@ export default function AuctionWarRoom() {
   const [editRow, setEditRow] = useState(null); // player being edited
   const [view, setView] = useState("room");
   const [assistant, setAssistant] = useState(EMPTY_ASST);
+  const presetTouchedRef = useRef(false);
   const [plan, setPlan] = useState(DEFAULT_PLAN);
   const [settings, setSettings] = useState(DEFAULT_SETTINGS);
   const [catalog, setCatalog] = useState(null);
@@ -626,6 +627,7 @@ export default function AuctionWarRoom() {
     const qb = players.find((p) => p.slot === "QB");
     const te = players.find((p) => p.slot === "TE");
     const issues = [];
+    const weekMeta = {}; // wk -> { severity, samePos, starterCount }
     let level = 0; // 0 green, 1 yellow, 2 red
     if (qb && te && qb.bye && qb.bye === te.bye) {
       issues.push(`QB and TE share the Week ${qb.bye} bye`);
@@ -633,20 +635,35 @@ export default function AuctionWarRoom() {
     }
     Object.entries(groups).forEach(([wk, list]) => {
       const starters = list.filter((p) => SLOT_BY_ID[p.slot]?.starter);
-      if (starters.length >= 3) {
-        issues.push(`${starters.length} starters off in Week ${wk}: ${starters.map((p) => p.name).join(", ")}`);
+      const starterPos = {};
+      starters.forEach((p) => { starterPos[p.pos] = (starterPos[p.pos] || 0) + 1; });
+      const samePos = Object.entries(starterPos).filter(([, n]) => n >= 2);
+      const shared = list.length >= 2;
+      let severity = "";
+      if (starters.length >= 3 || list.length >= 4 || samePos.length > 0) {
+        severity = "danger";
         level = Math.max(level, 2);
-      } else if (starters.length === 2) {
+      } else if (starters.length === 2 || list.length >= 3) {
+        severity = "warn";
         level = Math.max(level, 1);
+      } else if (shared) {
+        severity = "shared"; // stands out, but mixed positions are usually fine
+      }
+      weekMeta[wk] = { severity, samePos: samePos.map(([pos]) => pos), starterCount: starters.length, shared };
+
+      if (starters.length >= 3) {
+        issues.push(`${starters.length} starters off in Week ${wk}: ${starters.map((p) => `${p.name} (${p.pos})`).join(", ")}`);
+      } else if (samePos.length > 0) {
+        issues.push(`Week ${wk} stacks ${samePos.map(([pos, n]) => `${n} ${pos}s`).join(" & ")} — harder to fill that week`);
+      } else if (starters.length === 2) {
+        const posLabel = starters.map((p) => p.pos).join(" + ");
+        issues.push(`Week ${wk}: ${posLabel} starters overlap — usually manageable`);
       }
       if (list.length >= 4) {
         issues.push(`${list.length} total players off in Week ${wk}`);
-        level = Math.max(level, 2);
-      } else if (list.length === 3) {
-        level = Math.max(level, 1);
       }
     });
-    return { groups, issues, level };
+    return { groups, issues, level, weekMeta };
   }, [players]);
 
   /* ------- value totals ------- */
@@ -732,10 +749,14 @@ export default function AuctionWarRoom() {
 
     const otherOpenStarters = openStarters.filter((s) => s.id !== slot);
     const softReserve = otherOpenStarters.length * 3; // keep some powder for other starters
-    let recMax = V != null ? Math.round(V * mult) : (preset != null ? preset : Math.max(1, maxBid - softReserve));
-    if (preset != null) recMax = Math.min(recMax, preset);
-    recMax = Math.min(recMax, maxBid, Math.max(1, maxBid - softReserve));
-    recMax = Math.max(1, recMax);
+    let suggested = V != null ? Math.round(V * mult) : Math.max(1, maxBid - softReserve);
+    suggested = Math.min(suggested, maxBid, Math.max(1, maxBid - softReserve));
+    suggested = Math.max(1, suggested);
+    let recMax = preset != null ? Math.min(suggested, preset) : suggested;
+    if (V == null && preset != null) {
+      recMax = Math.min(preset, maxBid, Math.max(1, maxBid - softReserve));
+      recMax = Math.max(1, recMax);
+    }
 
     const projLabel = projIn != null ? "your projection" : preset != null && V == null ? "your max" : "estimated value";
     const discount = V != null ? V - bid : null;
@@ -773,7 +794,7 @@ export default function AuctionWarRoom() {
     if (byeIssue && tier !== "pass" && tier !== "idle") why.push(`Bye note: ${byeIssue}.`);
     if (budgetHealth === "tight" && tier === "bid") { tier = "value"; why.push("Budget is tight — don't stretch past the number."); }
 
-    return { pos, V, est, projIn, preset, bid, hasBid, recMax, absMax: maxBid, tier, why: why.join(" "), slot, slotLabel, discount };
+    return { pos, V, est, projIn, preset, bid, hasBid, suggested, recMax, absMax: maxBid, tier, why: why.join(" "), slot, slotLabel, discount };
   }, [assistant, players, posCounts, openStarters, maxBid, spotsLeft, budgetHealth]);
 
   /* ------- market inflation from off-the-board prices ------- */
@@ -816,6 +837,7 @@ export default function AuctionWarRoom() {
   /* ------- assistant handlers ------- */
   const pickAssistantPlayer = (p) => {
     const e = adjEst(p.pos, p.name);
+    presetTouchedRef.current = false;
     setAssistant((a) => ({
       ...a, name: p.name, pos: p.pos, team: p.team, bye: String(p.bye || TEAM_BYES[p.team] || ""),
       proj: e != null ? String(e) : "",
@@ -841,32 +863,51 @@ export default function AuctionWarRoom() {
     });
   }, [assistant.name, assistant.pos, assistant.team, adjEst]);
 
+  // Prefill Suggested max from the engine; keep syncing until you edit the field
+  useEffect(() => {
+    if (!analysis || presetTouchedRef.current) return;
+    const next = String(analysis.suggested);
+    setAssistant((a) => {
+      if (!a.name || a.presetMax === next) return a;
+      return { ...a, presetMax: next };
+    });
+  }, [assistant.name, analysis?.suggested]);
+
   const bumpBid = (d) => setAssistant((a) => {
     const cur = a.bid === "" ? 0 : Math.round(Number(a.bid)) || 0;
     return { ...a, bid: String(Math.max(0, cur + d)) };
   });
-  const clearAssistant = () => setAssistant(EMPTY_ASST);
+  const clearAssistant = () => {
+    presetTouchedRef.current = false;
+    setAssistant(EMPTY_ASST);
+  };
   const assistantDraft = () => {
     if (!analysis) { showToast("Search for the player on the block first.", "err"); return; }
+    const currentBid = analysis.hasBid ? analysis.bid : null;
     setDraftConfirm({
       name: assistant.name, pos: assistant.pos, team: assistant.team,
       bye: assistant.bye, targetPrice: analysis.V != null ? analysis.V : null,
-      maxBid: analysis.bid > 0 ? analysis.bid : (analysis.recMax || null),
+      // Confirmation price defaults to the live bid; fall back to recommended max if none entered
+      maxBid: currentBid != null ? currentBid : (analysis.recMax || null),
       proj: assistant.proj,
+      est: analysis.V != null ? analysis.V : analysis.est,
     });
   };
   const toggleStar = (name, meta) => {
     const k = boardKey(name);
     setBoard((b) => ({ ...b, [k]: { ...(b[k] || { status: "available", price: null, ...meta }), ...meta, name, star: !b[k]?.star } }));
   };
-  const assistantStar = () => {
-    if (!assistant.name || !assistant.pos) { showToast("Pick a player first.", "err"); return; }
-    toggleStar(assistant.name, { pos: assistant.pos, team: assistant.team, bye: assistant.bye ? Number(assistant.bye) : null });
-    showToast(board[boardKey(assistant.name)]?.star ? "Star removed." : `★ ${assistant.name} starred.`, "ok");
-  };
   const assistantGone = () => {
     if (!assistant.name || !assistant.pos) { clearAssistant(); return; }
-    setPriceAsk({ mode: "gone", player: { name: assistant.name, pos: assistant.pos, team: assistant.team, bye: assistant.bye } });
+    const currentBid = analysis?.hasBid ? analysis.bid : null;
+    setPriceAsk({
+      mode: "gone",
+      player: {
+        name: assistant.name, pos: assistant.pos, team: assistant.team, bye: assistant.bye,
+        maxBid: currentBid,
+        est: analysis?.V != null ? analysis.V : analysis?.est,
+      },
+    });
   };
 
   /* ------- big board actions ------- */
@@ -1140,7 +1181,10 @@ export default function AuctionWarRoom() {
   const assistantPanel = (
         <section className="panel wide asst-panel">
           <div className="panel-head">
-            <span className="eyebrow">Player on the block</span>
+            <div className="asst-title-block">
+              <span className="eyebrow">Player on the block</span>
+              <span className="asst-sub">Enter the name and current bid — the call updates live.</span>
+            </div>
             <div className="health-line">
               <span className={`pill ${budgetHealth === "strong" || budgetHealth === "done" ? "good" : budgetHealth === "moderate" ? "warn" : "danger"}`}>
                 Budget {budgetHealth === "done" ? "Done" : budgetHealth === "strong" ? "Strong" : budgetHealth === "moderate" ? "Moderate" : "Tight"}
@@ -1148,87 +1192,128 @@ export default function AuctionWarRoom() {
               <span className="health-avg">{spotsLeft > 0 ? `${money(avgPerSpot)}/player` : "—"}{openStarters.length > 0 ? ` · ${money(avgPerStarter)}/starter` : ""}</span>
             </div>
           </div>
+
           <div className="asst-grid">
-            {/* inputs */}
             <div className="asst-inputs">
-              <NameAutocomplete
-                value={assistant.name}
-                onChange={(v) => setAssistant((a) => ({ ...a, name: v }))}
-                onSelect={pickAssistantPlayer}
-                placeholder="Who's on the block?"
-              />
-              <div className="asst-row">
-                <select className="field" aria-label="Position" value={assistant.pos} onChange={(e) => setAssistant((a) => ({ ...a, pos: e.target.value }))}>
-                  <option value="">Pos</option>{POSITIONS.map((p) => <option key={p}>{p}</option>)}
-                </select>
-                <select className="field" aria-label="NFL team" value={assistant.team} onChange={(e) => setAssistant((a) => ({ ...a, team: e.target.value, bye: e.target.value ? String(TEAM_BYES[e.target.value]) : a.bye }))}>
-                  <option value="">Team</option>{TEAMS.map((t) => <option key={t}>{t}</option>)}
-                </select>
-                <input className="field" inputMode="numeric" placeholder="Bye" aria-label="Bye week" value={assistant.bye} onChange={(e) => setAssistant((a) => ({ ...a, bye: e.target.value }))} />
+              <label className="field-label">
+                <span>Player</span>
+                <NameAutocomplete
+                  value={assistant.name}
+                  onChange={(v) => setAssistant((a) => ({ ...a, name: v }))}
+                  onSelect={pickAssistantPlayer}
+                  placeholder="Search name…"
+                />
+              </label>
+
+              <div className="asst-row meta-row">
+                <label className="field-label">
+                  <span>Pos</span>
+                  <select className="field" aria-label="Position" value={assistant.pos} onChange={(e) => setAssistant((a) => ({ ...a, pos: e.target.value }))}>
+                    <option value="">—</option>{POSITIONS.map((p) => <option key={p}>{p}</option>)}
+                  </select>
+                </label>
+                <label className="field-label">
+                  <span>Team</span>
+                  <select className="field" aria-label="NFL team" value={assistant.team} onChange={(e) => setAssistant((a) => ({ ...a, team: e.target.value, bye: e.target.value ? String(TEAM_BYES[e.target.value]) : a.bye }))}>
+                    <option value="">—</option>{TEAMS.map((t) => <option key={t}>{t}</option>)}
+                  </select>
+                </label>
+                <label className="field-label">
+                  <span>Bye</span>
+                  <input className="field" inputMode="numeric" aria-label="Bye week" value={assistant.bye} onChange={(e) => setAssistant((a) => ({ ...a, bye: e.target.value }))} />
+                </label>
               </div>
-              <div className="asst-row">
-                <input className="field" inputMode="numeric" placeholder="Proj value $" aria-label="Projected auction value in dollars" onFocus={(e) => e.target.select()} value={assistant.proj} onChange={(e) => setAssistant((a) => ({ ...a, proj: e.target.value }))} />
-                <input className="field" inputMode="numeric" placeholder="My preset max $" aria-label="My preset maximum bid in dollars" onFocus={(e) => e.target.select()} value={assistant.presetMax} onChange={(e) => setAssistant((a) => ({ ...a, presetMax: e.target.value }))} />
+
+              <div className="asst-row value-row">
+                <label className="field-label">
+                  <span>Proj value</span>
+                  <input className="field" inputMode="numeric" aria-label="Projected auction value in dollars" placeholder="$" onFocus={(e) => e.target.select()} value={assistant.proj} onChange={(e) => setAssistant((a) => ({ ...a, proj: e.target.value }))} />
+                </label>
+                <label className="field-label">
+                  <span>Suggested max</span>
+                  <input className="field" inputMode="numeric" aria-label="Suggested maximum bid in dollars" placeholder="$" onFocus={(e) => e.target.select()} value={assistant.presetMax} onChange={(e) => {
+                    const v = e.target.value;
+                    presetTouchedRef.current = v.trim() !== "";
+                    setAssistant((a) => ({ ...a, presetMax: v }));
+                  }} />
+                </label>
               </div>
+
               <div className="bid-row">
                 <button className="btn bid-step" onClick={() => bumpBid(-1)} aria-label="Lower bid by one dollar">−$1</button>
                 <div className="bid-box">
-                  <label>Current bid</label>
-                  <input className="bid-input" inputMode="numeric" aria-label="Current auction bid in dollars" value={assistant.bid} placeholder="—"
+                  <label htmlFor="asst-bid">Current bid</label>
+                  <input id="asst-bid" className="bid-input" inputMode="numeric" aria-label="Current auction bid in dollars" value={assistant.bid} placeholder="—"
                           onChange={(e) => setAssistant((a) => ({ ...a, bid: e.target.value.replace(/[^0-9]/g, "") }))} />
                 </div>
                 <button className="btn bid-step" onClick={() => bumpBid(1)} aria-label="Raise bid by one dollar">+$1</button>
               </div>
+
               <div className="asst-actions">
                 <button className="btn primary big" onClick={assistantDraft}>Draft player</button>
-                <button className={`btn ${board[boardKey(assistant.name)]?.star ? "starred" : ""}`} aria-pressed={!!board[boardKey(assistant.name)]?.star} onClick={assistantStar}><Ic name="star" solid={!!board[boardKey(assistant.name)]?.star} fb={board[boardKey(assistant.name)]?.star ? "★" : "☆"} /> {board[boardKey(assistant.name)]?.star ? "Starred" : "Star"}</button>
                 <button className="btn" onClick={assistantGone}>Went elsewhere</button>
               </div>
             </div>
 
-            {/* verdict */}
-            <div className="asst-verdict">
-              {analysis ? (
-                <>
-                  <div className={`verdict ${analysis.tier}`}>
-                    {analysis.tier === "idle" ? "READY" : analysis.tier === "bid" ? "BID" : analysis.tier === "value" ? "VALUE" : analysis.tier === "caution" ? "CAUTION" : "PASS"}
-                  </div>
-                  <p className="verdict-why">{analysis.why}</p>
-                  <div className="verdict-nums">
-                    <div><label>Current bid</label><span className="vn">{analysis.hasBid ? money(analysis.bid) : "—"}</span></div>
-                    <div><label>Proj value</label><span className="vn">{analysis.V != null ? money(analysis.V) : "—"}{analysis.projIn == null && analysis.V != null ? <em> est</em> : null}</span></div>
-                    <div><label>Rec max</label><span className="vn gold">{money(analysis.recMax)}</span></div>
-                    <div><label>Abs max</label><span className="vn">{money(analysis.absMax)}</span></div>
-                    <div><label>Fills</label><span className="vn">{analysis.slotLabel || "—"}</span></div>
-                  </div>
-                  <PriceMeter bid={analysis.hasBid ? analysis.bid : null} V={analysis.V} recMax={analysis.recMax} absMax={analysis.absMax} tier={analysis.tier} />
-                </>
-              ) : (
-                <div className="verdict-empty">Search the player being auctioned and set the bid — the call updates live.</div>
-              )}
-            </div>
+            <div className="asst-decision">
+              <div className="asst-verdict">
+                {analysis ? (
+                  <>
+                    <div className="call-head">
+                      <div className={`verdict ${analysis.tier}`} aria-live="polite">
+                        {analysis.tier === "idle" ? "READY" : analysis.tier === "bid" ? "BID" : analysis.tier === "value" ? "VALUE" : analysis.tier === "caution" ? "CAUTION" : "PASS"}
+                      </div>
+                      <div className="call-hero">
+                        <span className="call-hero-label">Recommended max</span>
+                        <span className="call-hero-num">{money(analysis.recMax)}</span>
+                      </div>
+                    </div>
+                    <p className="verdict-why">{analysis.why}</p>
+                    <div className="verdict-nums" aria-label="Bid context">
+                      <div><label>Bid</label><span className="vn">{analysis.hasBid ? money(analysis.bid) : "—"}</span></div>
+                      <div><label>Proj</label><span className="vn">{analysis.V != null ? money(analysis.V) : "—"}{analysis.projIn == null && analysis.V != null ? <em> est</em> : null}</span></div>
+                      <div><label>Abs max</label><span className="vn">{money(analysis.absMax)}</span></div>
+                      <div><label>Fills</label><span className="vn">{analysis.slotLabel || "—"}</span></div>
+                    </div>
+                    <PriceMeter bid={analysis.hasBid ? analysis.bid : null} V={analysis.V} recMax={analysis.recMax} absMax={analysis.absMax} tier={analysis.tier} />
+                  </>
+                ) : (
+                  <div className="verdict-empty">Search a player to see the bid call and value meter.</div>
+                )}
 
-            {/* alternatives */}
-            <div className="asst-alt">
-              <div className="eyebrow small">Still available at {assistant.pos || "position"}</div>
-              {alternatives.length === 0 ? (
-                <div className="empty-note">Load a player above to compare the next-best options still on the board.</div>
-              ) : (
-                <table className="flat tiny">
-                  <thead><tr><th>Tier</th><th>Player</th><th className="hide-xs">Team</th><th>Bye</th><th className="num">Est $</th><th></th></tr></thead>
-                  <tbody>
-                    {alternatives.map((p) => (
-                      <tr key={p.id}>
-                        <td className="slot">T{p.tier}</td>
-                        <td className="pname"><button className="linklike" onClick={() => pickAssistantPlayer(p)} title="Load into assistant">{p.star ? <span className="star on"><Ic name="star" solid fb="★" /> </span> : null}{p.name}</button></td>
-                        <td className="hide-xs">{p.team}</td><td>{p.bye}</td>
-                        <td className="num">{p.est != null ? money(p.est) : "—"}</td>
-                        <td className="actions"><button className="icon-btn" title="Mark off the board" aria-label={`Mark ${p.name} off the board`} onClick={() => setPriceAsk({ mode: "gone", player: p })}><Ic name="cross-small" fb="✕" /></button></td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              )}
+                <div className="asst-alt">
+                  <div className="asst-alt-head">
+                    <span className="eyebrow small">Still available{assistant.pos ? ` at ${assistant.pos}` : ""}</span>
+                    {alternatives.length > 0 && <span className="asst-alt-count">{alternatives.length}</span>}
+                  </div>
+                  {alternatives.length === 0 ? (
+                    <div className="empty-note compact">Load a player to compare next-best options.</div>
+                  ) : (
+                    <div className="alt-table">
+                      <div className="alt-cols alt-head" role="row">
+                        <span className="alt-tier">Tier</span>
+                        <span className="alt-name">Player name</span>
+                        <span className="alt-team">Team</span>
+                        <span className="alt-bye">Bye</span>
+                        <span className="alt-est">Max price</span>
+                        <span className="alt-action-h" aria-hidden="true" />
+                      </div>
+                      <ul className="alt-list">
+                        {alternatives.map((p) => (
+                          <li key={p.id} className="alt-cols alt-row">
+                            <button type="button" className="alt-tier" onClick={() => pickAssistantPlayer(p)} title="Load into assistant">T{p.tier}</button>
+                            <button type="button" className="alt-name" onClick={() => pickAssistantPlayer(p)} title="Load into assistant">{p.name}</button>
+                            <button type="button" className="alt-team" onClick={() => pickAssistantPlayer(p)} title="Load into assistant">{p.team || "—"}</button>
+                            <button type="button" className="alt-bye" onClick={() => pickAssistantPlayer(p)} title="Load into assistant">{p.bye ?? "—"}</button>
+                            <button type="button" className="alt-est" onClick={() => pickAssistantPlayer(p)} title="Load into assistant">{p.est != null ? money(p.est) : "—"}</button>
+                            <button className="icon-btn alt-gone" title="Mark off the board" aria-label={`Mark ${p.name} off the board`} onClick={() => setPriceAsk({ mode: "gone", player: p })}><Ic name="cross-small" fb="✕" /></button>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                </div>
+              </div>
             </div>
           </div>
         </section>
@@ -1325,7 +1410,7 @@ export default function AuctionWarRoom() {
   );
 
   const needsPanel = (
-          <section className="panel">
+          <section className="panel needs-panel">
             <div className="panel-head">
               <span className="eyebrow">Position needs</span>
               <span className="panel-side">{flexOpen > 0 ? `+${flexOpen} FLEX open` : "starters / required"}</span>
@@ -1371,12 +1456,33 @@ export default function AuctionWarRoom() {
               <div className="empty-note">Bye weeks appear here as you draft — you\u2019ll get a warning if too many starters share a week.</div>
             ) : (
               <div className="bye-list">
-                {Object.entries(byeInfo.groups).sort((a, b) => a[0] - b[0]).map(([wk, list]) => (
-                  <div key={wk} className={`bye-row ${list.filter((p) => SLOT_BY_ID[p.slot]?.starter).length >= 3 || list.length >= 4 ? "danger" : list.length >= 3 ? "warn" : ""}`}>
-                    <span className="bye-wk">Wk {wk}</span>
-                    <span className="bye-names">{list.map((p) => p.name).join(", ")}</span>
-                  </div>
-                ))}
+                {Object.entries(byeInfo.groups).sort((a, b) => a[0] - b[0]).map(([wk, list]) => {
+                  const meta = byeInfo.weekMeta[wk] || {};
+                  const rowClass = meta.severity || "";
+                  const note = meta.samePos?.length
+                    ? `Same-position stack (${meta.samePos.join(", ")})`
+                    : meta.starterCount >= 2
+                      ? "Mixed positions — usually fine"
+                      : meta.shared
+                        ? `${list.length} on this bye`
+                        : null;
+                  return (
+                    <div key={wk} className={`bye-row ${rowClass}`}>
+                      <span className="bye-wk">Wk {wk}</span>
+                      <div className="bye-body">
+                        <div className="bye-players">
+                          {list.map((p) => (
+                            <span key={p.id} className={`bye-chip${SLOT_BY_ID[p.slot]?.starter ? " starter" : ""}`} title={`${p.name} · ${p.pos}${SLOT_BY_ID[p.slot]?.starter ? " · starter" : " · bench"}`}>
+                              <span className={`bye-pos p-${p.pos}`}>{p.pos}</span>
+                              <span className="bye-pname">{p.name}</span>
+                            </span>
+                          ))}
+                        </div>
+                        {note && <span className="bye-note">{note}</span>}
+                      </div>
+                    </div>
+                  );
+                })}
               </div>
             )}
           </section>
@@ -1628,7 +1734,7 @@ export default function AuctionWarRoom() {
   );
 
   return (
-    <div className="root">
+    <div className={`root view-${view}`}>
       <div className="topbar">
         <CommandHeader
           settingsLabel={settingsLabel}
@@ -1664,8 +1770,10 @@ export default function AuctionWarRoom() {
       <main className={`layout view-${view}`}>
         {view === "room" && (<>
           {assistantPanel}
-          {needsPanel}
-          {byePanel}
+          <div className="room-stack">
+            {needsPanel}
+            {byePanel}
+          </div>
         </>)}
 
         {view === "team" && (<>
@@ -1791,7 +1899,7 @@ export default function AuctionWarRoom() {
 function PricePrompt({ target, onCancel, onConfirm, mode = "mine", onSkip = null }) {
   const gone = mode === "gone";
   const suggest = target.maxBid != null ? Math.round(target.maxBid) : null;
-  const [price, setPrice] = useState(""); // always blank — nothing to erase mid-auction
+  const [price, setPrice] = useState(() => (suggest != null ? String(suggest) : ""));
   const ok = price !== "" && Number.isFinite(Number(price));
   return (
     <Modal title={gone ? `${target.name} went to another team — final price?` : `You won ${target.name} — for how much?`} onClose={onCancel}>
@@ -1801,7 +1909,7 @@ function PricePrompt({ target, onCancel, onConfirm, mode = "mine", onSkip = null
           onFocus={(e) => e.target.select()}
           value={price} onChange={(e) => setPrice(e.target.value.replace(/[^0-9]/g, ""))}
           onKeyDown={(e) => { if (e.key === "Enter" && ok) onConfirm(Math.round(Number(price))); }} />
-        {suggest != null && (
+        {suggest != null && price !== String(suggest) && (
           <button className="btn tiny-fill" onClick={() => setPrice(String(suggest))}>Use {money(suggest)}</button>
         )}
         <span className="hint">
@@ -1818,37 +1926,49 @@ function PricePrompt({ target, onCancel, onConfirm, mode = "mine", onSkip = null
   );
 }
 
+function meterEdge(p) {
+  if (p >= 90) return "m-edge-end";
+  if (p <= 10) return "m-edge-start";
+  return "";
+}
+
 function PriceMeter({ bid, V, recMax, absMax, tier }) {
   const hasBid = bid != null;
-  const scale = Math.max(absMax, (V || 0) * 1.3, recMax * 1.25, (bid || 0) + 4, 10);
+  // Scale to the decision range — leftover abs budget must not crush Proj/Rec/Bid into a left pile
+  const focusMax = Math.max(V || 0, recMax, bid || 0, 1);
+  const includeAbsOnBar = absMax <= focusMax * 2.25;
+  const scale = Math.max(focusMax * 1.5, includeAbsOnBar ? absMax : 0, 12);
   const pct = (x) => Math.min(100, Math.max(0, (x / scale) * 100));
   const greatEnd = V != null ? V * 0.82 : recMax * 0.6;
   const fairEnd = V != null ? Math.max(V, recMax * 0.8) : recMax * 0.85;
-  const markers = [
-    V != null ? { x: V, label: "Proj", cls: "m-proj" } : null,
-    { x: recMax, label: "Rec", cls: "m-rec" },
-    { x: absMax, label: "Abs", cls: "m-abs" },
-  ].filter(Boolean);
+
+  const projPct = V != null ? pct(V) : null;
+  const recPct = pct(recMax);
+  const absPct = pct(absMax);
+  const bidPct = hasBid ? pct(bid) : null;
+
   return (
-    <div className="meter-wrap">
-      <div className="meter">
+    <div className={`meter-wrap${hasBid ? " has-bid" : ""}`}>
+      <div className="meter" role="img" aria-label={`Value meter. Recommended max ${money(recMax)}${V != null ? `, projection ${money(V)}` : ""}, absolute max ${money(absMax)}${hasBid ? `, current bid ${money(bid)}` : ""}.`}>
         <div className="zone great" style={{ width: `${pct(greatEnd)}%` }} />
         <div className="zone fair" style={{ width: `${Math.max(0, pct(fairEnd) - pct(greatEnd))}%` }} />
         <div className="zone caution" style={{ width: `${Math.max(0, pct(recMax) - pct(fairEnd))}%` }} />
         <div className="zone over" style={{ width: `${Math.max(0, 100 - pct(recMax))}%` }} />
-        {markers.map((m) => (
-          <div key={m.label} className={`marker ${m.cls}`} style={{ left: `${pct(m.x)}%` }}>
-            <span>{m.label} {money(m.x)}</span>
-          </div>
-        ))}
+        {projPct != null && <div className={`marker m-proj ${meterEdge(projPct)}`} style={{ left: `${projPct}%` }} title={`Proj ${money(V)}`} />}
+        <div className={`marker m-rec ${meterEdge(recPct)}`} style={{ left: `${recPct}%` }} title={`Rec ${money(recMax)}`} />
+        {includeAbsOnBar && <div className={`marker m-abs ${meterEdge(absPct)}`} style={{ left: `${absPct}%` }} title={`Abs ${money(absMax)}`} />}
         {hasBid && (
-          <div className={`bid-marker t-${tier}`} style={{ left: `${pct(bid)}%` }}>
+          <div className={`bid-marker t-${tier} ${meterEdge(bidPct)}`} style={{ left: `${bidPct}%` }} title={`Bid ${money(bid)}`}>
             <div className="bid-tri" />
-            <span>{money(bid)}</span>
           </div>
         )}
       </div>
-      <div className="meter-legend"><span>Great value</span><span>Fair</span><span>Caution</span><span>Overpay</span></div>
+      <div className="meter-legend">
+        <span>Great</span>
+        <span>Fair</span>
+        <span>Caution</span>
+        <span>Overpay</span>
+      </div>
     </div>
   );
 }
