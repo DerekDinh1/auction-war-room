@@ -18,6 +18,14 @@ import {
 } from "./lib/seasons.js";
 
 const Ic = Icon; // legacy alias used throughout panels
+const THEME_KEY = "awr-theme";
+function readStoredTheme() {
+  try {
+    const v = typeof localStorage !== "undefined" ? localStorage.getItem(THEME_KEY) : null;
+    if (v === "light" || v === "dark") return v;
+  } catch { /* ignore */ }
+  return "dark";
+}
 
 /* ============================================================
    NFL AUCTION WAR ROOM — 12-team, $200, 1.5 PPR, 16-man roster
@@ -486,6 +494,7 @@ export default function AuctionWarRoom() {
   const [priceAsk, setPriceAsk] = useState(null); // {player, mode:'mine'|'gone'}
   const [editRow, setEditRow] = useState(null); // player being edited
   const [view, setView] = useState("room");
+  const [theme, setTheme] = useState(readStoredTheme);
   const [assistant, setAssistant] = useState(EMPTY_ASST);
   const presetTouchedRef = useRef(false);
   const [plan, setPlan] = useState(DEFAULT_PLAN);
@@ -511,11 +520,20 @@ export default function AuctionWarRoom() {
     window.scrollTo(0, 0);
   }, []);
 
+  const changeTheme = useCallback(() => {
+    setTheme((t) => (t === "light" ? "dark" : "light"));
+  }, []);
+
   useEffect(() => {
     if (!toast) return;
     const t = setTimeout(() => setToast(null), 3500);
     return () => clearTimeout(t);
   }, [toast]);
+
+  useEffect(() => {
+    document.documentElement.setAttribute("data-theme", theme);
+    storageSet(THEME_KEY, theme);
+  }, [theme]);
 
   /* ------- seasons catalog + persistence ------- */
   const applySeasonDraft = useCallback((season) => {
@@ -2172,6 +2190,17 @@ export default function AuctionWarRoom() {
             }, clearAssistant);
           }} />
       )}
+
+      <button
+        type="button"
+        className="theme-toggle"
+        onClick={changeTheme}
+        aria-pressed={theme === "light"}
+        aria-label={theme === "light" ? "Light theme on. Switch to dark" : "Dark theme on. Switch to light"}
+        title={theme === "light" ? "Switch to dark theme" : "Switch to light theme"}
+      >
+        <span className="theme-toggle-label">{theme === "light" ? "Light" : "Dark"}</span>
+      </button>
 
       <div
         className={`toast ${toast?.type || ""}`}

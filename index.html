@@ -5,6 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <meta name="description" content="NFL Auction War Room — 12-team fantasy football auction draft tracker" />
     <title>Auction War Room</title>
+    <script>
+      try {
+        var t = localStorage.getItem("awr-theme");
+        if (t === "light" || t === "dark") document.documentElement.setAttribute("data-theme", t);
+      } catch (e) {}
+    </script>
   </head>
   <body>
     <div id="root"></div>
