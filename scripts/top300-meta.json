@@ -1,0 +1,22 @@
+{
+  "generatedAt": "2026-07-26T21:33:20.764Z",
+  "method": "Average of FantasyPros expert consensus rank_ave across PPR, Half-PPR, and Standard draft rankings",
+  "sources": [
+    {
+      "label": "PPR",
+      "experts": 89,
+      "updated": "7/26"
+    },
+    {
+      "label": "HALF",
+      "experts": 92,
+      "updated": "7/26"
+    },
+    {
+      "label": "STD",
+      "experts": 89,
+      "updated": "7/26"
+    }
+  ],
+  "count": 300
+}

@@ -9,9 +9,15 @@ export default function Modal({ title, children, onClose }) {
   useEffect(() => {
     const opener = document.activeElement;
     const box = boxRef.current;
+    const shell = document.getElementById("awr-shell");
+    const mobileNav = document.querySelector(".viewnav-mobile");
     const first = box && box.querySelector("input, select, textarea, button");
     if (first) first.focus();
     else if (box) box.focus();
+
+    // Hide background from AT while dialog is open (aria-modal support varies)
+    if (shell) shell.setAttribute("inert", "");
+    if (mobileNav) mobileNav.setAttribute("inert", "");
 
     const onKey = (e) => {
       if (e.key === "Escape") {
@@ -38,6 +44,8 @@ export default function Modal({ title, children, onClose }) {
     document.addEventListener("keydown", onKey, true);
     return () => {
       document.removeEventListener("keydown", onKey, true);
+      if (shell) shell.removeAttribute("inert");
+      if (mobileNav) mobileNav.removeAttribute("inert");
       if (opener && opener.isConnected && typeof opener.focus === "function") opener.focus();
     };
   }, []);
@@ -51,7 +59,7 @@ export default function Modal({ title, children, onClose }) {
     >
       <div className="modal" ref={boxRef} role="dialog" aria-modal="true" aria-label={title} tabIndex={-1}>
         <div className="modal-head">
-          <span className="eyebrow">{title}</span>
+          <h2 className="eyebrow">{title}</h2>
           <button className="icon-btn" onClick={onClose} aria-label="Close dialog">
             <Icon name="cross-small" />
           </button>

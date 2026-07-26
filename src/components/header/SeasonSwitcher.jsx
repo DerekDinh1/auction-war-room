@@ -6,7 +6,13 @@ import { useEffect, useRef, useState } from "react";
 export default function SeasonSwitcher({ seasons, activeId, onSelect, onCreateNext }) {
   const [open, setOpen] = useState(false);
   const wrapRef = useRef(null);
+  const triggerRef = useRef(null);
   const active = seasons.find((s) => s.id === activeId) || seasons[0];
+
+  const close = () => {
+    setOpen(false);
+    triggerRef.current?.focus();
+  };
 
   useEffect(() => {
     if (!open) return;
@@ -14,7 +20,10 @@ export default function SeasonSwitcher({ seasons, activeId, onSelect, onCreateNe
       if (wrapRef.current && !wrapRef.current.contains(e.target)) setOpen(false);
     };
     const onKey = (e) => {
-      if (e.key === "Escape") setOpen(false);
+      if (e.key === "Escape") {
+        e.preventDefault();
+        close();
+      }
     };
     document.addEventListener("mousedown", onDoc);
     document.addEventListener("keydown", onKey);
@@ -29,10 +38,12 @@ export default function SeasonSwitcher({ seasons, activeId, onSelect, onCreateNe
   return (
     <div className="season-switcher" ref={wrapRef}>
       <button
+        ref={triggerRef}
         type="button"
         className="season-trigger"
-        aria-haspopup="listbox"
+        aria-haspopup="menu"
         aria-expanded={open}
+        aria-controls="season-menu"
         onClick={() => setOpen((v) => !v)}
       >
         <span className="season-kicker">Season</span>
@@ -40,17 +51,17 @@ export default function SeasonSwitcher({ seasons, activeId, onSelect, onCreateNe
         <span className="season-caret" aria-hidden="true">▾</span>
       </button>
       {open && (
-        <div className="season-menu" role="listbox" aria-label="Seasons">
+        <div className="season-menu" id="season-menu" role="menu" aria-label="Seasons">
           {seasons.map((s) => (
             <button
               key={s.id}
               type="button"
-              role="option"
-              aria-selected={s.id === activeId}
+              role="menuitemradio"
+              aria-checked={s.id === activeId}
               className={`season-option ${s.id === activeId ? "on" : ""}`}
               onClick={() => {
                 onSelect(s.id);
-                setOpen(false);
+                close();
               }}
             >
               <span className="season-option-name">{s.name}</span>
@@ -61,9 +72,10 @@ export default function SeasonSwitcher({ seasons, activeId, onSelect, onCreateNe
           ))}
           <button
             type="button"
+            role="menuitem"
             className="season-option create"
             onClick={() => {
-              setOpen(false);
+              close();
               onCreateNext();
             }}
           >

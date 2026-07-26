@@ -57,85 +57,117 @@ const TEAM_ALIASES = { JAC: "JAX", WSH: "WAS", ARZ: "ARI", LA: "LAR", OAK: "LV",
 const POSITIONS = ["QB", "RB", "WR", "TE", "K", "DEF"];
 const POS_ORDER = ["QB", "RB", "WR", "TE", "K", "DEF"]; // display order
 
-// Built-in player list [name, pos, team] — verify team/bye for offseason movers
+// Built-in player list [name, pos, team]
+// Top 300 by average FantasyPros expert consensus rank (PPR + Half-PPR + Standard), updated Jul 26, 2026
+// Sources: FantasyPros partners API — ~89–92 experts per scoring format; avg of rank_ave across formats
 const RAW_DB = [
-  // QB
-  ["Josh Allen","QB","BUF"],["Lamar Jackson","QB","BAL"],["Jalen Hurts","QB","PHI"],
-  ["Patrick Mahomes","QB","KC"],["Joe Burrow","QB","CIN"],["Jayden Daniels","QB","WAS"],
-  ["Justin Herbert","QB","LAC"],["Baker Mayfield","QB","TB"],["Jared Goff","QB","DET"],
-  ["Bo Nix","QB","DEN"],["Caleb Williams","QB","CHI"],["Drake Maye","QB","NE"],
-  ["Jordan Love","QB","GB"],["Kyler Murray","QB","ARI"],["Brock Purdy","QB","SF"],
-  ["Dak Prescott","QB","DAL"],["Justin Fields","QB","NYJ"],["C.J. Stroud","QB","HOU"],
-  ["Trevor Lawrence","QB","JAX"],["Tua Tagovailoa","QB","MIA"],["Matthew Stafford","QB","LAR"],
-  ["Bryce Young","QB","CAR"],["Michael Penix Jr.","QB","ATL"],["J.J. McCarthy","QB","MIN"],
-  ["Jaxson Dart","QB","NYG"],["Cam Ward","QB","TEN"],["Geno Smith","QB","LV"],
-  ["Sam Darnold","QB","SEA"],["Daniel Jones","QB","IND"],["Aaron Rodgers","QB","PIT"],
-  // RB
-  ["Bijan Robinson","RB","ATL"],["Saquon Barkley","RB","PHI"],["Jahmyr Gibbs","RB","DET"],
-  ["Christian McCaffrey","RB","SF"],["Derrick Henry","RB","BAL"],["Jonathan Taylor","RB","IND"],
-  ["Ashton Jeanty","RB","LV"],["De'Von Achane","RB","MIA"],["Josh Jacobs","RB","GB"],
-  ["Bucky Irving","RB","TB"],["Chase Brown","RB","CIN"],["Kyren Williams","RB","LAR"],
-  ["James Cook","RB","BUF"],["Breece Hall","RB","NYJ"],["Chuba Hubbard","RB","CAR"],
-  ["Kenneth Walker III","RB","SEA"],["James Conner","RB","ARI"],["Alvin Kamara","RB","NO"],
-  ["David Montgomery","RB","DET"],["Aaron Jones","RB","MIN"],["Omarion Hampton","RB","LAC"],
-  ["TreVeyon Henderson","RB","NE"],["Quinshon Judkins","RB","CLE"],["RJ Harvey","RB","DEN"],
-  ["Kaleb Johnson","RB","PIT"],["D'Andre Swift","RB","CHI"],["Tony Pollard","RB","TEN"],
-  ["Rhamondre Stevenson","RB","NE"],["Joe Mixon","RB","HOU"],["Nick Chubb","RB","HOU"],
-  ["Zach Charbonnet","RB","SEA"],["Tyrone Tracy Jr.","RB","NYG"],["Cam Skattebo","RB","NYG"],
-  ["Javonte Williams","RB","DAL"],["Jaylen Warren","RB","PIT"],["Isiah Pacheco","RB","KC"],
-  ["Brian Robinson Jr.","RB","SF"],["Austin Ekeler","RB","WAS"],["Jordan Mason","RB","MIN"],
-  ["Rachaad White","RB","TB"],["Ray Davis","RB","BUF"],["Tank Bigsby","RB","PHI"],
-  ["Travis Etienne Jr.","RB","JAX"],["Bhayshul Tuten","RB","JAX"],["Jerome Ford","RB","CLE"],
-  ["Najee Harris","RB","LAC"],["J.K. Dobbins","RB","DEN"],["Braelon Allen","RB","NYJ"],
-  ["Tyjae Spears","RB","TEN"],["Blake Corum","RB","LAR"],["Kareem Hunt","RB","KC"],
-  ["Trey Benson","RB","ARI"],["Jaydon Blue","RB","DAL"],["Dylan Sampson","RB","CLE"],
-  ["Woody Marks","RB","HOU"],["Devin Neal","RB","NO"],["Kendre Miller","RB","NO"],
-  ["Rico Dowdle","RB","CAR"],["Kimani Vidal","RB","LAC"],["Justice Hill","RB","BAL"],
-  ["Roschon Johnson","RB","CHI"],["Antonio Gibson","RB","NE"],
-  // WR
-  ["Ja'Marr Chase","WR","CIN"],["Justin Jefferson","WR","MIN"],["CeeDee Lamb","WR","DAL"],
-  ["Puka Nacua","WR","LAR"],["Amon-Ra St. Brown","WR","DET"],["Malik Nabers","WR","NYG"],
-  ["Nico Collins","WR","HOU"],["Brian Thomas Jr.","WR","JAX"],["Drake London","WR","ATL"],
-  ["A.J. Brown","WR","NE"],["Tyreek Hill","WR","MIA"],["Davante Adams","WR","LAR"],
-  ["Mike Evans","WR","TB"],["Terry McLaurin","WR","WAS"],["Garrett Wilson","WR","NYJ"],
-  ["Marvin Harrison Jr.","WR","ARI"],["Rome Odunze","WR","CHI"],["Ladd McConkey","WR","LAC"],
-  ["Jaxon Smith-Njigba","WR","SEA"],["DK Metcalf","WR","PIT"],["Courtland Sutton","WR","DEN"],
-  ["Zay Flowers","WR","BAL"],["DeVonta Smith","WR","PHI"],["Jaylen Waddle","WR","MIA"],
-  ["Rashee Rice","WR","KC"],["Xavier Worthy","WR","KC"],["Tee Higgins","WR","CIN"],
-  ["Jameson Williams","WR","DET"],["Jordan Addison","WR","MIN"],["Chris Olave","WR","NO"],
-  ["Jerry Jeudy","WR","CLE"],["George Pickens","WR","DAL"],["Travis Hunter","WR","JAX"],
-  ["Tetairoa McMillan","WR","CAR"],["Emeka Egbuka","WR","TB"],["Matthew Golden","WR","GB"],
-  ["Jayden Reed","WR","GB"],["Ricky Pearsall","WR","SF"],["Jauan Jennings","WR","SF"],
-  ["Deebo Samuel","WR","WAS"],["Calvin Ridley","WR","TEN"],["Michael Pittman Jr.","WR","IND"],
-  ["Josh Downs","WR","IND"],["Keon Coleman","WR","BUF"],["Khalil Shakir","WR","BUF"],
-  ["Stefon Diggs","WR","NE"],["Chris Godwin","WR","TB"],["Cooper Kupp","WR","SEA"],
-  ["Rashid Shaheed","WR","NO"],["Darnell Mooney","WR","ATL"],["Wan'Dale Robinson","WR","NYG"],
-  ["Luther Burden III","WR","CHI"],["Jack Bech","WR","LV"],["Tre Harris","WR","LAC"],
-  ["Kyle Williams","WR","NE"],["Jayden Higgins","WR","HOU"],["Marvin Mims Jr.","WR","DEN"],
-  ["Quentin Johnston","WR","LAC"],["Brandon Aiyuk","WR","SF"],["Christian Kirk","WR","HOU"],
-  ["Hollywood Brown","WR","KC"],["Cedric Tillman","WR","CLE"],["DJ Moore","WR","CHI"],
-  ["Romeo Doubs","WR","GB"],["Rashod Bateman","WR","BAL"],["Alec Pierce","WR","IND"],
-  ["Jakobi Meyers","WR","JAX"],["Xavier Legette","WR","CAR"],["Keenan Allen","WR","LAC"],
-  ["Adam Thielen","WR","MIN"],
-  // TE
-  ["Brock Bowers","TE","LV"],["Trey McBride","TE","ARI"],["George Kittle","TE","SF"],
-  ["Sam LaPorta","TE","DET"],["T.J. Hockenson","TE","MIN"],["David Njoku","TE","CLE"],
-  ["Mark Andrews","TE","BAL"],["Evan Engram","TE","DEN"],["Tucker Kraft","TE","GB"],
-  ["Dallas Goedert","TE","PHI"],["Jake Ferguson","TE","DAL"],["Tyler Warren","TE","IND"],
-  ["Colston Loveland","TE","CHI"],["Dalton Kincaid","TE","BUF"],["Kyle Pitts","TE","ATL"],
-  ["Hunter Henry","TE","NE"],["Jonnu Smith","TE","PIT"],["Pat Freiermuth","TE","PIT"],
-  ["Zach Ertz","TE","WAS"],["Cade Otton","TE","TB"],["Juwan Johnson","TE","NO"],
-  ["Chig Okonkwo","TE","TEN"],["Isaiah Likely","TE","BAL"],["Harold Fannin Jr.","TE","CLE"],
-  ["Ja'Tavion Sanders","TE","CAR"],["Brenton Strange","TE","JAX"],["Mason Taylor","TE","NYJ"],
-  ["Theo Johnson","TE","NYG"],["Oronde Gadsden II","TE","LAC"],["Travis Kelce","TE","KC"],
-  // K
-  ["Brandon Aubrey","K","DAL"],["Jake Bates","K","DET"],["Cameron Dicker","K","LAC"],
-  ["Chris Boswell","K","PIT"],["Ka'imi Fairbairn","K","HOU"],["Chase McLaughlin","K","TB"],
-  ["Tyler Loop","K","BAL"],["Harrison Butker","K","KC"],["Jason Sanders","K","MIA"],
-  ["Evan McPherson","K","CIN"],["Wil Lutz","K","DEN"],["Jason Myers","K","SEA"],
-  ["Cairo Santos","K","CHI"],["Tyler Bass","K","BUF"],["Matt Gay","K","WAS"],
-  ["Will Reichard","K","MIN"],["Daniel Carlson","K","LV"],["Jake Elliott","K","PHI"],
-  ["Joshua Karty","K","LAR"],["Spencer Shrader","K","IND"],
+  // QB (32)
+  ["Josh Allen","QB","BUF"],["Lamar Jackson","QB","BAL"],["Drake Maye","QB","NE"],
+  ["Joe Burrow","QB","CIN"],["Jayden Daniels","QB","WAS"],["Jalen Hurts","QB","PHI"],
+  ["Caleb Williams","QB","CHI"],["Justin Herbert","QB","LAC"],["Trevor Lawrence","QB","JAX"],
+  ["Dak Prescott","QB","DAL"],["Jaxson Dart","QB","NYG"],["Brock Purdy","QB","SF"],
+  ["Patrick Mahomes II","QB","KC"],["Bo Nix","QB","DEN"],["Matthew Stafford","QB","LAR"],
+  ["Jared Goff","QB","DET"],["Kyler Murray","QB","MIN"],["Jordan Love","QB","GB"],
+  ["Baker Mayfield","QB","TB"],["Tyler Shough","QB","NO"],["Malik Willis","QB","MIA"],
+  ["C.J. Stroud","QB","HOU"],["Sam Darnold","QB","SEA"],["Cam Ward","QB","TEN"],
+  ["Daniel Jones","QB","IND"],["Bryce Young","QB","CAR"],["Jacoby Brissett","QB","ARI"],
+  ["Aaron Rodgers","QB","PIT"],["Geno Smith","QB","NYJ"],["Fernando Mendoza","QB","LV"],
+  ["Tua Tagovailoa","QB","ATL"],["Michael Penix Jr.","QB","ATL"],
+  // RB (91)
+  ["Bijan Robinson","RB","ATL"],["Jahmyr Gibbs","RB","DET"],["Christian McCaffrey","RB","SF"],
+  ["Jonathan Taylor","RB","IND"],["James Cook III","RB","BUF"],["Ashton Jeanty","RB","LV"],
+  ["Saquon Barkley","RB","PHI"],["De'Von Achane","RB","MIA"],["Chase Brown","RB","CIN"],
+  ["Omarion Hampton","RB","LAC"],["Derrick Henry","RB","BAL"],["Kenneth Walker III","RB","KC"],
+  ["Kyren Williams","RB","LAR"],["Jeremiyah Love","RB","ARI"],["Josh Jacobs","RB","GB"],
+  ["Breece Hall","RB","NYJ"],["Javonte Williams","RB","DAL"],["Travis Etienne Jr.","RB","NO"],
+  ["Cam Skattebo","RB","NYG"],["Bucky Irving","RB","TB"],["Quinshon Judkins","RB","CLE"],
+  ["D'Andre Swift","RB","CHI"],["TreVeyon Henderson","RB","NE"],["David Montgomery","RB","HOU"],
+  ["Bhayshul Tuten","RB","JAX"],["Jadarian Price","RB","SEA"],["Jaylen Warren","RB","PIT"],
+  ["Tony Pollard","RB","TEN"],["Rhamondre Stevenson","RB","NE"],["Chuba Hubbard","RB","CAR"],
+  ["Rico Dowdle","RB","PIT"],["RJ Harvey","RB","DEN"],["Kyle Monangai","RB","CHI"],
+  ["J.K. Dobbins","RB","DEN"],["Blake Corum","RB","LAR"],["Kenny Gainwell","RB","TB"],
+  ["Rachaad White","RB","WAS"],["Aaron Jones Sr.","RB","MIN"],["Jacory Croskey-Merritt","RB","WAS"],
+  ["Jonathon Brooks","RB","CAR"],["Jordan Mason","RB","MIN"],["Tyrone Tracy Jr.","RB","NYG"],
+  ["Chris Rodriguez Jr.","RB","JAX"],["Woody Marks","RB","HOU"],["Tyler Allgeier","RB","ARI"],
+  ["Zach Charbonnet","RB","SEA"],["Isiah Pacheco","RB","DET"],["Tyjae Spears","RB","TEN"],
+  ["Dylan Sampson","RB","CLE"],["Alvin Kamara","RB","NO"],["Keaton Mitchell","RB","LAC"],
+  ["Jonah Coleman","RB","DEN"],["Brian Robinson Jr.","RB","ATL"],["Tank Bigsby","RB","PHI"],
+  ["Braelon Allen","RB","NYJ"],["Emanuel Wilson","RB","SEA"],["James Conner","RB","ARI"],
+  ["Emmett Johnson","RB","KC"],["Mike Washington Jr.","RB","LV"],["Kimani Vidal","RB","LAC"],
+  ["Ray Davis","RB","BUF"],["Sean Tucker","RB","TB"],["Nicholas Singleton","RB","TEN"],
+  ["Kaytron Allen","RB","WAS"],["Jaylen Wright","RB","MIA"],["MarShawn Lloyd","RB","GB"],
+  ["Ollie Gordon II","RB","MIA"],["Justice Hill","RB","BAL"],["Demond Claiborne","RB","MIN"],
+  ["Jaydon Blue","RB","DAL"],["Devin Neal","RB","NO"],["Ty Johnson","RB","BUF"],
+  ["Kaleb Johnson","RB","PIT"],["Chris Brooks","RB","GB"],["Jordan James","RB","SF"],
+  ["Isaiah Davis","RB","NYJ"],["DJ Giddens","RB","IND"],["Malik Davis","RB","DAL"],
+  ["George Holani","RB","SEA"],["Trey Benson","RB","ARI"],["Samaje Perine","RB","CIN"],
+  ["Kaelon Black","RB","SF"],["Kendre Miller","RB","NO"],["Najee Harris","RB","LAC"],
+  ["Seth McGowan","RB","IND"],["LeQuint Allen Jr.","RB","JAX"],["Jerome Ford","RB","WAS"],
+  ["Brashard Smith","RB","KC"],["Adam Randall","RB","BAL"],["Emari Demercado","RB","KC"],
+  ["Devin Singletary","RB","NYG"],
+  // WR (110)
+  ["Ja'Marr Chase","WR","CIN"],["Puka Nacua","WR","LAR"],["Jaxon Smith-Njigba","WR","SEA"],
+  ["Amon-Ra St. Brown","WR","DET"],["CeeDee Lamb","WR","DAL"],["Justin Jefferson","WR","MIN"],
+  ["Drake London","WR","ATL"],["A.J. Brown","WR","NE"],["Nico Collins","WR","HOU"],
+  ["George Pickens","WR","DAL"],["Rashee Rice","WR","KC"],["Chris Olave","WR","NO"],
+  ["DeVonta Smith","WR","PHI"],["Tee Higgins","WR","CIN"],["Zay Flowers","WR","BAL"],
+  ["Tetairoa McMillan","WR","CAR"],["Emeka Egbuka","WR","TB"],["Garrett Wilson","WR","NYJ"],
+  ["Ladd McConkey","WR","LAC"],["Malik Nabers","WR","NYG"],["Jaylen Waddle","WR","DEN"],
+  ["Terry McLaurin","WR","WAS"],["Davante Adams","WR","LAR"],["Luther Burden III","WR","CHI"],
+  ["Jameson Williams","WR","DET"],["Mike Evans","WR","SF"],["Christian Watson","WR","GB"],
+  ["DJ Moore","WR","BUF"],["Rome Odunze","WR","CHI"],["Marvin Harrison Jr.","WR","ARI"],
+  ["Carnell Tate","WR","TEN"],["Alec Pierce","WR","IND"],["DK Metcalf","WR","PIT"],
+  ["Brian Thomas Jr.","WR","JAX"],["Courtland Sutton","WR","DEN"],["Chris Godwin Jr.","WR","TB"],
+  ["Parker Washington","WR","JAX"],["Jordyn Tyson","WR","NO"],["Michael Wilson","WR","ARI"],
+  ["Quentin Johnston","WR","LAC"],["Michael Pittman Jr.","WR","PIT"],["Makai Lemon","WR","PHI"],
+  ["Ricky Pearsall","WR","SF"],["Jakobi Meyers","WR","JAX"],["Jordan Addison","WR","MIN"],
+  ["Wan'Dale Robinson","WR","TEN"],["Josh Downs","WR","IND"],["Jayden Reed","WR","GB"],
+  ["Xavier Worthy","WR","KC"],["Jayden Higgins","WR","HOU"],["Khalil Shakir","WR","BUF"],
+  ["Romeo Doubs","WR","NE"],["Jalen Coker","WR","CAR"],["KC Concepcion","WR","CLE"],
+  ["Matthew Golden","WR","GB"],["Rashid Shaheed","WR","SEA"],["Jauan Jennings","WR","MIN"],
+  ["Jerry Jeudy","WR","CLE"],["Denzel Boston","WR","CLE"],["Stefon Diggs","WR","NE"],
+  ["Omar Cooper Jr.","WR","NYJ"],["Jalen McMillan","WR","TB"],["Adonai Mitchell","WR","NYJ"],
+  ["Travis Hunter","WR","JAX"],["Tre Tucker","WR","LV"],["Tre' Harris","WR","LAC"],
+  ["Kayshon Boutte","WR","NE"],["Ryan Flournoy","WR","DAL"],["Antonio Williams","WR","WAS"],
+  ["Deebo Samuel Sr.","WR","WAS"],["Troy Franklin","WR","DEN"],["Isaac TeSlaa","WR","DET"],
+  ["Calvin Ridley","WR","TEN"],["Jaylin Noel","WR","HOU"],["Jalen Nailor","WR","LV"],
+  ["Darnell Mooney","WR","NYG"],["Brandon Aiyuk","WR","SF"],["Dontayvion Wicks","WR","PHI"],
+  ["Pat Bryant","WR","DEN"],["Malik Washington","WR","MIA"],["Rashod Bateman","WR","BAL"],
+  ["Tank Dell","WR","HOU"],["Chimere Dike","WR","TEN"],["Tyreek Hill","WR","MIA"],
+  ["De'Zhaun Stribling","WR","SF"],["Germie Bernard","WR","PIT"],["Cooper Kupp","WR","SEA"],
+  ["Elic Ayomanor","WR","TEN"],["Zachariah Branch","WR","ATL"],["Chris Bell","WR","MIA"],
+  ["Keon Coleman","WR","BUF"],["Elijah Sarratt","WR","BAL"],["Jack Bech","WR","LV"],
+  ["Ted Hurst III","WR","TB"],["Christian Kirk","WR","SF"],["Malachi Fields","WR","NYG"],
+  ["Tory Horton","WR","SEA"],["Marvin Mims Jr.","WR","DEN"],["Chris Brazzell II","WR","CAR"],
+  ["Tyquan Thornton","WR","KC"],["Darius Slayton","WR","NYG"],["Kyle Williams","WR","NE"],
+  ["Andrei Iosivas","WR","CIN"],["Xavier Legette","WR","CAR"],["Keenan Allen","WR","LAC"],
+  ["Devaughn Vele","WR","NO"],["Mack Hollins","WR","NE"],["Ja'Kobi Lane","WR","BAL"],
+  ["Skyler Bell","WR","BUF"],["Hollywood Brown","WR","PHI"],
+  // TE (37)
+  ["Brock Bowers","TE","LV"],["Trey McBride","TE","ARI"],["Colston Loveland","TE","CHI"],
+  ["Tyler Warren","TE","IND"],["Tucker Kraft","TE","GB"],["Harold Fannin Jr.","TE","CLE"],
+  ["Kyle Pitts Sr.","TE","ATL"],["Sam LaPorta","TE","DET"],["George Kittle","TE","SF"],
+  ["Travis Kelce","TE","KC"],["Dalton Kincaid","TE","BUF"],["Jake Ferguson","TE","DAL"],
+  ["Isaiah Likely","TE","NYG"],["Dallas Goedert","TE","PHI"],["Mark Andrews","TE","BAL"],
+  ["Brenton Strange","TE","JAX"],["Juwan Johnson","TE","NO"],["Hunter Henry","TE","NE"],
+  ["Oronde Gadsden II","TE","LAC"],["Chig Okonkwo","TE","WAS"],["Dalton Schultz","TE","HOU"],
+  ["AJ Barner","TE","SEA"],["T.J. Hockenson","TE","MIN"],["Kenyon Sadiq","TE","NYJ"],
+  ["Greg Dulcich","TE","MIA"],["Gunnar Helm","TE","TEN"],["Terrance Ferguson","TE","LAR"],
+  ["Pat Freiermuth","TE","PIT"],["David Njoku","TE","LAC"],["Cade Otton","TE","TB"],
+  ["Colby Parkinson","TE","LAR"],["Evan Engram","TE","DEN"],["Mike Gesicki","TE","CIN"],
+  ["Eli Stowers","TE","PHI"],["Theo Johnson","TE","NYG"],["Mason Taylor","TE","NYJ"],
+  ["Jake Tonges","TE","SF"],
+  // K (30)
+  ["Brandon Aubrey","K","DAL"],["Ka'imi Fairbairn","K","HOU"],["Cameron Dicker","K","LAC"],
+  ["Cam Little","K","JAX"],["Jason Myers","K","SEA"],["Eddy Pineiro","K","SF"],
+  ["Tyler Loop","K","BAL"],["Evan McPherson","K","CIN"],["Cairo Santos","K","CHI"],
+  ["Andy Borregales","K","NE"],["Chase McLaughlin","K","TB"],["Jake Bates","K","DET"],
+  ["Nick Folk","K","ATL"],["Harrison Mevis","K","LAR"],["Brandon McManus","K","GB"],
+  ["Blake Grupe","K","IND"],["Daniel Carlson","K","LV"],["Ryan Fitzgerald","K","CAR"],
+  ["Harrison Butker","K","KC"],["Chris Boswell","K","PIT"],["Jake Moody","K","WAS"],
+  ["Trey Smack","K","GB"],["Ben Sauls","K","NYG"],["Spencer Shrader","K","IND"],
+  ["Tyler Bass","K","BUF"],["Will Reichard","K","MIN"],["Wil Lutz","K","DEN"],
+  ["Joey Slye","K","TEN"],["Charlie Smyth","K","NO"],["Jake Elliott","K","PHI"],
 ];
 const DEF_NAMES = {
   ARI:"Cardinals", ATL:"Falcons", BAL:"Ravens", BUF:"Bills", CAR:"Panthers", CHI:"Bears",
@@ -362,29 +394,73 @@ function fuzzyMatch(query, pos, limit = 8) {
   return scored.slice(0, limit).map((x) => x[1]);
 }
 
-function NameAutocomplete({ value, onChange, onSelect, placeholder, inputRef, posFilter, ariaLabel }) {
+function NameAutocomplete({ value, onChange, onSelect, placeholder, inputRef, posFilter, ariaLabel, listId = "asst-ac-list" }) {
   const [open, setOpen] = useState(false);
+  const [activeIdx, setActiveIdx] = useState(-1);
   const sugg = useMemo(() => {
     if (!value || value.length < 2) return [];
     return fuzzyMatch(value, posFilter, 8);
   }, [value, posFilter]);
+  const expanded = open && sugg.length > 0;
+  const activeId = expanded && activeIdx >= 0 && sugg[activeIdx] ? `${listId}-opt-${sugg[activeIdx].id}` : undefined;
+
+  useEffect(() => { setActiveIdx(-1); }, [value, posFilter]);
+
+  const pick = (p) => {
+    onSelect(p);
+    setOpen(false);
+    setActiveIdx(-1);
+  };
+
   return (
     <div className="ac-wrap">
       <input
         ref={inputRef}
         className="field"
+        role="combobox"
+        aria-autocomplete="list"
+        aria-haspopup="listbox"
+        aria-expanded={expanded}
+        aria-controls={listId}
+        aria-activedescendant={activeId}
         value={value}
         placeholder={placeholder}
         aria-label={ariaLabel || placeholder}
-        onChange={(e) => { onChange(e.target.value); setOpen(true); }}
+        onChange={(e) => { onChange(e.target.value); setOpen(true); setActiveIdx(-1); }}
         onFocus={() => setOpen(true)}
-        onBlur={() => setTimeout(() => setOpen(false), 150)}
+        onBlur={() => setTimeout(() => setOpen(false), 200)}
+        onKeyDown={(e) => {
+          if (!sugg.length) return;
+          if (e.key === "ArrowDown") {
+            e.preventDefault();
+            setOpen(true);
+            setActiveIdx((i) => (i + 1) % sugg.length);
+          } else if (e.key === "ArrowUp") {
+            e.preventDefault();
+            setOpen(true);
+            setActiveIdx((i) => (i <= 0 ? sugg.length - 1 : i - 1));
+          } else if (e.key === "Enter" && activeIdx >= 0 && sugg[activeIdx]) {
+            e.preventDefault();
+            pick(sugg[activeIdx]);
+          } else if (e.key === "Escape") {
+            setOpen(false);
+            setActiveIdx(-1);
+          }
+        }}
         autoComplete="off"
       />
-      {open && sugg.length > 0 && (
-        <div className="ac-list">
-          {sugg.map((p) => (
-            <button key={p.id} className="ac-item" onMouseDown={(e) => { e.preventDefault(); onSelect(p); setOpen(false); }}>
+      {expanded && (
+        <div className="ac-list" id={listId} role="listbox" aria-label="Player suggestions">
+          {sugg.map((p, i) => (
+            <button
+              key={p.id}
+              id={`${listId}-opt-${p.id}`}
+              type="button"
+              role="option"
+              aria-selected={i === activeIdx}
+              className={`ac-item${i === activeIdx ? " active" : ""}`}
+              onMouseDown={(e) => { e.preventDefault(); pick(p); }}
+            >
               <span>{p.name}</span>
               <span className="ac-meta">{p.pos} · {p.team} · Bye {p.bye}</span>
             </button>
@@ -428,6 +504,12 @@ export default function AuctionWarRoom() {
   const showToast = useCallback((msg, type = "info") => {
     setToast({ msg, type, id: Date.now() });
   }, []);
+
+  const changeView = useCallback((next) => {
+    setView(next);
+    window.scrollTo(0, 0);
+  }, []);
+
   useEffect(() => {
     if (!toast) return;
     const t = setTimeout(() => setToast(null), 3500);
@@ -1260,7 +1342,12 @@ export default function AuctionWarRoom() {
                 {analysis ? (
                   <>
                     <div className="call-head">
-                      <div className={`verdict ${analysis.tier}`} aria-live="polite">
+                      <div
+                        className={`verdict ${analysis.tier}`}
+                        role="status"
+                        aria-live="polite"
+                        aria-atomic="true"
+                      >
                         {analysis.tier === "idle" ? "READY" : analysis.tier === "bid" ? "BID" : analysis.tier === "value" ? "VALUE" : analysis.tier === "caution" ? "CAUTION" : "PASS"}
                       </div>
                       <div className="call-hero">
@@ -1269,12 +1356,12 @@ export default function AuctionWarRoom() {
                       </div>
                     </div>
                     <p className="verdict-why">{analysis.why}</p>
-                    <div className="verdict-nums" aria-label="Bid context">
-                      <div><label>Bid</label><span className="vn">{analysis.hasBid ? money(analysis.bid) : "—"}</span></div>
-                      <div><label>Proj</label><span className="vn">{analysis.V != null ? money(analysis.V) : "—"}{analysis.projIn == null && analysis.V != null ? <em> est</em> : null}</span></div>
-                      <div><label>Abs max</label><span className="vn">{money(analysis.absMax)}</span></div>
-                      <div><label>Fills</label><span className="vn">{analysis.slotLabel || "—"}</span></div>
-                    </div>
+                    <dl className="verdict-nums" aria-label="Bid context">
+                      <div><dt>Bid</dt><dd className="vn">{analysis.hasBid ? money(analysis.bid) : "—"}</dd></div>
+                      <div><dt>Proj</dt><dd className="vn">{analysis.V != null ? money(analysis.V) : "—"}{analysis.projIn == null && analysis.V != null ? <em> est</em> : null}</dd></div>
+                      <div><dt>Abs max</dt><dd className="vn">{money(analysis.absMax)}</dd></div>
+                      <div><dt>Fills</dt><dd className="vn">{analysis.slotLabel || "—"}</dd></div>
+                    </dl>
                     <PriceMeter bid={analysis.hasBid ? analysis.bid : null} V={analysis.V} recMax={analysis.recMax} absMax={analysis.absMax} tier={analysis.tier} />
                   </>
                 ) : (
@@ -1290,26 +1377,37 @@ export default function AuctionWarRoom() {
                     <div className="empty-note compact">Load a player to compare next-best options.</div>
                   ) : (
                     <div className="alt-table">
-                      <div className="alt-cols alt-head" role="row">
-                        <span className="alt-tier">Tier</span>
-                        <span className="alt-name">Player name</span>
-                        <span className="alt-team">Team</span>
-                        <span className="alt-bye">Bye</span>
-                        <span className="alt-est">Max price</span>
-                        <span className="alt-action-h" aria-hidden="true" />
-                      </div>
-                      <ul className="alt-list">
-                        {alternatives.map((p) => (
-                          <li key={p.id} className="alt-cols alt-row">
-                            <button type="button" className="alt-tier" onClick={() => pickAssistantPlayer(p)} title="Load into assistant">T{p.tier}</button>
-                            <button type="button" className="alt-name" onClick={() => pickAssistantPlayer(p)} title="Load into assistant">{p.name}</button>
-                            <button type="button" className="alt-team" onClick={() => pickAssistantPlayer(p)} title="Load into assistant">{p.team || "—"}</button>
-                            <button type="button" className="alt-bye" onClick={() => pickAssistantPlayer(p)} title="Load into assistant">{p.bye ?? "—"}</button>
-                            <button type="button" className="alt-est" onClick={() => pickAssistantPlayer(p)} title="Load into assistant">{p.est != null ? money(p.est) : "—"}</button>
-                            <button className="icon-btn alt-gone" title="Mark off the board" aria-label={`Mark ${p.name} off the board`} onClick={() => setPriceAsk({ mode: "gone", player: p })}><Ic name="cross-small" fb="✕" /></button>
-                          </li>
-                        ))}
-                      </ul>
+                      <table className="alt-table-el">
+                        <caption className="sr-only">Still available{assistant.pos ? ` at ${assistant.pos}` : ""}</caption>
+                        <thead>
+                          <tr>
+                            <th scope="col">Tier</th>
+                            <th scope="col">Player name</th>
+                            <th scope="col">Team</th>
+                            <th scope="col">Bye</th>
+                            <th scope="col" className="num">Max price</th>
+                            <th scope="col" className="sr-only">Actions</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {alternatives.map((p) => (
+                            <tr key={p.id}>
+                              <td className="alt-tier">T{p.tier}</td>
+                              <td className="alt-name">
+                                <button type="button" className="linklike" onClick={() => pickAssistantPlayer(p)} aria-label={`Load ${p.name} into assistant`}>
+                                  {p.name}
+                                </button>
+                              </td>
+                              <td className="alt-team">{p.team || "—"}</td>
+                              <td className="alt-bye">{p.bye ?? "—"}</td>
+                              <td className="alt-est num">{p.est != null ? money(p.est) : "—"}</td>
+                              <td>
+                                <button className="icon-btn alt-gone" title="Mark off the board" aria-label={`Mark ${p.name} off the board`} onClick={() => setPriceAsk({ mode: "gone", player: p })}><Ic name="cross-small" fb="✕" /></button>
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
                     </div>
                   )}
                 </div>
@@ -1325,10 +1423,18 @@ export default function AuctionWarRoom() {
             <span className="eyebrow">My roster</span>
             <span className="panel-side">{openStarters.length > 0 ? `${openStarters.length} starting spots open` : "Starters set"}</span>
           </div>
-          <div className="table-scroll">
+          <div className="table-scroll roster-scroll">
           <table className="roster">
             <thead>
-              <tr><th>Slot</th><th>Player</th><th>Team</th><th>Bye</th><th className="num">Paid</th><th className="num hide-xs">Value</th><th></th></tr>
+              <tr>
+                <th scope="col" className="col-slot">Slot</th>
+                <th scope="col" className="col-player">Player</th>
+                <th scope="col" className="col-team">Team</th>
+                <th scope="col" className="col-bye">Bye</th>
+                <th scope="col" className="num col-paid">Paid</th>
+                <th scope="col" className="num hide-xs col-value">Value</th>
+                <th scope="col" className="sr-only col-actions">Actions</th>
+              </tr>
             </thead>
             <tbody>
               {SLOTS.map((s) => {
@@ -1336,26 +1442,58 @@ export default function AuctionWarRoom() {
                 const benchDivider = s.id === "B1";
                 const rows = [];
                 if (benchDivider) rows.push(
-                  <tr key="bench-div" className="divider-row"><td colSpan={7}>Bench</td></tr>
+                  <tr key="bench-div" className="divider-row">
+                    <td className="col-slot" aria-hidden="true"></td>
+                    <td className="col-player">Bench</td>
+                    <td className="col-team" aria-hidden="true"></td>
+                    <td className="col-bye" aria-hidden="true"></td>
+                    <td className="col-paid" aria-hidden="true"></td>
+                    <td className="hide-xs col-value" aria-hidden="true"></td>
+                    <td className="col-actions" aria-hidden="true"></td>
+                  </tr>
                 );
                 if (!p) {
                   rows.push(
                     <tr key={s.id} className={`empty-row ${s.starter ? "need" : ""}`}>
-                      <td className="slot">{s.label}</td>
-                      <td colSpan={6} className="empty-cell">{s.starter ? `Open — needs ${s.accepts.join("/")}` : "Open"}</td>
+                      <td className="slot col-slot">
+                        <span className="slot-full">{s.label}</span>
+                        <span className="slot-short">{s.starter ? s.label : s.id.replace(/^B/, "BN")}</span>
+                      </td>
+                      <td className="empty-cell col-player">
+                        {s.starter ? (
+                          <>
+                            <span className="empty-full">Open — needs {s.accepts.join("/")}</span>
+                            <span className="empty-short">Needs {s.accepts.join("/")}</span>
+                          </>
+                        ) : "Open"}
+                      </td>
+                      <td className="col-team" aria-hidden="true"></td>
+                      <td className="col-bye" aria-hidden="true"></td>
+                      <td className="num col-paid" aria-hidden="true"></td>
+                      <td className="num hide-xs col-value" aria-hidden="true"></td>
+                      <td className="actions col-actions" aria-hidden="true"></td>
                     </tr>
                   );
                 } else {
                   const v = p.proj != null ? Number(p.proj) - p.price : null;
+                  const meta = [p.team || null, p.bye ? `Bye ${p.bye}` : null].filter(Boolean).join(" · ");
                   rows.push(
                     <tr key={s.id}>
-                      <td className="slot">{s.label}</td>
-                      <td className="pname">{p.name}<span className={`pos-chip p-${p.pos}`}>{p.pos}</span>{p.bye && byeInfo.groups[p.bye]?.length >= 3 ? <span className="bye-flag" title="Bye-week pileup"><Ic name="flag" fb="⚑" /></span> : null}</td>
-                      <td>{p.team || "—"}</td>
-                      <td>{p.bye || "—"}</td>
-                      <td className="num money">{money(p.price)}</td>
-                      <td className={`num val hide-xs ${v == null ? "" : valueTone(v)}`}>{v == null ? "—" : v > 0 ? `+$${v}` : money(v)}</td>
-                      <td className="actions">
+                      <td className="slot col-slot">
+                        <span className="slot-full">{s.label}</span>
+                        <span className="slot-short">{s.starter ? s.label : s.id.replace(/^B/, "BN")}</span>
+                      </td>
+                      <td className="pname col-player">
+                        <span className="pname-main">{p.name}</span>
+                        <span className={`pos-chip p-${p.pos}`}>{p.pos}</span>
+                        {p.bye && byeInfo.groups[p.bye]?.length >= 3 ? <span className="bye-flag" title="Bye-week pileup"><Ic name="flag" fb="⚑" /></span> : null}
+                        {meta ? <span className="pname-meta">{meta}</span> : null}
+                      </td>
+                      <td className="col-team">{p.team || "—"}</td>
+                      <td className="col-bye">{p.bye || "—"}</td>
+                      <td className="num money col-paid">{money(p.price)}</td>
+                      <td className={`num val hide-xs col-value ${v == null ? "" : valueTone(v)}`}>{v == null ? "—" : v > 0 ? `+$${v}` : money(v)}</td>
+                      <td className="actions col-actions">
                         <select className="move" value="" aria-label={`Move ${p.name} to another slot`} onChange={(e) => { movePlayer(p.id, e.target.value); e.target.value = ""; }} title="Move player">
                           <option value="" disabled>Move</option>
                           {SLOTS.filter((t2) => t2.id !== s.id && t2.accepts.includes(p.pos)).map((t2) => (
@@ -1373,10 +1511,13 @@ export default function AuctionWarRoom() {
             </tbody>
             <tfoot>
               <tr>
-                <td colSpan={4} className="tfoot-label">Total spent</td>
-                <td className="num money">{money(spent)}</td>
-                <td className={`num val hide-xs ${projected.length ? valueTone(totalValue) : ""}`}>{projected.length ? (totalValue > 0 ? `+$${totalValue}` : money(totalValue)) : "—"}</td>
-                <td></td>
+                <td className="col-slot" aria-hidden="true"></td>
+                <td className="tfoot-label col-player">Total spent</td>
+                <td className="col-team" aria-hidden="true"></td>
+                <td className="col-bye" aria-hidden="true"></td>
+                <td className="num money col-paid">{money(spent)}</td>
+                <td className={`num val hide-xs col-value ${projected.length ? valueTone(totalValue) : ""}`}>{projected.length ? (totalValue > 0 ? `+$${totalValue}` : money(totalValue)) : "—"}</td>
+                <td className="col-actions" aria-hidden="true"></td>
               </tr>
             </tfoot>
           </table>
@@ -1734,7 +1875,8 @@ export default function AuctionWarRoom() {
   );
 
   return (
-    <div className={`root view-${view}`}>
+    <div className={`root view-${view}`} id="awr-root">
+      <div id="awr-shell">
       <div className="topbar">
         <CommandHeader
           settingsLabel={settingsLabel}
@@ -1764,7 +1906,12 @@ export default function AuctionWarRoom() {
           onSelectQuick={selectQuick}
           onRunQuickAdd={runQuickAdd}
         />
-        <ViewNav items={navItems} view={view} onChange={setView} />
+        <ViewNav
+          variant="desktop"
+          items={navItems}
+          view={view}
+          onChange={changeView}
+        />
       </div>
 
       <main className={`layout view-${view}`}>
@@ -1810,6 +1957,15 @@ export default function AuctionWarRoom() {
         {activeSeason ? `${activeSeason.name}. ` : ""}
         Bye weeks preloaded from the official 2026 schedule. Rosters move in the offseason — double-check team/bye when a suggestion looks stale. Icons: <a className="foot-link" href="https://www.flaticon.com/uicons" target="_blank" rel="noreferrer">Uicons by Flaticon</a>.
       </footer>
+      </div>
+
+      {/* Same items + changeView as desktop; portaled so fixed positioning is never trapped */}
+      <ViewNav
+        variant="mobile"
+        items={navItems}
+        view={view}
+        onChange={changeView}
+      />
 
       {/* ======= modals & toast ======= */}
       {confirmBox && (
@@ -1891,7 +2047,15 @@ export default function AuctionWarRoom() {
         </Modal>
       )}
 
-      {toast && <div className={`toast ${toast.type}`} key={toast.id}>{toast.msg}</div>}
+      <div
+        className={`toast ${toast?.type || ""}`}
+        role={toast?.type === "err" ? "alert" : "status"}
+        aria-live={toast?.type === "err" ? "assertive" : "polite"}
+        aria-atomic="true"
+        aria-hidden={!toast}
+      >
+        {toast?.msg || ""}
+      </div>
     </div>
   );
 }
