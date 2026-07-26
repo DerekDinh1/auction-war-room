@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useMemo, useCallback } from "react";
+import React, { useState, useEffect, useLayoutEffect, useRef, useMemo, useCallback } from "react";
 import { CommandHeader, ViewNav, Modal, Icon, SeasonsPanel } from "./components/index.js";
 import { money } from "./lib/format.js";
 import { storageGet, storageSet } from "./lib/storage.js";
@@ -405,6 +405,57 @@ function estValue(pos, name) {
   return Math.max(1, Math.round(v));
 }
 const tierOf = (name) => { const r = POS_RANK[norm(name)]; return r ? Math.ceil(r / 6) : null; };
+
+function resolveBye(player) {
+  if (player?.bye != null && player.bye !== "") {
+    const n = Number(player.bye);
+    if (Number.isFinite(n) && n > 0) return n;
+  }
+  return TEAM_BYES[player?.team] || null;
+}
+
+/** Bye overlap if `candidate` were added to `roster`. null when clean. */
+function assessByeConflict(roster, candidate, slotById = {}) {
+  const week = resolveBye(candidate);
+  if (!week) return null;
+  const mates = (roster || []).filter((p) => resolveBye(p) === week);
+  if (!mates.length) return null;
+
+  const starterMates = mates.filter((p) => slotById[p.slot]?.starter);
+  const samePosStarters = starterMates.filter((p) => p.pos === candidate.pos);
+  const qb = roster.find((p) => p.slot === "QB");
+  const te = roster.find((p) => p.slot === "TE");
+  const short = (p) => (p.name || "").split(/\s+/).filter(Boolean).pop() || p.name;
+  const qbTeClash =
+    (candidate.pos === "TE" && qb && resolveBye(qb) === week) ||
+    (candidate.pos === "QB" && te && resolveBye(te) === week);
+
+  let level = 1;
+  if (starterMates.length >= 2 || mates.length >= 3 || samePosStarters.length >= 1 || qbTeClash) level = 2;
+
+  let message;
+  if (starterMates.length >= 2) {
+    message = `Week ${week} bye with ${starterMates.length} starters (${starterMates.map(short).join(", ")})`;
+  } else if (samePosStarters.length >= 1) {
+    message = `Week ${week} stacks another ${candidate.pos} starter (${short(samePosStarters[0])})`;
+  } else if (candidate.pos === "TE" && qb && resolveBye(qb) === week) {
+    message = `Same Week ${week} bye as your QB`;
+  } else if (candidate.pos === "QB" && te && resolveBye(te) === week) {
+    message = `Same Week ${week} bye as your TE`;
+  } else if (mates.length >= 3) {
+    message = `Week ${week} already has ${mates.length} players`;
+  } else if (starterMates.length === 1) {
+    message = `Week ${week} bye with ${starterMates[0].pos} ${short(starterMates[0])}`;
+  } else {
+    message = `Week ${week} bye with ${mates.map(short).join(", ")}`;
+  }
+
+  const chip = starterMates.length
+    ? `Bye ${week} · ${starterMates.map(short).join(", ")}`
+    : `Bye ${week} · overlap`;
+
+  return { level, message, chip, week, mates, starterMates };
+}
 
 /* ---------- fuzzy player matching ---------- */
 function editDist(a, b, cap) {
@@ -1025,17 +1076,11 @@ export default function AuctionWarRoom() {
     const deep = posCounts[pos] >= (depthTargets[pos] || 1) && !fillsDedicated && !fillsFlex;
 
     // bye impact if added
-    const byeNum = assistant.bye ? Number(assistant.bye) : null;
-    let byeIssue = null;
-    if (byeNum) {
-      const same = players.filter((p) => p.bye === byeNum);
-      const sameStarters = same.filter((p) => SLOT_BY_ID[p.slot]?.starter);
-      const qb = players.find((p) => p.slot === "QB"), te = players.find((p) => p.slot === "TE");
-      if ((fillsDedicated || fillsFlex) && sameStarters.length >= 2) byeIssue = `would put ${sameStarters.length + 1} starters on the Week ${byeNum} bye`;
-      else if (same.length >= 3) byeIssue = `would stack ${same.length + 1} players on the Week ${byeNum} bye`;
-      else if (pos === "TE" && qb && qb.bye === byeNum) byeIssue = `shares the Week ${byeNum} bye with your QB`;
-      else if (pos === "QB" && te && te.bye === byeNum) byeIssue = `shares the Week ${byeNum} bye with your TE`;
-    }
+    const byeConflict = assessByeConflict(
+      players,
+      { name: assistant.name, pos, team: assistant.team, bye: assistant.bye },
+      SLOT_BY_ID,
+    );
 
     // need weighting
     let mult;
@@ -1045,7 +1090,7 @@ export default function AuctionWarRoom() {
     else if (deep) mult = 0.85;
     else mult = 0.95;
     if ((pos === "RB" || pos === "WR") && posCounts[pos] === 0) mult += 0.05;
-    if (byeIssue) mult -= 0.06;
+    if (byeConflict) mult -= byeConflict.level >= 2 ? 0.08 : 0.04;
 
     const otherOpenStarters = openStarters.filter((s) => s.id !== slot);
     const softReserve = otherOpenStarters.length * 3; // keep some powder for other starters
@@ -1091,11 +1136,11 @@ export default function AuctionWarRoom() {
     } else {
       tier = "caution"; why.push(`No projection available — anchor on your ${money(recMax)} cap.`);
     }
-    if (byeIssue && tier !== "pass" && tier !== "idle") why.push(`Bye note: ${byeIssue}.`);
+    if (byeConflict && tier !== "pass" && tier !== "idle") why.push(`Bye note: ${byeConflict.message}.`);
     if (budgetHealth === "tight" && tier === "bid") { tier = "value"; why.push("Budget is tight — don't stretch past the number."); }
 
-    return { pos, V, est, projIn, preset, bid, hasBid, suggested, recMax, absMax: maxBid, tier, why: why.join(" "), slot, slotLabel, discount };
-  }, [assistant, players, posCounts, openStarters, maxBid, spotsLeft, budgetHealth]);
+    return { pos, V, est, projIn, preset, bid, hasBid, suggested, recMax, absMax: maxBid, tier, why: why.join(" "), slot, slotLabel, discount, byeConflict };
+  }, [assistant, players, posCounts, openStarters, maxBid, spotsLeft, budgetHealth, SLOT_BY_ID]);
 
   /* ------- market inflation from off-the-board prices ------- */
   const market = useMemo(() => {
@@ -1443,16 +1488,19 @@ export default function AuctionWarRoom() {
         est: adjEst(p.pos, p.name),
         rank: POS_RANK[norm(p.name)] || 999,
         overall: OVERALL_RANK[norm(p.name)] || 9999,
+        byeConflict: assessByeConflict(players, p, SLOT_BY_ID),
       });
     });
     Object.entries(board).forEach(([k, b]) => {
       if (!b?.name || b.status === "gone" || b.status === "mine") return;
       if (draftedNames.has(norm(b.name))) return;
       if (pool.some((r) => r.key === k)) return;
-      pool.push({
+      const custom = {
         id: `x-${k}`, name: b.name, pos: b.pos || "", team: b.team || "", bye: b.bye || null,
         key: k, star: !!b.star, est: adjEst(b.pos, b.name), rank: 999, overall: 9999,
-      });
+      };
+      custom.byeConflict = assessByeConflict(players, custom, SLOT_BY_ID);
+      pool.push(custom);
     });
 
     // Best = highest on the top-300 overall board (not auction $)
@@ -1482,7 +1530,7 @@ export default function AuctionWarRoom() {
     }
 
     return { overall, need, needReason };
-  }, [spotsLeft, players, board, adjEst, posNeed, posCounts, flexOpen, settings.flexEligible]);
+  }, [spotsLeft, players, board, adjEst, posNeed, posCounts, flexOpen, settings.flexEligible, SLOT_BY_ID]);
 
   const boardCounts = useMemo(() => {
     const vals = Object.values(board);
@@ -1663,6 +1711,12 @@ export default function AuctionWarRoom() {
                       </div>
                     </div>
                     <p className="verdict-why">{analysis.why}</p>
+                    {analysis.byeConflict ? (
+                      <div className={`bye-callout lv-${analysis.byeConflict.level}`} role="status">
+                        <span className="bye-callout-label">Bye watch</span>
+                        <span className="bye-callout-msg">{analysis.byeConflict.message}</span>
+                      </div>
+                    ) : null}
                     <dl className="verdict-nums" aria-label="Bid context">
                       <div><dt>Bid</dt><dd className="vn">{analysis.hasBid ? money(analysis.bid) : "—"}</dd></div>
                       <div><dt>Proj</dt><dd className="vn">{analysis.V != null ? money(analysis.V) : "—"}{analysis.projIn == null && analysis.V != null ? <em> est</em> : null}</dd></div>
@@ -1697,8 +1751,10 @@ export default function AuctionWarRoom() {
                           </tr>
                         </thead>
                         <tbody>
-                          {alternatives.map((p) => (
-                            <tr key={p.id}>
+                          {alternatives.map((p) => {
+                            const altBye = assessByeConflict(players, p, SLOT_BY_ID);
+                            return (
+                            <tr key={p.id} className={altBye ? `bye-row-hit lv-${altBye.level}` : ""}>
                               <td className="alt-tier">T{p.tier}</td>
                               <td className="alt-name">
                                 <button type="button" className="linklike" onClick={() => pickAssistantPlayer(p)} aria-label={`Load ${p.name} into assistant`}>
@@ -1706,13 +1762,17 @@ export default function AuctionWarRoom() {
                                 </button>
                               </td>
                               <td className="alt-team">{p.team || "—"}</td>
-                              <td className="alt-bye">{p.bye ?? "—"}</td>
+                              <td className={`alt-bye${altBye ? ` hit lv-${altBye.level}` : ""}`} title={altBye?.message || undefined}>
+                                {p.bye ?? "—"}
+                                {altBye ? <span className="bye-dot" aria-hidden="true" /> : null}
+                              </td>
                               <td className="alt-est num">{p.est != null ? money(p.est) : "—"}</td>
                               <td>
                                 <button className="icon-btn alt-gone" title="Mark off the board" aria-label={`Mark ${p.name} off the board`} onClick={() => setPriceAsk({ mode: "gone", player: p })}><Ic name="cross-small" fb="✕" /></button>
                               </td>
                             </tr>
-                          ))}
+                            );
+                          })}
                         </tbody>
                       </table>
                     </div>
@@ -2021,13 +2081,16 @@ export default function AuctionWarRoom() {
           <span className="panel-side">tap to load the assistant</span>
         </div>
         <div className="suggest-list">
-          {rows.map((row) => (
+          {rows.map((row) => {
+            const bye = row.player.byeConflict || assessByeConflict(players, row.player, SLOT_BY_ID);
+            const byeWeek = resolveBye(row.player);
+            return (
             <button
               key={row.key}
               type="button"
-              className="suggest-row"
+              className={`suggest-row${bye ? ` has-bye-warn lv-${bye.level}` : ""}`}
               onClick={() => loadSuggestion(row.player)}
-              aria-label={`Load ${row.player.name} into assistant`}
+              aria-label={`Load ${row.player.name} into assistant${bye ? `. ${bye.message}` : ""}`}
             >
               <span className="suggest-label">
                 {row.label}
@@ -2037,10 +2100,16 @@ export default function AuctionWarRoom() {
                 <span className="suggest-name">{row.player.name}</span>
                 <span className={`posb p-${row.player.pos}`}>{row.player.pos}</span>
                 {row.player.team ? <span className="suggest-meta">{row.player.team}</span> : null}
+                {byeWeek ? (
+                  <span className={`suggest-bye${bye ? ` lv-${bye.level}` : ""}`} title={bye?.message || `Bye week ${byeWeek}`}>
+                    {bye ? bye.chip : `Bye ${byeWeek}`}
+                  </span>
+                ) : null}
               </span>
               <span className="suggest-est">{row.player.est != null ? money(row.player.est) : "—"}</span>
             </button>
-          ))}
+            );
+          })}
         </div>
       </section>
     );
@@ -2119,6 +2188,18 @@ export default function AuctionWarRoom() {
                         <span className="tps-player">
                           <span className={`posb p-${p.pos}`}>{p.pos}</span>
                           <span className="tps-name">{p.name}</span>
+                          {p.bye ? (
+                            <span
+                              className={`tps-bye${byeInfo.weekMeta[p.bye]?.severity === "danger" || byeInfo.weekMeta[p.bye]?.severity === "warn" ? ` ${byeInfo.weekMeta[p.bye].severity}` : byeInfo.weekMeta[p.bye]?.shared ? " shared" : ""}`}
+                              title={
+                                byeInfo.weekMeta[p.bye]?.severity === "danger" || byeInfo.weekMeta[p.bye]?.severity === "warn"
+                                  ? `Week ${p.bye} bye overlap`
+                                  : `Bye ${p.bye}`
+                              }
+                            >
+                              B{p.bye}
+                            </span>
+                          ) : null}
                           <span className="tps-price">{money(p.price)}</span>
                         </span>
                       ) : (
@@ -2256,20 +2337,14 @@ export default function AuctionWarRoom() {
                             <button className={`seg-btn mine ${r.status === "mine" ? "on" : ""}`} aria-pressed={r.status === "mine"} aria-label="Won" onClick={() => setBoardStatus(r, "mine")}><span className="seg-full">Won</span><span className="seg-short">W</span></button>
                             <button className={`seg-btn gone ${r.status === "gone" ? "on" : ""}`} aria-pressed={r.status === "gone"} aria-label="Gone" onClick={() => setBoardStatus(r, "gone")}><span className="seg-full">Gone</span><span className="seg-short">G</span></button>
                           </div>
-                          <select
-                            className={`board-status-select status-${r.status}`}
+                          <BoardStatusSelect
                             value={r.status}
-                            aria-label={`Status for ${r.name}`}
-                            onChange={(e) => {
-                              const next = e.target.value;
+                            playerName={r.name}
+                            onChange={(next) => {
                               if (next === r.status) return;
                               setBoardStatus(r, next);
                             }}
-                          >
-                            <option value="available">Open</option>
-                            <option value="mine">Won</option>
-                            <option value="gone">Gone</option>
-                          </select>
+                          />
                         </td>
                       </tr>
                     ))}
@@ -2503,6 +2578,15 @@ export default function AuctionWarRoom() {
               {suggestPanel}
               {needsPanel}
             </div>
+            {byeInfo.level > 0 ? (
+              <div className={`room-bye-alert ${byeToneClass}`} role="status">
+                <span className="room-bye-alert-label">Bye watch</span>
+                <span className="room-bye-alert-msg">{byeInfo.issues[0]}</span>
+                {byeInfo.issues.length > 1 ? (
+                  <span className="room-bye-alert-more">+{byeInfo.issues.length - 1} more on My Team</span>
+                ) : null}
+              </div>
+            ) : null}
             {teamPreviewPanel}
             {boardPanel}
           </div>
@@ -2627,6 +2711,127 @@ export default function AuctionWarRoom() {
       >
         {toast?.msg || ""}
       </div>
+    </div>
+  );
+}
+
+const BOARD_STATUS_OPTIONS = [
+  { value: "available", label: "Open" },
+  { value: "mine", label: "Won" },
+  { value: "gone", label: "Gone" },
+];
+
+function BoardStatusSelect({ value, playerName, onChange }) {
+  const [open, setOpen] = useState(false);
+  const [place, setPlace] = useState("down");
+  const [menuStyle, setMenuStyle] = useState(null);
+  const wrapRef = useRef(null);
+  const triggerRef = useRef(null);
+  const menuId = useMemo(() => `board-status-${norm(playerName).replace(/\s+/g, "-") || "x"}`, [playerName]);
+  const current = BOARD_STATUS_OPTIONS.find((o) => o.value === value) || BOARD_STATUS_OPTIONS[0];
+
+  const close = useCallback(() => {
+    setOpen(false);
+    triggerRef.current?.focus();
+  }, []);
+
+  const positionMenu = useCallback(() => {
+    const trig = triggerRef.current;
+    if (!trig) return;
+    const r = trig.getBoundingClientRect();
+    const menuH = BOARD_STATUS_OPTIONS.length * 36 + 8;
+    const gap = 4;
+    const spaceBelow = window.innerHeight - r.bottom - gap;
+    const spaceAbove = r.top - gap;
+    const goUp = spaceBelow < menuH && spaceAbove > spaceBelow;
+    const width = Math.max(r.width, 92);
+    const left = Math.min(Math.max(8, r.left), window.innerWidth - width - 8);
+    setPlace(goUp ? "up" : "down");
+    setMenuStyle({
+      position: "fixed",
+      left,
+      width,
+      zIndex: 140,
+      ...(goUp
+        ? { top: "auto", bottom: Math.max(8, window.innerHeight - r.top + gap) }
+        : { top: r.bottom + gap, bottom: "auto" }),
+    });
+  }, []);
+
+  useLayoutEffect(() => {
+    if (!open) {
+      setMenuStyle(null);
+      return;
+    }
+    positionMenu();
+  }, [open, positionMenu]);
+
+  useEffect(() => {
+    if (!open) return;
+    const onDoc = (e) => {
+      if (wrapRef.current && !wrapRef.current.contains(e.target)) setOpen(false);
+    };
+    const onKey = (e) => {
+      if (e.key === "Escape") {
+        e.preventDefault();
+        close();
+      }
+    };
+    const onReposition = () => positionMenu();
+    const onScrollClose = () => setOpen(false);
+    document.addEventListener("mousedown", onDoc);
+    document.addEventListener("keydown", onKey);
+    window.addEventListener("resize", onReposition);
+    document.addEventListener("scroll", onScrollClose, true);
+    return () => {
+      document.removeEventListener("mousedown", onDoc);
+      document.removeEventListener("keydown", onKey);
+      window.removeEventListener("resize", onReposition);
+      document.removeEventListener("scroll", onScrollClose, true);
+    };
+  }, [open, close, positionMenu]);
+
+  return (
+    <div className={`board-status-dd status-${value}${open ? " open" : ""}`} ref={wrapRef}>
+      <button
+        ref={triggerRef}
+        type="button"
+        className="board-status-trigger"
+        aria-haspopup="listbox"
+        aria-expanded={open}
+        aria-controls={menuId}
+        aria-label={`Status for ${playerName}`}
+        onClick={() => setOpen((v) => !v)}
+      >
+        <span className="board-status-value">{current.label}</span>
+        <span className="board-status-caret" aria-hidden="true">{place === "up" && open ? "▴" : "▾"}</span>
+      </button>
+      {open && menuStyle ? (
+        <ul
+          id={menuId}
+          className={`board-status-menu place-${place}`}
+          role="listbox"
+          aria-label={`Status for ${playerName}`}
+          style={menuStyle}
+        >
+          {BOARD_STATUS_OPTIONS.map((o) => (
+            <li key={o.value} role="presentation">
+              <button
+                type="button"
+                role="option"
+                aria-selected={o.value === value}
+                className={`board-status-option status-${o.value}${o.value === value ? " on" : ""}`}
+                onClick={() => {
+                  close();
+                  if (o.value !== value) onChange(o.value);
+                }}
+              >
+                {o.label}
+              </button>
+            </li>
+          ))}
+        </ul>
+      ) : null}
     </div>
   );
 }
