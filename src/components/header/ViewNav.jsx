@@ -1,6 +1,8 @@
 import { createPortal } from "react-dom";
 import { useEffect, useRef } from "react";
+import { motion, useReducedMotion } from "motion/react";
 import Icon from "../ui/Icon.jsx";
+import { motionTokens } from "../../lib/motion.js";
 
 /**
  * View switcher.
@@ -11,6 +13,7 @@ import Icon from "../ui/Icon.jsx";
 export default function ViewNav({ items, view, onChange, variant = "desktop" }) {
   const isMobile = variant === "mobile";
   const navRef = useRef(null);
+  const reduce = useReducedMotion();
 
   useEffect(() => {
     if (!isMobile) return;
@@ -51,25 +54,44 @@ export default function ViewNav({ items, view, onChange, variant = "desktop" }) 
       className={`viewnav viewnav-${variant}`}
       aria-label="Views"
     >
-      {items.map((v) => (
-        <button
-          key={v.id}
-          type="button"
-          className={`navbtn ${view === v.id ? "on" : ""}`}
-          aria-current={view === v.id ? "page" : undefined}
-          onClick={() => onChange(v.id)}
-        >
-          <span className="navicon" aria-hidden="true">
-            <Icon name={v.icon} />
-          </span>
-          <span className="navlabel">{v.label}</span>
-          {v.badge ? (
-            <span className="navbadge" aria-label={`${v.badge} items`}>
-              {v.badge}
+      {items.map((v) => {
+        const on = view === v.id;
+        return (
+          <motion.button
+            key={v.id}
+            type="button"
+            className={`navbtn ${on ? "on" : ""}`}
+            aria-current={on ? "page" : undefined}
+            onClick={() => onChange(v.id)}
+            whileTap={reduce ? undefined : { scale: 0.94 }}
+            transition={motionTokens.spring.tap}
+          >
+            <span className="navicon" aria-hidden="true">
+              <Icon name={v.icon} />
             </span>
-          ) : null}
-        </button>
-      ))}
+            <span className="navlabel">{v.label}</span>
+            {v.badge ? (
+              <motion.span
+                className="navbadge"
+                aria-label={`${v.badge} items`}
+                key={String(v.badge)}
+                initial={reduce ? false : { scale: 0.85, opacity: 0.6 }}
+                animate={{ scale: 1, opacity: 1 }}
+                transition={motionTokens.spring.snappy}
+              >
+                {v.badge}
+              </motion.span>
+            ) : null}
+            {on && !isMobile ? (
+              <motion.span
+                className="nav-underline"
+                layoutId="nav-underline"
+                transition={reduce ? { duration: 0 } : motionTokens.spring.snappy}
+              />
+            ) : null}
+          </motion.button>
+        );
+      })}
     </nav>
   );
 

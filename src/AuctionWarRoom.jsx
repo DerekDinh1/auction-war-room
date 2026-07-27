@@ -1,7 +1,9 @@
 import React, { useState, useEffect, useLayoutEffect, useRef, useMemo, useCallback } from "react";
+import { motion, AnimatePresence, MotionConfig, useReducedMotion } from "motion/react";
 import { CommandHeader, ViewNav, Modal, Icon, SeasonsPanel } from "./components/index.js";
 import { money } from "./lib/format.js";
 import { storageGet, storageSet } from "./lib/storage.js";
+import { motionTokens, viewTransition, pressable } from "./lib/motion.js";
 import {
   CATALOG_KEY,
   LEGACY_STORAGE_KEY,
@@ -653,6 +655,7 @@ function fuzzyMatch(query, pos, limit = 8) {
 function NameAutocomplete({ value, onChange, onSelect, placeholder, inputRef, posFilter, ariaLabel, listId = "asst-ac-list" }) {
   const [open, setOpen] = useState(false);
   const [activeIdx, setActiveIdx] = useState(-1);
+  const reduce = useReducedMotion();
   const sugg = useMemo(() => {
     if (!value || value.length < 2) return [];
     return fuzzyMatch(value, posFilter, 8);
@@ -705,24 +708,40 @@ function NameAutocomplete({ value, onChange, onSelect, placeholder, inputRef, po
         }}
         autoComplete="off"
       />
-      {expanded && (
-        <div className="ac-list" id={listId} role="listbox" aria-label="Player suggestions">
-          {sugg.map((p, i) => (
-            <button
-              key={p.id}
-              id={`${listId}-opt-${p.id}`}
-              type="button"
-              role="option"
-              aria-selected={i === activeIdx}
-              className={`ac-item${i === activeIdx ? " active" : ""}`}
-              onMouseDown={(e) => { e.preventDefault(); pick(p); }}
-            >
-              <span>{p.name}</span>
-              <span className="ac-meta">{p.pos} · {p.team} · Bye {p.bye}</span>
-            </button>
-          ))}
-        </div>
-      )}
+      <AnimatePresence>
+        {expanded ? (
+          <motion.div
+            className="ac-list"
+            id={listId}
+            role="listbox"
+            aria-label="Player suggestions"
+            initial={reduce ? { opacity: 0 } : { opacity: 0, y: -6, scale: 0.98 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={reduce ? { opacity: 0 } : { opacity: 0, y: -4, scale: 0.98 }}
+            transition={reduce ? { duration: 0.12 } : motionTokens.spring.snappy}
+            style={{ transformOrigin: "top center" }}
+          >
+            {sugg.map((p, i) => (
+              <motion.button
+                key={p.id}
+                id={`${listId}-opt-${p.id}`}
+                type="button"
+                role="option"
+                aria-selected={i === activeIdx}
+                className={`ac-item${i === activeIdx ? " active" : ""}`}
+                onMouseDown={(e) => { e.preventDefault(); pick(p); }}
+                initial={reduce ? false : { opacity: 0, x: -4 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: i * 0.02, duration: motionTokens.duration.fast }}
+                whileTap={reduce ? undefined : { scale: 0.98 }}
+              >
+                <span>{p.name}</span>
+                <span className="ac-meta">{p.pos} · {p.team} · Bye {p.bye}</span>
+              </motion.button>
+            ))}
+          </motion.div>
+        ) : null}
+      </AnimatePresence>
     </div>
   );
 }
@@ -750,6 +769,8 @@ export default function AuctionWarRoom() {
   const [catalog, setCatalog] = useState(null);
   const [activeSeasonId, setActiveSeasonIdState] = useState(null);
   const [draftConfirm, setDraftConfirm] = useState(null); // pseudo-target for assistant "Draft Player"
+  const reduceMotion = useReducedMotion();
+  const press = pressable(reduceMotion);
 
   // form state
   const emptyForm = { name: "", pos: "", team: "", bye: "", price: "", proj: "" };
@@ -1585,12 +1606,22 @@ export default function AuctionWarRoom() {
     reader.readAsText(file);
   };
   const resetDraft = () => {
+    const pickCount = players.length;
+    const boardCount = Object.keys(board).length;
     setConfirmBox({
-      message: `Reset ${activeSeason?.label || "this season"}?`,
-      detail: "All picks, board tracking and budget history for this season will be cleared. Other seasons stay untouched. Export first if you want a backup.",
+      message: `Clear ${activeSeason?.label || "this season"} entries?`,
+      detail: `Removes ${pickCount} pick${pickCount === 1 ? "" : "s"} and ${boardCount} board mark${boardCount === 1 ? "" : "s"} for this season. League settings stay. Other seasons stay untouched.`,
       onYes: () => {
-        setPlayers([]); setBoard({}); setNextPick(1); setAssistant(EMPTY_ASST); setConfirmBox(null);
-        showToast("Board reset. Budget restored.", "ok");
+        setPlayers([]);
+        setBoard({});
+        setNextPick(1);
+        setAssistant(EMPTY_ASST);
+        setForm(emptyForm);
+        setQuick("");
+        setEditRow(null);
+        setQuickOpen(false);
+        setConfirmBox(null);
+        showToast("Entries cleared. Budget restored.", "ok");
       },
     });
   };
@@ -1677,18 +1708,18 @@ export default function AuctionWarRoom() {
               </div>
 
               <div className="bid-row">
-                <button className="btn bid-step" onClick={() => bumpBid(-1)} aria-label="Lower bid by one dollar">−$1</button>
+                <motion.button type="button" className="btn bid-step" onClick={() => bumpBid(-1)} aria-label="Lower bid by one dollar" {...press}>−$1</motion.button>
                 <div className="bid-box">
                   <label htmlFor="asst-bid">Current bid</label>
                   <input id="asst-bid" className="bid-input" inputMode="numeric" aria-label="Current auction bid in dollars" value={assistant.bid} placeholder="—"
                           onChange={(e) => setAssistant((a) => ({ ...a, bid: e.target.value.replace(/[^0-9]/g, "") }))} />
                 </div>
-                <button className="btn bid-step" onClick={() => bumpBid(1)} aria-label="Raise bid by one dollar">+$1</button>
+                <motion.button type="button" className="btn bid-step" onClick={() => bumpBid(1)} aria-label="Raise bid by one dollar" {...press}>+$1</motion.button>
               </div>
 
               <div className="asst-actions">
-                <button className="btn primary big" onClick={assistantDraft}>Draft player</button>
-                <button className="btn" onClick={assistantGone}>Went elsewhere</button>
+                <motion.button type="button" className="btn primary big" onClick={assistantDraft} {...press}>Draft player</motion.button>
+                <motion.button type="button" className="btn" onClick={assistantGone} {...press}>Went elsewhere</motion.button>
               </div>
             </div>
 
@@ -1697,17 +1728,29 @@ export default function AuctionWarRoom() {
                 {analysis ? (
                   <>
                     <div className="call-head">
-                      <div
+                      <motion.div
+                        key={analysis.tier}
                         className={`verdict ${analysis.tier}`}
                         role="status"
                         aria-live="polite"
                         aria-atomic="true"
+                        initial={reduceMotion ? false : { scale: 0.92, opacity: 0.5 }}
+                        animate={{ scale: 1, opacity: 1 }}
+                        transition={motionTokens.spring.snappy}
                       >
                         {analysis.tier === "idle" ? "READY" : analysis.tier === "bid" ? "BID" : analysis.tier === "value" ? "VALUE" : analysis.tier === "caution" ? "CAUTION" : "PASS"}
-                      </div>
+                      </motion.div>
                       <div className="call-hero">
                         <span className="call-hero-label">Recommended max</span>
-                        <span className="call-hero-num">{money(analysis.recMax)}</span>
+                        <motion.span
+                          key={analysis.recMax}
+                          className="call-hero-num"
+                          initial={reduceMotion ? false : { y: 8, opacity: 0.4 }}
+                          animate={{ y: 0, opacity: 1 }}
+                          transition={motionTokens.spring.snappy}
+                        >
+                          {money(analysis.recMax)}
+                        </motion.span>
                       </div>
                     </div>
                     <p className="verdict-why">{analysis.why}</p>
@@ -2085,12 +2128,18 @@ export default function AuctionWarRoom() {
             const bye = row.player.byeConflict || assessByeConflict(players, row.player, SLOT_BY_ID);
             const byeWeek = resolveBye(row.player);
             return (
-            <button
+            <motion.button
               key={row.key}
               type="button"
               className={`suggest-row${bye ? ` has-bye-warn lv-${bye.level}` : ""}`}
               onClick={() => loadSuggestion(row.player)}
               aria-label={`Load ${row.player.name} into assistant${bye ? `. ${bye.message}` : ""}`}
+              layout
+              initial={reduceMotion ? false : { opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={motionTokens.spring.soft}
+              whileHover={reduceMotion ? undefined : { y: -2 }}
+              whileTap={reduceMotion ? undefined : { scale: 0.985 }}
             >
               <span className="suggest-label">
                 {row.label}
@@ -2107,7 +2156,7 @@ export default function AuctionWarRoom() {
                 ) : null}
               </span>
               <span className="suggest-est">{row.player.est != null ? money(row.player.est) : "—"}</span>
-            </button>
+            </motion.button>
             );
           })}
         </div>
@@ -2290,15 +2339,38 @@ export default function AuctionWarRoom() {
               <div className="board-controls">
                 <div className="filter-row">
                   {BOARD_FILTERS.map((f) => (
-                    <button key={f} className={`chip ${boardFilter === f ? "on" : ""}`} aria-pressed={boardFilter === f} onClick={() => setBoardFilter(f)}>{f === "ALL" ? "All" : f}</button>
+                    <motion.button
+                      key={f}
+                      type="button"
+                      className={`chip ${boardFilter === f ? "on" : ""}`}
+                      aria-pressed={boardFilter === f}
+                      onClick={() => setBoardFilter(f)}
+                      {...press}
+                    >
+                      {f === "ALL" ? "All" : f}
+                    </motion.button>
                   ))}
                 </div>
                 <div className="filter-row">
-                  <button className={`chip ${boardStarsOnly ? "on" : ""}`} aria-pressed={boardStarsOnly} onClick={() => setBoardStarsOnly((v) => !v)}>★ Starred{boardCounts.star ? ` (${boardCounts.star})` : ""}</button>
-                  <button className={`chip ${boardShowGone ? "on" : ""}`} aria-pressed={boardShowGone} onClick={() => setBoardShowGone((v) => !v)}>
+                  <motion.button
+                    type="button"
+                    className={`chip ${boardStarsOnly ? "on" : ""}`}
+                    aria-pressed={boardStarsOnly}
+                    onClick={() => setBoardStarsOnly((v) => !v)}
+                    {...press}
+                  >
+                    ★ Starred{boardCounts.star ? ` (${boardCounts.star})` : ""}
+                  </motion.button>
+                  <motion.button
+                    type="button"
+                    className={`chip ${boardShowGone ? "on" : ""}`}
+                    aria-pressed={boardShowGone}
+                    onClick={() => setBoardShowGone((v) => !v)}
+                    {...press}
+                  >
                     <span className="chip-full">{boardShowGone ? "Showing drafted" : "Hiding drafted"}</span>
                     <span className="chip-short">{boardShowGone ? "Show taken" : "Hide taken"}</span>
-                  </button>
+                  </motion.button>
                 </div>
               </div>
               {boardRows.length === 0 ? (
@@ -2321,8 +2393,28 @@ export default function AuctionWarRoom() {
                   <tbody>
                     {boardRows.map((r) => (
                       <tr key={r.key} className={r.status !== "available" ? "row-taken" : ""}>
-                        <td className="col-star"><button className={`star-btn ${r.star ? "on" : ""}`} title="Star player" aria-pressed={r.star} aria-label={`Star ${r.name}`}
-                          onClick={() => toggleStar(r.name, { pos: r.pos, team: r.team, bye: r.bye })}><Ic name="star" solid={r.star} fb={r.star ? "★" : "☆"} /></button></td>
+                        <td className="col-star">
+                          <motion.button
+                            type="button"
+                            className={`star-btn ${r.star ? "on" : ""}`}
+                            title="Star player"
+                            aria-pressed={r.star}
+                            aria-label={`Star ${r.name}`}
+                            onClick={() => toggleStar(r.name, { pos: r.pos, team: r.team, bye: r.bye })}
+                            whileTap={reduceMotion ? undefined : { scale: 0.88 }}
+                            transition={motionTokens.spring.tap}
+                          >
+                            <motion.span
+                              key={r.star ? "on" : "off"}
+                              className="star-glyph"
+                              initial={reduceMotion || !r.star ? false : { scale: 0.55, opacity: 0.5 }}
+                              animate={{ scale: 1, opacity: 1 }}
+                              transition={motionTokens.spring.snappy}
+                            >
+                              <Ic name="star" solid={r.star} fb={r.star ? "★" : "☆"} />
+                            </motion.span>
+                          </motion.button>
+                        </td>
                         <td className="num rank-cell col-rank">{r.overall ?? "—"}</td>
                         <td className="num rank-cell col-posrank hide-xs">{r.rank < 999 ? r.rank : "—"}</td>
                         <td className="pname col-player"><button className="linklike" onClick={() => loadSuggestion(r)} title="Load into Draft Assistant">{r.name}</button></td>
@@ -2452,18 +2544,18 @@ export default function AuctionWarRoom() {
             <div key={pos} className="stepper-row">
               <span className="stepper-label">{pos}</span>
               <div className="stepper">
-                <button className="btn step" onClick={() => setStarter(pos, -1)} aria-label={`Fewer ${pos}`}>−</button>
+                <motion.button type="button" className="btn step" onClick={() => setStarter(pos, -1)} aria-label={`Fewer ${pos}`} whileTap={reduceMotion ? undefined : { scale: 0.9 }}>−</motion.button>
                 <span className="stepper-val">{settings.starters[pos]}</span>
-                <button className="btn step" onClick={() => setStarter(pos, 1)} aria-label={`More ${pos}`}>+</button>
+                <motion.button type="button" className="btn step" onClick={() => setStarter(pos, 1)} aria-label={`More ${pos}`} whileTap={reduceMotion ? undefined : { scale: 0.9 }}>+</motion.button>
               </div>
             </div>
           ))}
           <div className="stepper-row">
             <span className="stepper-label">Bench</span>
             <div className="stepper">
-              <button className="btn step" onClick={() => setSettings((st) => normalizeSettings({ ...st, bench: st.bench - 1 }))} aria-label="Fewer bench">−</button>
+              <motion.button type="button" className="btn step" onClick={() => setSettings((st) => normalizeSettings({ ...st, bench: st.bench - 1 }))} aria-label="Fewer bench" whileTap={reduceMotion ? undefined : { scale: 0.9 }}>−</motion.button>
               <span className="stepper-val">{settings.bench}</span>
-              <button className="btn step" onClick={() => setSettings((st) => normalizeSettings({ ...st, bench: st.bench + 1 }))} aria-label="More bench">+</button>
+              <motion.button type="button" className="btn step" onClick={() => setSettings((st) => normalizeSettings({ ...st, bench: st.bench + 1 }))} aria-label="More bench" whileTap={reduceMotion ? undefined : { scale: 0.9 }}>+</motion.button>
             </div>
           </div>
         </div>
@@ -2483,8 +2575,8 @@ export default function AuctionWarRoom() {
           <div className="eyebrow small mt">FLEX accepts</div>
           <div className="toggle-row">
             {POSITIONS.map((pos) => (
-              <button key={pos} className={`chip ${settings.flexEligible[pos] ? "on" : ""}`} aria-pressed={settings.flexEligible[pos]}
-                onClick={() => setSettings((st) => ({ ...st, flexEligible: { ...st.flexEligible, [pos]: !st.flexEligible[pos] } }))}>{pos}</button>
+              <motion.button type="button" key={pos} className={`chip ${settings.flexEligible[pos] ? "on" : ""}`} aria-pressed={settings.flexEligible[pos]}
+                onClick={() => setSettings((st) => ({ ...st, flexEligible: { ...st.flexEligible, [pos]: !st.flexEligible[pos] } }))} {...press}>{pos}</motion.button>
             ))}
           </div>
         </div>
@@ -2493,8 +2585,8 @@ export default function AuctionWarRoom() {
           <div className="eyebrow small">Warn on a second…</div>
           <div className="toggle-row">
             {POSITIONS.map((pos) => (
-              <button key={pos} className={`chip ${settings.onlyOne[pos] ? "on" : ""}`} aria-pressed={settings.onlyOne[pos]}
-                onClick={() => setSettings((st) => ({ ...st, onlyOne: { ...st.onlyOne, [pos]: !st.onlyOne[pos] } }))}>{pos}</button>
+              <motion.button type="button" key={pos} className={`chip ${settings.onlyOne[pos] ? "on" : ""}`} aria-pressed={settings.onlyOne[pos]}
+                onClick={() => setSettings((st) => ({ ...st, onlyOne: { ...st.onlyOne, [pos]: !st.onlyOne[pos] } }))} {...press}>{pos}</motion.button>
             ))}
           </div>
           <div className="empty-note">Highlighted positions trigger a confirm prompt if you draft more than you need — it never blocks the pick.</div>
@@ -2513,6 +2605,26 @@ export default function AuctionWarRoom() {
       {players.length > 0 && (
         <div className="set-warn">Changing the lineup re-slots your {players.length} drafted {players.length === 1 ? "player" : "players"} automatically. Shrinking the roster below what you've drafted can leave players unslotted.</div>
       )}
+
+      <div className="settings-reset">
+        <div className="settings-reset-copy">
+          <span className="eyebrow small">Test / clear entries</span>
+          <p className="empty-note">
+            {players.length === 0 && Object.keys(board).length === 0
+              ? "No picks or board marks yet."
+              : `${players.length} pick${players.length === 1 ? "" : "s"} · ${Object.keys(board).length} board mark${Object.keys(board).length === 1 ? "" : "s"} on this season.`}
+          </p>
+        </div>
+        <motion.button
+          type="button"
+          className="btn danger"
+          onClick={resetDraft}
+          disabled={players.length === 0 && Object.keys(board).length === 0}
+          {...press}
+        >
+          <Ic name="refresh" fb="" /> Clear entries
+        </motion.button>
+      </div>
     </section>
   );
 
@@ -2524,13 +2636,16 @@ export default function AuctionWarRoom() {
         <button className="btn" onClick={() => fileRef.current && fileRef.current.click()}><Ic name="upload" fb="" /> Import JSON</button>
         <input ref={fileRef} type="file" accept=".json,application/json" style={{ display: "none" }}
           onChange={(e) => { const f = e.target.files[0]; if (f) importDraft(f); e.target.value = ""; }} />
-        <button className="btn danger" onClick={resetDraft}><Ic name="refresh" fb="" /> Reset draft</button>
+        <button className="btn danger" onClick={resetDraft} disabled={players.length === 0 && Object.keys(board).length === 0}>
+          <Ic name="refresh" fb="" /> Clear entries
+        </button>
       </div>
-      <div className="empty-note">Everything auto-saves as you go. Export before the draft if you want a manual backup.</div>
+      <div className="empty-note">Everything auto-saves as you go. Clear entries wipes this season&apos;s picks and board tracking so you can re-test — export first if you want a backup.</div>
     </section>
   );
 
   return (
+    <MotionConfig reducedMotion="user">
     <div className={`root view-${view}`} id="awr-root">
       <div id="awr-shell">
       <div className="topbar">
@@ -2570,7 +2685,13 @@ export default function AuctionWarRoom() {
         />
       </div>
 
-      <main className={`layout view-${view}`}>
+      <motion.main
+        key={view}
+        className={`layout view-${view}`}
+        initial={reduceMotion ? false : { opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={viewTransition}
+      >
         {view === "room" && (<>
           {assistantPanel}
           <div className="room-stack">
@@ -2578,15 +2699,25 @@ export default function AuctionWarRoom() {
               {suggestPanel}
               {needsPanel}
             </div>
-            {byeInfo.level > 0 ? (
-              <div className={`room-bye-alert ${byeToneClass}`} role="status">
-                <span className="room-bye-alert-label">Bye watch</span>
-                <span className="room-bye-alert-msg">{byeInfo.issues[0]}</span>
-                {byeInfo.issues.length > 1 ? (
-                  <span className="room-bye-alert-more">+{byeInfo.issues.length - 1} more on My Team</span>
-                ) : null}
-              </div>
-            ) : null}
+            <AnimatePresence>
+              {byeInfo.level > 0 ? (
+                <motion.div
+                  key="room-bye-alert"
+                  className={`room-bye-alert ${byeToneClass}`}
+                  role="status"
+                  initial={reduceMotion ? { opacity: 0 } : { opacity: 0, y: -8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={reduceMotion ? { opacity: 0 } : { opacity: 0, y: -6 }}
+                  transition={reduceMotion ? { duration: 0.12 } : motionTokens.spring.soft}
+                >
+                  <span className="room-bye-alert-label">Bye watch</span>
+                  <span className="room-bye-alert-msg">{byeInfo.issues[0]}</span>
+                  {byeInfo.issues.length > 1 ? (
+                    <span className="room-bye-alert-more">+{byeInfo.issues.length - 1} more on My Team</span>
+                  ) : null}
+                </motion.div>
+              ) : null}
+            </AnimatePresence>
             {teamPreviewPanel}
             {boardPanel}
           </div>
@@ -2618,7 +2749,7 @@ export default function AuctionWarRoom() {
           {settingsPanel}
           {dataPanel}
         </>)}
-      </main>
+      </motion.main>
 
       <footer className="foot">
         {activeSeason ? `${activeSeason.name}. ` : ""}
@@ -2691,27 +2822,47 @@ export default function AuctionWarRoom() {
           }} />
       )}
 
-      <button
+      <motion.button
         type="button"
         className="theme-toggle"
         onClick={changeTheme}
         aria-pressed={theme === "light"}
         aria-label={theme === "light" ? "Light theme on. Switch to dark" : "Dark theme on. Switch to light"}
         title={theme === "light" ? "Switch to dark theme" : "Switch to light theme"}
+        whileHover={reduceMotion ? undefined : { y: -2, scale: 1.03 }}
+        whileTap={reduceMotion ? undefined : { scale: 0.94 }}
+        transition={motionTokens.spring.tap}
       >
-        <span className="theme-toggle-label">{theme === "light" ? "Light" : "Dark"}</span>
-      </button>
+        <motion.span
+          key={theme}
+          className="theme-toggle-label"
+          initial={reduceMotion ? false : { opacity: 0, y: 4 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: motionTokens.duration.fast }}
+        >
+          {theme === "light" ? "Light" : "Dark"}
+        </motion.span>
+      </motion.button>
 
-      <div
-        className={`toast ${toast?.type || ""}`}
-        role={toast?.type === "err" ? "alert" : "status"}
-        aria-live={toast?.type === "err" ? "assertive" : "polite"}
-        aria-atomic="true"
-        aria-hidden={!toast}
-      >
-        {toast?.msg || ""}
-      </div>
+      <AnimatePresence>
+        {toast ? (
+          <motion.div
+            key={toast.msg + toast.type}
+            className={`toast ${toast.type || ""}`}
+            role={toast.type === "err" ? "alert" : "status"}
+            aria-live={toast.type === "err" ? "assertive" : "polite"}
+            aria-atomic="true"
+            initial={reduceMotion ? { opacity: 0, x: "-50%" } : { opacity: 0, y: 16, x: "-50%", scale: 0.96 }}
+            animate={{ opacity: 1, y: 0, x: "-50%", scale: 1 }}
+            exit={reduceMotion ? { opacity: 0, x: "-50%" } : { opacity: 0, y: 10, x: "-50%", scale: 0.97 }}
+            transition={motionTokens.spring.soft}
+          >
+            {toast.msg}
+          </motion.div>
+        ) : null}
+      </AnimatePresence>
     </div>
+    </MotionConfig>
   );
 }
 
@@ -2791,9 +2942,11 @@ function BoardStatusSelect({ value, playerName, onChange }) {
     };
   }, [open, close, positionMenu]);
 
+  const reduce = useReducedMotion();
+
   return (
     <div className={`board-status-dd status-${value}${open ? " open" : ""}`} ref={wrapRef}>
-      <button
+      <motion.button
         ref={triggerRef}
         type="button"
         className="board-status-trigger"
@@ -2802,36 +2955,52 @@ function BoardStatusSelect({ value, playerName, onChange }) {
         aria-controls={menuId}
         aria-label={`Status for ${playerName}`}
         onClick={() => setOpen((v) => !v)}
+        whileTap={reduce ? undefined : { scale: 0.97 }}
+        transition={motionTokens.spring.tap}
       >
         <span className="board-status-value">{current.label}</span>
-        <span className="board-status-caret" aria-hidden="true">{place === "up" && open ? "▴" : "▾"}</span>
-      </button>
-      {open && menuStyle ? (
-        <ul
-          id={menuId}
-          className={`board-status-menu place-${place}`}
-          role="listbox"
-          aria-label={`Status for ${playerName}`}
-          style={menuStyle}
+        <motion.span
+          className="board-status-caret"
+          aria-hidden="true"
+          animate={{ rotate: open ? (place === "up" ? 0 : 180) : 0 }}
+          transition={{ duration: motionTokens.duration.fast }}
         >
-          {BOARD_STATUS_OPTIONS.map((o) => (
-            <li key={o.value} role="presentation">
-              <button
-                type="button"
-                role="option"
-                aria-selected={o.value === value}
-                className={`board-status-option status-${o.value}${o.value === value ? " on" : ""}`}
-                onClick={() => {
-                  close();
-                  if (o.value !== value) onChange(o.value);
-                }}
-              >
-                {o.label}
-              </button>
-            </li>
-          ))}
-        </ul>
-      ) : null}
+          ▾
+        </motion.span>
+      </motion.button>
+      <AnimatePresence>
+        {open && menuStyle ? (
+          <motion.ul
+            id={menuId}
+            className={`board-status-menu place-${place}`}
+            role="listbox"
+            aria-label={`Status for ${playerName}`}
+            style={{ ...menuStyle, transformOrigin: place === "up" ? "bottom center" : "top center" }}
+            initial={reduce ? { opacity: 0 } : { opacity: 0, scale: 0.96, y: place === "up" ? 6 : -6 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={reduce ? { opacity: 0 } : { opacity: 0, scale: 0.96, y: place === "up" ? 4 : -4 }}
+            transition={reduce ? { duration: 0.12 } : motionTokens.spring.snappy}
+          >
+            {BOARD_STATUS_OPTIONS.map((o) => (
+              <li key={o.value} role="presentation">
+                <motion.button
+                  type="button"
+                  role="option"
+                  aria-selected={o.value === value}
+                  className={`board-status-option status-${o.value}${o.value === value ? " on" : ""}`}
+                  onClick={() => {
+                    close();
+                    if (o.value !== value) onChange(o.value);
+                  }}
+                  whileTap={reduce ? undefined : { scale: 0.97 }}
+                >
+                  {o.label}
+                </motion.button>
+              </li>
+            ))}
+          </motion.ul>
+        ) : null}
+      </AnimatePresence>
     </div>
   );
 }
@@ -2873,6 +3042,7 @@ function meterEdge(p) {
 }
 
 function PriceMeter({ bid, V, recMax, absMax, tier }) {
+  const reduce = useReducedMotion();
   const hasBid = bid != null;
   // Scale to the decision range — leftover abs budget must not crush Proj/Rec/Bid into a left pile
   const focusMax = Math.max(V || 0, recMax, bid || 0, 1);
@@ -2897,11 +3067,26 @@ function PriceMeter({ bid, V, recMax, absMax, tier }) {
         {projPct != null && <div className={`marker m-proj ${meterEdge(projPct)}`} style={{ left: `${projPct}%` }} title={`Proj ${money(V)}`} />}
         <div className={`marker m-rec ${meterEdge(recPct)}`} style={{ left: `${recPct}%` }} title={`Rec ${money(recMax)}`} />
         {includeAbsOnBar && <div className={`marker m-abs ${meterEdge(absPct)}`} style={{ left: `${absPct}%` }} title={`Abs ${money(absMax)}`} />}
-        {hasBid && (
-          <div className={`bid-marker t-${tier} ${meterEdge(bidPct)}`} style={{ left: `${bidPct}%` }} title={`Bid ${money(bid)}`}>
-            <div className="bid-tri" />
-          </div>
-        )}
+        <AnimatePresence>
+          {hasBid ? (
+            <motion.div
+              key="bid-marker"
+              className={`bid-marker t-${tier} ${meterEdge(bidPct)}`}
+              title={`Bid ${money(bid)}`}
+              initial={reduce ? false : { opacity: 0, y: -4 }}
+              animate={{
+                opacity: 1,
+                y: 0,
+                left: `${bidPct}%`,
+                x: bidPct <= 2 ? "0%" : bidPct >= 98 ? "-100%" : "-50%",
+              }}
+              exit={reduce ? { opacity: 0 } : { opacity: 0, y: -2 }}
+              transition={reduce ? { duration: 0.12 } : motionTokens.spring.snappy}
+            >
+              <div className="bid-tri" />
+            </motion.div>
+          ) : null}
+        </AnimatePresence>
       </div>
       <div className="meter-legend">
         <span>Great</span>

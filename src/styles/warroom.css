@@ -660,17 +660,12 @@ tr.row-taken .pname .linklike { text-decoration: line-through; }
 .hint { color: var(--muted); font-size: 12.5px; }
 .btn.tiny-fill { align-self: flex-start; padding: 6px 12px; font-size: 12.5px; min-height: 34px; color: var(--accent); border-color: rgba(210,245,60,.45); }
 :root[data-theme="light"] .btn.tiny-fill { border-color: rgba(143,174,18,.45); }
-.toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); z-index: 120;
+.toast { position: fixed; bottom: 20px; left: 50%; z-index: 120;
   background: var(--panel-2); border: 1px solid var(--line); border-radius: 10px; padding: 11px 18px;
-  font-weight: 650; box-shadow: 0 10px 30px var(--shadow); animation: rise .18s ease; max-width: 92vw; }
-.toast[aria-hidden="true"] {
-  opacity: 0; visibility: hidden; pointer-events: none; animation: none;
-  transform: translate(-50%, 8px);
-}
+  font-weight: 650; box-shadow: 0 10px 30px var(--shadow); max-width: 92vw; will-change: transform, opacity; }
 .toast.ok { border-color: rgba(69,217,126,.5); color: var(--green); }
 .toast.err { border-color: rgba(241,101,95,.55); color: var(--red); }
 .toast.warn { border-color: rgba(243,182,75,.5); color: var(--amber); }
-@keyframes rise { from { transform: translate(-50%, 8px); opacity: 0; } to { transform: translate(-50%, 0); opacity: 1; } }
 
 .fi { display: inline-flex; vertical-align: -2px; line-height: 1; }
 .navicon .fi { font-size: 16px; }
@@ -681,8 +676,10 @@ tr.row-taken .pname .linklike { text-decoration: line-through; }
 .foot { padding: 18px clamp(12px, 3vw, 28px) 0; color: var(--muted-2); font-size: 12px; max-width: 1600px; margin: 0 auto; }
 
 @media (prefers-reduced-motion: reduce) {
-  .toast, .bar-fill, .btn, .chip, .icon-btn, .navbtn, .seg-btn { animation: none; transition: none; }
-  .btn:active, .chip:active, .icon-btn:active { transform: none; }
+  .toast, .bar-fill, .btn, .chip, .icon-btn, .navbtn, .seg-btn,
+  .ac-list, .board-status-menu, .season-menu, .nav-underline, .bid-marker,
+  .room-bye-alert, .suggest-row, .star-glyph { animation: none !important; transition: none !important; }
+  .btn:active, .chip:active, .icon-btn:active, .star-btn:active { transform: none; }
 }
 
 /* ---- draft assistant ---- */
@@ -751,9 +748,9 @@ tr.row-taken .pname .linklike { text-decoration: line-through; }
 .marker.m-proj { background: var(--marker-strong); }
 .marker.m-rec { background: var(--accent); width: 3px; }
 .marker.m-abs { background: rgba(141,153,172,.7); }
-.bid-marker { position: absolute; top: calc(100% + 4px); transform: translateX(-50%); text-align: center; }
-.bid-marker.m-edge-start { transform: none; text-align: left; }
-.bid-marker.m-edge-end { transform: translateX(-100%); text-align: right; }
+.bid-marker { position: absolute; top: calc(100% + 4px); text-align: center; }
+.bid-marker.m-edge-start { text-align: left; }
+.bid-marker.m-edge-end { text-align: right; }
 .bid-tri { width: 0; height: 0; border-left: 5px solid transparent; border-right: 5px solid transparent; border-bottom: 7px solid var(--ink); margin: 0 auto; }
 .bid-marker.m-edge-start .bid-tri { margin-left: 0; }
 .bid-marker.m-edge-end .bid-tri { margin-right: 0; margin-left: auto; }
@@ -909,13 +906,18 @@ button, select { touch-action: manipulation; }
 .navbtn { transition: color .16s ease, border-color .16s ease; }
 .navbtn:hover { color: var(--ink); }
 .navbtn { font-family: var(--font-disp); font-size: 15px; letter-spacing: .04em; text-transform: uppercase; }
-.navbtn.on { color: var(--accent); border-bottom-color: var(--accent); background: transparent; }
+.navbtn.on { color: var(--accent); border-bottom-color: transparent; background: transparent; }
 .navbtn.on::after { display: none; }
+.nav-underline {
+  position: absolute; left: 10px; right: 10px; bottom: -1px; height: 2px;
+  background: var(--accent); border-radius: 1px; pointer-events: none;
+}
 .navicon { font-size: 15px; }
 .navbadge { background: var(--nav-badge-bg); border-radius: 20px; padding: 1px 8px; font-size: 11px;
   font-family: ui-monospace, Menlo, monospace; }
 .navbtn:not(.on) .navbadge { background: var(--panel-2); color: var(--muted); }
 .navbadge { color: var(--accent-ink); background: var(--accent); }
+.star-glyph { display: inline-flex; line-height: 1; }
 .data-actions { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 10px; }
 .data-actions .btn { flex: 1 1 140px; }
 
@@ -1071,6 +1073,19 @@ button, select { touch-action: manipulation; }
 :root[data-theme="light"] .slot-chip.starter { border-color: rgba(143,174,18,.45); }
 .set-warn { margin-top: 14px; font-size: 12.5px; color: var(--amber); background: rgba(243,182,75,.08);
   border: 1px solid rgba(243,182,75,.3); border-radius: 8px; padding: 8px 12px; }
+.settings-reset {
+  margin-top: 16px;
+  padding-top: 14px;
+  border-top: 1px solid var(--line-soft);
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.settings-reset-copy { min-width: 0; flex: 1 1 200px; }
+.settings-reset-copy .empty-note { margin: 4px 0 0; }
+.settings-reset .btn { flex: 0 0 auto; }
 .pos-count em { font-style: normal; color: var(--muted); font-size: 14px; margin-left: 3px; letter-spacing: .04em; }
 .open-slots.done { color: var(--green); }
 

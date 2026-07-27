@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
+import { motion, AnimatePresence, useReducedMotion } from "motion/react";
 import Icon from "../ui/Icon.jsx";
 import BudgetVitals from "./BudgetVitals.jsx";
 import SeasonSwitcher from "./SeasonSwitcher.jsx";
 import { money } from "../../lib/format.js";
+import { motionTokens, pressable } from "../../lib/motion.js";
 
 /**
  * Sticky command header: brand, season switcher, compact budget vitals, draft meta, quick-add.
@@ -36,6 +38,8 @@ export default function CommandHeader({
   onRunQuickAdd,
 }) {
   const [activeIdx, setActiveIdx] = useState(-1);
+  const reduce = useReducedMotion();
+  const press = pressable(reduce);
   const listId = "quick-ac-list";
   const expanded = quickOpen && quickSugg.length > 0;
   const activeId =
@@ -133,51 +137,79 @@ export default function CommandHeader({
             onKeyDown={handleKeyDown}
             autoComplete="off"
           />
-          {expanded && (
-            <div className="ac-list" id={listId} role="listbox" aria-label="Quick-add player suggestions">
-              {quickSugg.map((p, i) => (
-                <button
-                  key={p.id}
-                  id={`${listId}-opt-${p.id}`}
-                  type="button"
-                  role="option"
-                  aria-selected={i === activeIdx}
-                  className={`ac-item${i === activeIdx ? " active" : ""}`}
-                  onMouseDown={(e) => {
-                    e.preventDefault();
-                    onSelectQuick(p);
-                    setActiveIdx(-1);
-                  }}
-                >
-                  <span>{p.name}</span>
-                  <span className="ac-meta">
-                    {p.pos} · {p.team} · Bye {p.bye}
-                    {quickParsed && quickParsed.price != null
-                      ? ` — add for ${money(quickParsed.price)}`
-                      : ""}
-                  </span>
-                </button>
-              ))}
-            </div>
-          )}
+          <AnimatePresence>
+            {expanded ? (
+              <motion.div
+                className="ac-list"
+                id={listId}
+                role="listbox"
+                aria-label="Quick-add player suggestions"
+                initial={reduce ? { opacity: 0 } : { opacity: 0, y: -6, scale: 0.98 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={reduce ? { opacity: 0 } : { opacity: 0, y: -4, scale: 0.98 }}
+                transition={reduce ? { duration: 0.12 } : motionTokens.spring.snappy}
+                style={{ transformOrigin: "top center" }}
+              >
+                {quickSugg.map((p, i) => (
+                  <motion.button
+                    key={p.id}
+                    id={`${listId}-opt-${p.id}`}
+                    type="button"
+                    role="option"
+                    aria-selected={i === activeIdx}
+                    className={`ac-item${i === activeIdx ? " active" : ""}`}
+                    onMouseDown={(e) => {
+                      e.preventDefault();
+                      onSelectQuick(p);
+                      setActiveIdx(-1);
+                    }}
+                    initial={reduce ? false : { opacity: 0, x: -4 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: i * 0.02, duration: motionTokens.duration.fast }}
+                    whileTap={reduce ? undefined : { scale: 0.98 }}
+                  >
+                    <span>{p.name}</span>
+                    <span className="ac-meta">
+                      {p.pos} · {p.team} · Bye {p.bye}
+                      {quickParsed && quickParsed.price != null
+                        ? ` — add for ${money(quickParsed.price)}`
+                        : ""}
+                    </span>
+                  </motion.button>
+                ))}
+              </motion.div>
+            ) : null}
+          </AnimatePresence>
         </div>
-        <button className="btn primary big" onClick={onRunQuickAdd}>
+        <motion.button
+          type="button"
+          className="btn primary big"
+          onClick={onRunQuickAdd}
+          {...press}
+        >
           Add pick
-        </button>
+        </motion.button>
       </div>
 
-      {budgetTone !== "good" && spotsLeft > 0 && (
-        <div
-          className={`ticker ${budgetTone}`}
-          role="status"
-          aria-live="polite"
-          aria-atomic="true"
-        >
-          {budgetTone === "danger"
-            ? `Budget critical — max bid is ${money(maxBid)} with ${spotsLeft} spots to fill.`
-            : `Budget getting tight — averaging ${money(avgPerSpot)} per remaining spot.`}
-        </div>
-      )}
+      <AnimatePresence>
+        {budgetTone !== "good" && spotsLeft > 0 ? (
+          <motion.div
+            key={budgetTone}
+            className={`ticker ${budgetTone}`}
+            role="status"
+            aria-live="polite"
+            aria-atomic="true"
+            initial={reduce ? { opacity: 0 } : { opacity: 0, y: -6 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={reduce ? { opacity: 0 } : { opacity: 0, y: -4 }}
+            transition={reduce ? { duration: 0.12 } : motionTokens.spring.soft}
+          >
+            {budgetTone === "danger"
+              ? `Budget critical — max bid is ${money(maxBid)} with ${spotsLeft} spots to fill.`
+              : `Budget getting tight — averaging ${money(avgPerSpot)} per remaining spot.`}
+          </motion.div>
+        ) : null}
+      </AnimatePresence>
     </header>
   );
 }

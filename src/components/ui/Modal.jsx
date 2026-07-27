@@ -1,9 +1,12 @@
 import { useEffect, useRef } from "react";
+import { motion, AnimatePresence, useReducedMotion } from "motion/react";
 import Icon from "./Icon.jsx";
+import { motionTokens, scalePop } from "../../lib/motion.js";
 
 export default function Modal({ title, children, onClose }) {
   const boxRef = useRef(null);
   const closeRef = useRef(onClose);
+  const reduce = useReducedMotion();
   closeRef.current = onClose;
 
   useEffect(() => {
@@ -50,22 +53,47 @@ export default function Modal({ title, children, onClose }) {
     };
   }, []);
 
+  const pop = scalePop(reduce);
+
   return (
-    <div
-      className="modal-veil"
-      onMouseDown={(e) => {
-        if (e.target === e.currentTarget) onClose();
-      }}
-    >
-      <div className="modal" ref={boxRef} role="dialog" aria-modal="true" aria-label={title} tabIndex={-1}>
-        <div className="modal-head">
-          <h2 className="eyebrow">{title}</h2>
-          <button className="icon-btn" onClick={onClose} aria-label="Close dialog">
-            <Icon name="cross-small" />
-          </button>
-        </div>
-        {children}
-      </div>
-    </div>
+    <AnimatePresence>
+      <motion.div
+        className="modal-veil"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        transition={{ duration: motionTokens.duration.fast }}
+        onMouseDown={(e) => {
+          if (e.target === e.currentTarget) onClose();
+        }}
+      >
+        <motion.div
+          className="modal"
+          ref={boxRef}
+          role="dialog"
+          aria-modal="true"
+          aria-label={title}
+          tabIndex={-1}
+          initial={pop.initial}
+          animate={pop.animate}
+          exit={pop.exit}
+          transition={reduce ? { duration: 0.12 } : motionTokens.spring.soft}
+        >
+          <div className="modal-head">
+            <h2 className="eyebrow">{title}</h2>
+            <motion.button
+              type="button"
+              className="icon-btn"
+              onClick={onClose}
+              aria-label="Close dialog"
+              whileTap={reduce ? undefined : { scale: 0.9 }}
+            >
+              <Icon name="cross-small" />
+            </motion.button>
+          </div>
+          {children}
+        </motion.div>
+      </motion.div>
+    </AnimatePresence>
   );
 }
