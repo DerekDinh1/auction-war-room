@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useLayoutEffect, useRef, useMemo, useCallback } from "react";
+import React, { useState, useEffect, useLayoutEffect, useRef, useMemo, useCallback, Fragment } from "react";
 import { motion, AnimatePresence, MotionConfig, useReducedMotion } from "motion/react";
 import { CommandHeader, ViewNav, Modal, Icon, SeasonsPanel } from "./components/index.js";
 import { money } from "./lib/format.js";
@@ -17,6 +17,7 @@ import {
   setActiveSeasonId,
   seasonDraftSlice,
   applyDraftToSeason,
+  normalizeWatchlist,
 } from "./lib/seasons.js";
 
 const Ic = Icon; // legacy alias used throughout panels
@@ -563,6 +564,42 @@ const SLOT_COST_EST = { QB: 8, RB: 13, WR: 12, TE: 6, FLEX: 8, K: 1, DEF: 1 };
 const BOARD_FILTERS = ["ALL", "QB", "RB", "WR", "TE", "K", "DEF"];
 const boardKey = (name) => norm(name);
 
+function combineNominateRows({ overall, need, needReason, target }) {
+  const order = [];
+  const byKey = new Map();
+  const push = (player, kind) => {
+    if (!player) return;
+    const existing = byKey.get(player.key);
+    if (existing) {
+      existing.kinds.push(kind);
+      return;
+    }
+    const item = { player, kinds: [kind] };
+    byKey.set(player.key, item);
+    order.push(item);
+  };
+  push(overall, "overall");
+  push(need, "need");
+  push(target, "target");
+  return order.map((item) => {
+    const kinds = new Set(item.kinds);
+    let label = "Best available";
+    if (kinds.has("overall") && kinds.has("need") && kinds.has("target")) label = "Best + target + need";
+    else if (kinds.has("overall") && kinds.has("need")) label = "Best + fills need";
+    else if (kinds.has("overall") && kinds.has("target")) label = "Best + next target";
+    else if (kinds.has("need") && kinds.has("target")) label = "Target + fills need";
+    else if (kinds.has("target")) label = "Next target";
+    else if (kinds.has("need")) label = "Fills need";
+    return {
+      key: `${item.kinds.join("-")}-${item.player.key}`,
+      player: item.player,
+      label,
+      reason: kinds.has("need") ? needReason : null,
+      isTarget: kinds.has("target"),
+    };
+  });
+}
+
 const uid = () => Math.random().toString(36).slice(2, 10) + Date.now().toString(36);
 
 /* ---------- quick-add parser ---------- */
@@ -765,6 +802,10 @@ export default function AuctionWarRoom() {
   const [assistant, setAssistant] = useState(EMPTY_ASST);
   const presetTouchedRef = useRef(false);
   const [plan, setPlan] = useState(DEFAULT_PLAN);
+  const [watchlist, setWatchlist] = useState([]);
+  const [targetQuery, setTargetQuery] = useState("");
+  const [targetPosFilter, setTargetPosFilter] = useState("ALL");
+  const [targetSort, setTargetSort] = useState("overall"); // "overall" | "pos"
   const [settings, setSettings] = useState(DEFAULT_SETTINGS);
   const [catalog, setCatalog] = useState(null);
   const [activeSeasonId, setActiveSeasonIdState] = useState(null);
@@ -826,6 +867,8 @@ export default function AuctionWarRoom() {
     setNextPick(typeof d.nextPick === "number" ? d.nextPick : 1);
     setAssistant(d.assistant);
     setPlan(d.plan);
+    setWatchlist(normalizeWatchlist(d.watchlist));
+    setTargetQuery("");
     setEditRow(null);
     setView(d.view === "board" ? "room" : (d.view || "room"));
     setSettings(normalizeSettings(d.settings || DEFAULT_SETTINGS));
@@ -870,7 +913,7 @@ export default function AuctionWarRoom() {
       setCatalog((prev) => {
         if (!prev?.seasons?.[activeSeasonId]) return prev;
         const updated = applyDraftToSeason(prev.seasons[activeSeasonId], {
-          players, board, nextPick, assistant, plan, view, settings,
+          players, board, nextPick, assistant, plan, watchlist, view, settings,
         });
         const nextCat = {
           ...prev,
@@ -882,7 +925,7 @@ export default function AuctionWarRoom() {
       });
     }, 500);
     return () => clearTimeout(t);
-  }, [players, board, nextPick, assistant, plan, view, settings, loaded, activeSeasonId]);
+  }, [players, board, nextPick, assistant, plan, watchlist, view, settings, loaded, activeSeasonId]);
 
   const seasonList = useMemo(() => (catalog ? listSeasons(catalog) : []), [catalog]);
   const activeSeason = catalog && activeSeasonId ? catalog.seasons[activeSeasonId] : null;
@@ -890,14 +933,14 @@ export default function AuctionWarRoom() {
   const switchSeason = useCallback((id) => {
     if (!catalog || id === activeSeasonId) return;
     // flush current draft into catalog synchronously before switching
-    const flushed = applyDraftToSeason(catalog.seasons[activeSeasonId], { players, board, nextPick, assistant, plan, view, settings });
+    const flushed = applyDraftToSeason(catalog.seasons[activeSeasonId], { players, board, nextPick, assistant, plan, watchlist, view, settings });
     let nextCat = upsertSeason(catalog, flushed);
     nextCat = setActiveSeasonId(nextCat, id);
     setCatalog(nextCat);
     applySeasonDraft(nextCat.seasons[id]);
     storageSet(CATALOG_KEY, JSON.stringify(nextCat));
     showToast(`Switched to ${nextCat.seasons[id].label}`, "ok");
-  }, [catalog, activeSeasonId, players, board, nextPick, assistant, plan, view, settings, applySeasonDraft, showToast]);
+  }, [catalog, activeSeasonId, players, board, nextPick, assistant, plan, watchlist, view, settings, applySeasonDraft, showToast]);
 
   const renameSeason = useCallback((id, name) => {
     if (!catalog?.seasons[id]) return;
@@ -924,7 +967,7 @@ export default function AuctionWarRoom() {
       message: `Start ${next.label}?`,
       detail: "League settings copy from the current season. Roster, board, and budget history start empty. You can switch back anytime.",
       onYes: () => {
-        const flushed = applyDraftToSeason(from, { players, board, nextPick, assistant, plan, view, settings });
+        const flushed = applyDraftToSeason(from, { players, board, nextPick, assistant, plan, watchlist, view, settings });
         let nextCat = upsertSeason(catalog, flushed);
         nextCat = upsertSeason(nextCat, next);
         nextCat = setActiveSeasonId(nextCat, next.id);
@@ -935,7 +978,7 @@ export default function AuctionWarRoom() {
         showToast(`${next.label} ready — empty board, settings copied.`, "ok");
       },
     });
-  }, [catalog, activeSeasonId, players, board, nextPick, assistant, plan, view, settings, applySeasonDraft, switchSeason, showToast]);
+  }, [catalog, activeSeasonId, players, board, nextPick, assistant, plan, watchlist, view, settings, applySeasonDraft, switchSeason, showToast]);
 
   /* ------- roster shape derived from settings ------- */
   const roster = useMemo(() => buildRoster(settings), [settings]);
@@ -1493,7 +1536,7 @@ export default function AuctionWarRoom() {
   }, [board, players]);
 
   const nominateSuggestions = useMemo(() => {
-    if (spotsLeft <= 0) return { overall: null, need: null, needReason: null };
+    if (spotsLeft <= 0) return { overall: null, need: null, needReason: null, target: null };
 
     const draftedNames = new Set(players.map((p) => norm(p.name)));
     const pool = [];
@@ -1550,8 +1593,13 @@ export default function AuctionWarRoom() {
       needReason = need ? `FLEX ${need.pos}` : null;
     }
 
-    return { overall, need, needReason };
-  }, [spotsLeft, players, board, adjEst, posNeed, posCounts, flexOpen, settings.flexEligible, SLOT_BY_ID]);
+    const watchKeys = new Set(watchlist.map((w) => boardKey(w.name)));
+    const target = watchKeys.size
+      ? pool.filter((p) => watchKeys.has(p.key)).sort(rankPick)[0] || null
+      : null;
+
+    return { overall, need, needReason, target };
+  }, [spotsLeft, players, board, adjEst, posNeed, posCounts, flexOpen, settings.flexEligible, SLOT_BY_ID, watchlist]);
 
   const boardCounts = useMemo(() => {
     const vals = Object.values(board);
@@ -1571,11 +1619,11 @@ export default function AuctionWarRoom() {
   const exportDraft = () => {
     const label = (activeSeason?.label || "draft").replace(/[–—]/g, "-");
     const blob = new Blob([JSON.stringify({
-      version: 4,
+      version: 5,
       seasonId: activeSeasonId,
       seasonLabel: activeSeason?.label,
       exported: new Date().toISOString(),
-      players, board, nextPick, plan, settings,
+      players, board, nextPick, plan, watchlist, settings,
     }, null, 2)], { type: "application/json" });
     const a = document.createElement("a");
     a.href = URL.createObjectURL(blob);
@@ -1591,11 +1639,12 @@ export default function AuctionWarRoom() {
         if (!Array.isArray(d.players)) throw new Error("bad file");
         setConfirmBox({
           message: "Import this draft file?",
-          detail: `It contains ${d.players.length} drafted players and ${Object.keys(d.board || {}).length} tracked board entries. This replaces everything currently on screen.`,
+          detail: `It contains ${d.players.length} drafted players, ${Object.keys(d.board || {}).length} tracked board entries, and ${normalizeWatchlist(d.watchlist).length} targets. This replaces everything currently on screen.`,
           onYes: () => {
             setPlayers(d.players); setBoard(d.board || {});
             setNextPick(d.nextPick || d.players.length + 1);
             if (d.plan && typeof d.plan === "object") setPlan({ ...DEFAULT_PLAN, ...d.plan });
+            setWatchlist(normalizeWatchlist(d.watchlist));
             if (d.settings) setSettings(normalizeSettings(d.settings));
             setAssistant(EMPTY_ASST);
             setConfirmBox(null); showToast("Draft imported.", "ok");
@@ -1632,6 +1681,80 @@ export default function AuctionWarRoom() {
   const byeToneClass = byeInfo.level === 0 ? "good" : byeInfo.level === 1 ? "warn" : "danger";
   const historyRows = [...players].sort((a, b) => a.pick - b.pick);
 
+  const targetRows = useMemo(() => {
+    const draftedByName = new Map(players.map((p) => [norm(p.name), p]));
+    const posIdx = (pos) => {
+      const i = POS_ORDER.indexOf(pos);
+      return i < 0 ? 99 : i;
+    };
+    const rows = watchlist.map((w) => {
+      const k = boardKey(w.name);
+      const db = PLAYER_DB.find((p) => boardKey(p.name) === k);
+      const b = board[k] || {};
+      const rosterP = draftedByName.get(norm(w.name));
+      const name = db?.name || b.name || w.name;
+      const pos = db?.pos || b.pos || w.pos || "";
+      const team = db?.team || b.team || w.team || "";
+      const bye = db?.bye ?? b.bye ?? w.bye ?? (team ? TEAM_BYES[team] : null);
+      const status = (rosterP || b.status === "mine") ? "mine" : (b.status === "gone" ? "gone" : "available");
+      const price = status === "mine" ? (rosterP?.price ?? b.price ?? null) : (b.price ?? null);
+      return {
+        key: k,
+        name,
+        pos,
+        team,
+        bye,
+        status,
+        price,
+        est: adjEst(pos, name),
+        rank: POS_RANK[norm(name)] || 999,
+        overall: OVERALL_RANK[norm(name)] || 9999,
+      };
+    });
+    const filtered = targetPosFilter === "ALL" ? rows : rows.filter((r) => r.pos === targetPosFilter);
+    return [...filtered].sort((a, b) => {
+      if (targetSort === "pos") {
+        return posIdx(a.pos) - posIdx(b.pos)
+          || a.rank - b.rank
+          || a.overall - b.overall
+          || a.name.localeCompare(b.name);
+      }
+      return a.overall - b.overall
+        || a.rank - b.rank
+        || posIdx(a.pos) - posIdx(b.pos)
+        || a.name.localeCompare(b.name);
+    });
+  }, [watchlist, players, board, adjEst, targetPosFilter, targetSort]);
+
+  const targetCounts = useMemo(() => {
+    const draftedByName = new Set(players.map((p) => norm(p.name)));
+    let open = 0;
+    let mine = 0;
+    let gone = 0;
+    watchlist.forEach((w) => {
+      const b = board[boardKey(w.name)];
+      if (draftedByName.has(norm(w.name)) || b?.status === "mine") mine += 1;
+      else if (b?.status === "gone") gone += 1;
+      else open += 1;
+    });
+    return { open, mine, gone, total: watchlist.length };
+  }, [watchlist, players, board]);
+
+  const addTarget = useCallback((p) => {
+    const k = boardKey(p.name);
+    let added = false;
+    setWatchlist((wl) => {
+      if (wl.some((w) => boardKey(w.name) === k)) return wl;
+      added = true;
+      return [...wl, { name: p.name, pos: p.pos, team: p.team, bye: p.bye ?? null }];
+    });
+    setTargetQuery("");
+    showToast(added ? `${p.name} added to targets.` : `${p.name} is already on your target list.`, added ? "ok" : "warn");
+  }, [showToast]);
+
+  const removeTarget = useCallback((name) => {
+    setWatchlist((wl) => wl.filter((w) => boardKey(w.name) !== boardKey(name)));
+  }, []);
 
   if (!loaded) {
     return (<div className="root"><div className="loading">Loading your board…</div></div>);
@@ -1640,7 +1763,7 @@ export default function AuctionWarRoom() {
   const navItems = [
     { id: "room", label: "Draft Room", icon: "stopwatch", fb: "◷", badge: null },
     { id: "team", label: "My Team", icon: "shield", fb: "▣", badge: `${drafted}/${ROSTER_SIZE}` },
-    { id: "plan", label: "Plan", icon: "dollar", fb: "$", badge: planOverruns.length ? String(planOverruns.length) : null },
+    { id: "plan", label: "Plan", icon: "dollar", fb: "$", badge: planOverruns.length ? String(planOverruns.length) : (targetCounts.open ? String(targetCounts.open) : null) },
     { id: "settings", label: "Settings", icon: "settings", fb: "✦", badge: null },
   ];
   const settingsLabel = `${activeSeason?.label || "2026–27"} · ${settings.teams}-team · $${settings.budget} · 1.5 PPR`;
@@ -2107,15 +2230,8 @@ export default function AuctionWarRoom() {
   };
 
   const suggestPanel = (() => {
-    const { overall, need, needReason } = nominateSuggestions;
-    if (!overall && !need) return null;
-    const same = overall && need && overall.key === need.key;
-    const rows = same
-      ? [{ key: "both", player: overall, label: "Best + fills need", reason: needReason }]
-      : [
-          overall && { key: "overall", player: overall, label: "Best available", reason: null },
-          need && { key: "need", player: need, label: "Fills need", reason: needReason },
-        ].filter(Boolean);
+    const { overall, need, needReason, target } = nominateSuggestions;
+    const rows = combineNominateRows({ overall, need, needReason, target });
     if (!rows.length) return null;
     return (
       <section className="panel suggest-panel">
@@ -2131,9 +2247,9 @@ export default function AuctionWarRoom() {
             <motion.button
               key={row.key}
               type="button"
-              className={`suggest-row${bye ? ` has-bye-warn lv-${bye.level}` : ""}`}
+              className={`suggest-row${row.isTarget ? " is-target" : ""}${bye ? ` has-bye-warn lv-${bye.level}` : ""}`}
               onClick={() => loadSuggestion(row.player)}
-              aria-label={`Load ${row.player.name} into assistant${bye ? `. ${bye.message}` : ""}`}
+              aria-label={`Load ${row.player.name} into assistant${row.isTarget ? " (next target)" : ""}${bye ? `. ${bye.message}` : ""}`}
               layout
               initial={reduceMotion ? false : { opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
@@ -2484,6 +2600,136 @@ export default function AuctionWarRoom() {
     </section>
   );
 
+  const targetsPanel = (
+    <section className="panel wide targets-panel">
+      <div className="panel-head">
+        <span className="eyebrow">Draft targets</span>
+        <span className="panel-side">
+          {targetCounts.total
+            ? `${targetCounts.open} open${targetCounts.mine ? ` · ${targetCounts.mine} won` : ""}${targetCounts.gone ? ` · ${targetCounts.gone} gone` : ""}`
+            : "Players you want to nominate"}
+        </span>
+      </div>
+      <div className="target-toolbar">
+        <div className="filter-row">
+          {BOARD_FILTERS.map((f) => (
+            <motion.button
+              key={f}
+              type="button"
+              className={`chip ${targetPosFilter === f ? "on" : ""}`}
+              aria-pressed={targetPosFilter === f}
+              onClick={() => setTargetPosFilter(f)}
+              {...press}
+            >
+              {f === "ALL" ? "All" : f}
+            </motion.button>
+          ))}
+        </div>
+        <div className="target-add">
+          <NameAutocomplete
+            value={targetQuery}
+            onChange={setTargetQuery}
+            onSelect={addTarget}
+            placeholder={targetPosFilter === "ALL" ? "Add a target…" : `Add a ${targetPosFilter}…`}
+            posFilter={targetPosFilter === "ALL" ? null : targetPosFilter}
+            ariaLabel="Add a target player"
+            listId="plan-target-ac"
+          />
+          {watchlist.length > 0 ? (
+            <button
+              type="button"
+              className="btn"
+              onClick={() => setConfirmBox({
+                message: "Clear the target list?",
+                detail: "Removes every player from this season's draft targets. Budget plan and roster stay put.",
+                onYes: () => { setWatchlist([]); setConfirmBox(null); showToast("Target list cleared.", "ok"); },
+              })}
+            >
+              Clear list
+            </button>
+          ) : null}
+        </div>
+      </div>
+      {watchlist.length === 0 ? (
+        <div className="empty-note">Search a name to build your shortlist. The best remaining target also shows in the Draft Room as a nominate-next candidate.</div>
+      ) : targetRows.length === 0 ? (
+        <div className="empty-note">No {targetPosFilter} targets on this list. Switch to All or add one above.</div>
+      ) : (
+        <div className="table-scroll">
+          <table className="flat targets-table">
+            <thead>
+              <tr>
+                <th className={`num col-rank${targetSort === "overall" ? " sorted" : ""}`}>
+                  <button type="button" className="th-sort" aria-pressed={targetSort === "overall"} onClick={() => setTargetSort("overall")}>
+                    #{targetSort === "overall" ? " ▾" : ""}
+                  </button>
+                </th>
+                <th className={`col-pos${targetSort === "pos" ? " sorted" : ""}`}>
+                  <button type="button" className="th-sort" aria-pressed={targetSort === "pos"} onClick={() => setTargetSort("pos")}>
+                    Pos{targetSort === "pos" ? " ▾" : ""}
+                  </button>
+                </th>
+                <th>Player</th>
+                <th className="hide-xs">Team</th>
+                <th className="num">Est</th>
+                <th>Status</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              {targetRows.map((r, i) => {
+                const showGroup = targetSort === "pos" && targetPosFilter === "ALL" && (i === 0 || targetRows[i - 1].pos !== r.pos);
+                const statusLabel = r.status === "mine" ? "Won" : r.status === "gone" ? "Gone" : "Open";
+                return (
+                  <Fragment key={r.key}>
+                    {showGroup ? (
+                      <tr className="target-group"><td colSpan={7}>{r.pos}</td></tr>
+                    ) : null}
+                    <tr className={r.status !== "available" ? "row-taken" : ""}>
+                      <td className="num rank-cell">{r.overall < 9999 ? r.overall : "—"}</td>
+                      <td><span className={`posb p-${r.pos}`}>{r.pos || "—"}</span></td>
+                      <td className="pname">
+                        {r.status === "available" ? (
+                          <button
+                            type="button"
+                            className="linklike"
+                            onClick={() => { pickAssistantPlayer(r); changeView("room"); }}
+                            title="Load into Draft Assistant"
+                          >
+                            {r.name}
+                          </button>
+                        ) : r.name}
+                      </td>
+                      <td className="hide-xs">{r.team || "—"}</td>
+                      <td className="num">{r.est != null ? money(r.est) : "—"}</td>
+                      <td>
+                        <span className={`target-status st-${r.status}`}>
+                          {statusLabel}
+                          {r.price != null ? ` ${money(r.price)}` : ""}
+                        </span>
+                      </td>
+                      <td className="actions">
+                        <button
+                          type="button"
+                          className="icon-btn danger"
+                          title="Remove target"
+                          aria-label={`Remove ${r.name} from targets`}
+                          onClick={() => removeTarget(r.name)}
+                        >
+                          <Ic name="cross-small" fb="✕" />
+                        </button>
+                      </td>
+                    </tr>
+                  </Fragment>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+      )}
+    </section>
+  );
+
   const planPanel = (
     <section className="panel wide">
       <div className="panel-head">
@@ -2734,6 +2980,7 @@ export default function AuctionWarRoom() {
         </>)}
 
         {view === "plan" && (<>
+          {targetsPanel}
           {planPanel}
           {healthPanel}
         </>)}

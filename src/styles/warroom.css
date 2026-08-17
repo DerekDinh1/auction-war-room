@@ -294,6 +294,8 @@ p.brand-sub { margin: 0; }
   font-variant-numeric: tabular-nums; font-weight: 700; color: var(--green);
   white-space: nowrap;
 }
+.suggest-row.is-target { border-color: rgba(210,245,60,.4); }
+:root[data-theme="light"] .suggest-row.is-target { border-color: rgba(143,174,18,.45); }
 
 /* ---- team preview (draft room) ---- */
 .team-preview-panel .panel-head { margin-bottom: 8px; }
@@ -851,6 +853,26 @@ tr.row-taken .pname .linklike { text-decoration: line-through; }
 .plan-input { max-width: 84px; margin-left: auto; text-align: right; padding: 6px 8px; }
 .plan-note { text-align: right; color: var(--muted); font-size: 12px; }
 
+/* ---- draft targets (plan tab) ---- */
+.target-toolbar { display: grid; gap: 10px; margin-bottom: 12px; }
+.target-add { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 8px; align-items: start; }
+.target-add .ac-wrap { min-width: 0; }
+.th-sort {
+  background: none; border: none; padding: 0; font: inherit; color: inherit;
+  cursor: pointer; letter-spacing: inherit; text-transform: inherit;
+}
+.th-sort:hover { color: var(--ink); }
+th.sorted .th-sort { color: var(--accent); }
+.target-group td {
+  font-size: 10.5px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase;
+  color: var(--muted); padding-top: 12px; border-bottom: 1px solid var(--line-soft);
+}
+.target-status { font-size: 12px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; }
+.target-status.st-available { color: var(--muted); }
+.target-status.st-mine { color: var(--green); }
+.target-status.st-gone { color: var(--red); }
+.targets-table { width: 100%; }
+
 .table-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
 button, select { touch-action: manipulation; }
 /* keyboard focus was invisible on every button — one rule covers the whole surface */
@@ -1108,6 +1130,7 @@ button, select { touch-action: manipulation; }
   .add-grid { grid-template-columns: 1fr 1fr; }
   .add-grid > .ac-wrap { grid-column: 1 / -1; }
   .add-grid .btn { grid-column: 1 / -1; min-height: 46px; }
+  .target-add { grid-template-columns: 1fr; }
   .actions .move { display: none; }
   .icon-btn { width: 40px; height: 40px; font-size: 15px; }
   .btn { min-height: 44px; }

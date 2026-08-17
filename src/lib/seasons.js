@@ -1,6 +1,6 @@
 /**
  * Season = one auction year / "project" (e.g. 2026–27).
- * Each season owns its own draft state (roster, board, settings, plan).
+ * Each season owns its own draft state (roster, board, settings, plan, watchlist).
  */
 
 export const LEGACY_STORAGE_KEY = "ffad-2026-v1";
@@ -20,6 +20,32 @@ export function seasonId(startYear) {
   return `${Number(startYear)}-${String((Number(startYear) + 1) % 100).padStart(2, "0")}`;
 }
 
+/** Shortlist of players to chase in the auction. Not the legacy board `targets` list. */
+export function normalizeWatchlist(raw) {
+  if (!Array.isArray(raw)) return [];
+  const out = [];
+  const seen = new Set();
+  for (const item of raw) {
+    if (item == null) continue;
+    const name = (typeof item === "string" ? item : item.name || "").trim();
+    if (!name) continue;
+    const key = name.toLowerCase();
+    if (seen.has(key)) continue;
+    seen.add(key);
+    if (typeof item === "string") {
+      out.push({ name });
+      continue;
+    }
+    out.push({
+      name,
+      pos: item.pos || "",
+      team: item.team || "",
+      bye: item.bye ?? null,
+    });
+  }
+  return out;
+}
+
 export function emptyDraftState(settings) {
   return {
     players: [],
@@ -27,6 +53,7 @@ export function emptyDraftState(settings) {
     nextPick: 1,
     assistant: { ...EMPTY_ASST },
     plan: { ...DEFAULT_PLAN },
+    watchlist: [],
     view: "room",
     settings: settings || null,
   };
@@ -72,6 +99,7 @@ export function migrateLegacy(flat) {
   if (flat?.plan && typeof flat.plan === "object") {
     season.plan = { ...DEFAULT_PLAN, ...flat.plan };
   }
+  season.watchlist = normalizeWatchlist(flat?.watchlist);
   if (typeof flat?.view === "string") season.view = flat.view;
   return createCatalog(season);
 }
@@ -114,6 +142,7 @@ export function seasonDraftSlice(season) {
     nextPick: typeof season.nextPick === "number" ? season.nextPick : 1,
     assistant: { ...EMPTY_ASST, ...(season.assistant || {}) },
     plan: { ...DEFAULT_PLAN, ...(season.plan || {}) },
+    watchlist: normalizeWatchlist(season.watchlist),
     view: season.view || "room",
     settings: season.settings || null,
   };
@@ -127,6 +156,7 @@ export function applyDraftToSeason(season, draft) {
     nextPick: draft.nextPick,
     assistant: draft.assistant,
     plan: draft.plan,
+    watchlist: normalizeWatchlist(draft.watchlist),
     view: draft.view,
     settings: draft.settings,
   };
