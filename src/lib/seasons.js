@@ -1,6 +1,9 @@
 /**
  * Season = one auction year / "project" (e.g. 2026–27).
- * Each season owns its own draft state (roster, board, settings, plan).
+ * Each season owns its own draft state (roster, board, settings, plan, targets).
+ * `targets` is the Plan-tab nomination list: [{ name, pos, team, bye }].
+ * Older saves used `targets` as the big board (status / priority); those are
+ * migrated onto `board` and stripped from this list.
  */
 
 export const LEGACY_STORAGE_KEY = "ffad-2026-v1";
@@ -27,6 +30,7 @@ export function emptyDraftState(settings) {
     nextPick: 1,
     assistant: { ...EMPTY_ASST },
     plan: { ...DEFAULT_PLAN },
+    targets: [],
     view: "room",
     settings: settings || null,
   };
@@ -72,6 +76,7 @@ export function migrateLegacy(flat) {
   if (flat?.plan && typeof flat.plan === "object") {
     season.plan = { ...DEFAULT_PLAN, ...flat.plan };
   }
+  if (Array.isArray(flat?.targets)) season.targets = flat.targets;
   if (typeof flat?.view === "string") season.view = flat.view;
   return createCatalog(season);
 }
@@ -107,6 +112,66 @@ export function setActiveSeasonId(catalog, id) {
   return { ...catalog, activeSeasonId: id };
 }
 
+/** Old board-as-targets rows used `status` and/or `priority`. */
+export function isLegacyBoardTargets(targets) {
+  return Array.isArray(targets) && targets.some((t) => t && (typeof t.status === "string" || t.priority != null));
+}
+
+/** Plan-tab target list. Drops legacy board rows and nameless entries. */
+export function normalizePlanTargets(targets) {
+  if (!Array.isArray(targets)) return [];
+  const seen = new Set();
+  const out = [];
+  for (const t of targets) {
+    if (!t?.name) continue;
+    if (typeof t.status === "string" || t.priority != null) continue;
+    const key = String(t.name).toLowerCase();
+    if (seen.has(key)) continue;
+    seen.add(key);
+    out.push({
+      name: t.name,
+      pos: t.pos || "",
+      team: t.team || "",
+      bye: t.bye ?? null,
+    });
+  }
+  return out;
+}
+
+
+/** Keep board stars and Plan targets in sync (bidirectional). */
+export function syncStarsAndTargets(board, targets, keyFn = (name) => String(name || "").toLowerCase()) {
+  const syncedTargets = normalizePlanTargets(targets);
+  const targetKeys = new Set(syncedTargets.map((t) => keyFn(t.name)));
+  const syncedBoard = { ...(board || {}) };
+
+  Object.values(syncedBoard).forEach((b) => {
+    if (!b?.star || !b?.name) return;
+    const k = keyFn(b.name);
+    if (targetKeys.has(k)) return;
+    syncedTargets.push({ name: b.name, pos: b.pos || "", team: b.team || "", bye: b.bye ?? null });
+    targetKeys.add(k);
+  });
+
+  syncedTargets.forEach((t) => {
+    const k = keyFn(t.name);
+    const cur = syncedBoard[k];
+    syncedBoard[k] = {
+      ...(cur || {}),
+      name: t.name,
+      pos: t.pos || cur?.pos || "",
+      team: t.team || cur?.team || "",
+      bye: t.bye ?? cur?.bye ?? null,
+      star: true,
+      status: cur?.status || "available",
+      price: cur?.price ?? null,
+      injuryNote: cur?.injuryNote,
+    };
+  });
+
+  return { board: syncedBoard, targets: normalizePlanTargets(syncedTargets) };
+}
+
 export function seasonDraftSlice(season) {
   return {
     players: season.players || [],
@@ -114,6 +179,7 @@ export function seasonDraftSlice(season) {
     nextPick: typeof season.nextPick === "number" ? season.nextPick : 1,
     assistant: { ...EMPTY_ASST, ...(season.assistant || {}) },
     plan: { ...DEFAULT_PLAN, ...(season.plan || {}) },
+    targets: normalizePlanTargets(season.targets),
     view: season.view || "room",
     settings: season.settings || null,
   };
@@ -127,6 +193,7 @@ export function applyDraftToSeason(season, draft) {
     nextPick: draft.nextPick,
     assistant: draft.assistant,
     plan: draft.plan,
+    targets: Array.isArray(draft.targets) ? normalizePlanTargets(draft.targets) : normalizePlanTargets(season.targets),
     view: draft.view,
     settings: draft.settings,
   };
