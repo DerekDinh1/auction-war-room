@@ -17,6 +17,9 @@ import {
   setActiveSeasonId,
   seasonDraftSlice,
   applyDraftToSeason,
+  isLegacyBoardTargets,
+  normalizePlanTargets,
+  syncStarsAndTargets,
 } from "./lib/seasons.js";
 
 const Ic = Icon; // legacy alias used throughout panels
@@ -172,7 +175,7 @@ const RAW_DB = [
   ["Patrick Mahomes II","QB","KC"], // 98 · avg 100.27
   ["Bo Nix","QB","DEN"], // 99 · avg 100.75
   ["George Kittle","TE","SF"], // 100 · avg 101.15
-  ["Ricky Pearsall","WR","SF"], // 101 · avg 101.35
+  ["Ricky Pearsall","WR","SF"], // 101 · avg 101.35 · OUT 2026 (PCL)
   ["Jakobi Meyers","WR","JAX"], // 102 · avg 102.73
   ["Jordan Addison","WR","MIN"], // 103 · avg 103.26
   ["Matthew Stafford","QB","LAR"], // 104 · avg 103.80
@@ -340,7 +343,7 @@ const RAW_DB = [
   ["Trey Benson","RB","ARI"], // 266 · avg 261.27
   ["Mike Gesicki","TE","CIN"], // 267 · avg 261.55
   ["Eli Stowers","TE","PHI"], // 268 · avg 262.69
-  ["Chris Brazzell II","WR","CAR"], // 269 · avg 262.89
+  ["Chris Brazzell II","WR","CAR"], // 269 · avg 262.89 · OUT 2026 (LCL)
   ["Tyquan Thornton","WR","KC"], // 270 · avg 263.43
   ["Samaje Perine","RB","CIN"], // 271 · avg 264.05
   ["Darius Slayton","WR","NYG"], // 272 · avg 264.83
@@ -388,6 +391,29 @@ const PLAYER_DB = [
 ].map(([name, pos, team], i) => ({ id: `db${i}`, name, pos, team, bye: TEAM_BYES[team] }));
 
 const norm = (s) => (s || "").toLowerCase().replace(/[’‘]/g, "'").replace(/[.\-]/g, "").trim();
+// Confirmed out for 2026 (training camp / preseason, Aug 2026)
+const OUT_FOR_SEASON = {
+  [norm("Ricky Pearsall")]: "PCL surgery — out for 2026",
+  [norm("Chris Brazzell II")]: "LCL tear — out for 2026",
+};
+const injuryNoteFor = (name) => OUT_FOR_SEASON[norm(name)] || null;
+const isOutForSeason = (name) => !!injuryNoteFor(name);
+const seedOutForSeasonBoard = (boardData) => {
+  const next = { ...(boardData || {}) };
+  Object.entries(OUT_FOR_SEASON).forEach(([key, note]) => {
+    const p = PLAYER_DB.find((x) => norm(x.name) === key);
+    if (!p) return;
+    const cur = next[key];
+    if (cur?.status === "mine") return;
+    next[key] = {
+      ...(cur || {}),
+      name: p.name, pos: p.pos, team: p.team, bye: p.bye,
+      status: "gone", price: cur?.price ?? null, star: !!cur?.star,
+      injuryNote: note,
+    };
+  });
+  return next;
+};
 
 /* ---------- estimated auction values (12-team, $200; DB is roughly rank-ordered) ---------- */
 const POS_LISTS = {};
@@ -765,6 +791,10 @@ export default function AuctionWarRoom() {
   const [assistant, setAssistant] = useState(EMPTY_ASST);
   const presetTouchedRef = useRef(false);
   const [plan, setPlan] = useState(DEFAULT_PLAN);
+  const [targets, setTargets] = useState([]); // [{ name, pos, team, bye }]
+  const [targetFilter, setTargetFilter] = useState("ALL");
+  const [targetSort, setTargetSort] = useState("overall"); // "overall" | "pos"
+  const [targetName, setTargetName] = useState("");
   const [settings, setSettings] = useState(DEFAULT_SETTINGS);
   const [catalog, setCatalog] = useState(null);
   const [activeSeasonId, setActiveSeasonIdState] = useState(null);
@@ -808,11 +838,13 @@ export default function AuctionWarRoom() {
   /* ------- seasons catalog + persistence ------- */
   const applySeasonDraft = useCallback((season) => {
     const d = seasonDraftSlice(season);
-    // migrate old target list → board entries if needed
-    let boardData = d.board;
-    if (Array.isArray(season.targets)) {
+    let boardData = d.board && typeof d.board === "object" ? { ...d.board } : {};
+    // Older saves stored the big board as `targets` (status / priority).
+    // Only migrate when that shape is present and the real board is empty.
+    if (isLegacyBoardTargets(season.targets) && Object.keys(boardData).length === 0) {
       boardData = {};
       season.targets.forEach((t) => {
+        if (!t?.name) return;
         boardData[boardKey(t.name)] = {
           name: t.name, pos: t.pos, team: t.team, bye: t.bye,
           star: (t.priority || 0) >= 4,
@@ -821,11 +853,15 @@ export default function AuctionWarRoom() {
         };
       });
     }
+    const seededBoard = seedOutForSeasonBoard(boardData);
+    const synced = syncStarsAndTargets(seededBoard, normalizePlanTargets(season.targets), boardKey);
     setPlayers(Array.isArray(d.players) ? d.players : []);
-    setBoard(boardData && typeof boardData === "object" ? boardData : {});
+    setBoard(synced.board);
     setNextPick(typeof d.nextPick === "number" ? d.nextPick : 1);
     setAssistant(d.assistant);
     setPlan(d.plan);
+    setTargets(synced.targets);
+    setTargetName("");
     setEditRow(null);
     setView(d.view === "board" ? "room" : (d.view || "room"));
     setSettings(normalizeSettings(d.settings || DEFAULT_SETTINGS));
@@ -870,7 +906,7 @@ export default function AuctionWarRoom() {
       setCatalog((prev) => {
         if (!prev?.seasons?.[activeSeasonId]) return prev;
         const updated = applyDraftToSeason(prev.seasons[activeSeasonId], {
-          players, board, nextPick, assistant, plan, view, settings,
+          players, board, nextPick, assistant, plan, view, settings, targets,
         });
         const nextCat = {
           ...prev,
@@ -882,7 +918,7 @@ export default function AuctionWarRoom() {
       });
     }, 500);
     return () => clearTimeout(t);
-  }, [players, board, nextPick, assistant, plan, view, settings, loaded, activeSeasonId]);
+  }, [players, board, nextPick, assistant, plan, view, settings, targets, loaded, activeSeasonId]);
 
   const seasonList = useMemo(() => (catalog ? listSeasons(catalog) : []), [catalog]);
   const activeSeason = catalog && activeSeasonId ? catalog.seasons[activeSeasonId] : null;
@@ -890,14 +926,14 @@ export default function AuctionWarRoom() {
   const switchSeason = useCallback((id) => {
     if (!catalog || id === activeSeasonId) return;
     // flush current draft into catalog synchronously before switching
-    const flushed = applyDraftToSeason(catalog.seasons[activeSeasonId], { players, board, nextPick, assistant, plan, view, settings });
+    const flushed = applyDraftToSeason(catalog.seasons[activeSeasonId], { players, board, nextPick, assistant, plan, view, settings, targets });
     let nextCat = upsertSeason(catalog, flushed);
     nextCat = setActiveSeasonId(nextCat, id);
     setCatalog(nextCat);
     applySeasonDraft(nextCat.seasons[id]);
     storageSet(CATALOG_KEY, JSON.stringify(nextCat));
     showToast(`Switched to ${nextCat.seasons[id].label}`, "ok");
-  }, [catalog, activeSeasonId, players, board, nextPick, assistant, plan, view, settings, applySeasonDraft, showToast]);
+  }, [catalog, activeSeasonId, players, board, nextPick, assistant, plan, view, settings, targets, applySeasonDraft, showToast]);
 
   const renameSeason = useCallback((id, name) => {
     if (!catalog?.seasons[id]) return;
@@ -924,7 +960,7 @@ export default function AuctionWarRoom() {
       message: `Start ${next.label}?`,
       detail: "League settings copy from the current season. Roster, board, and budget history start empty. You can switch back anytime.",
       onYes: () => {
-        const flushed = applyDraftToSeason(from, { players, board, nextPick, assistant, plan, view, settings });
+        const flushed = applyDraftToSeason(from, { players, board, nextPick, assistant, plan, view, settings, targets });
         let nextCat = upsertSeason(catalog, flushed);
         nextCat = upsertSeason(nextCat, next);
         nextCat = setActiveSeasonId(nextCat, next.id);
@@ -935,7 +971,7 @@ export default function AuctionWarRoom() {
         showToast(`${next.label} ready — empty board, settings copied.`, "ok");
       },
     });
-  }, [catalog, activeSeasonId, players, board, nextPick, assistant, plan, view, settings, applySeasonDraft, switchSeason, showToast]);
+  }, [catalog, activeSeasonId, players, board, nextPick, assistant, plan, view, settings, targets, applySeasonDraft, switchSeason, showToast]);
 
   /* ------- roster shape derived from settings ------- */
   const roster = useMemo(() => buildRoster(settings), [settings]);
@@ -1261,7 +1297,10 @@ export default function AuctionWarRoom() {
   };
   const toggleStar = (name, meta) => {
     const k = boardKey(name);
-    setBoard((b) => ({ ...b, [k]: { ...(b[k] || { status: "available", price: null, ...meta }), ...meta, name, star: !b[k]?.star } }));
+    const nextStar = !board[k]?.star;
+    setBoard((b) => ({ ...b, [k]: { ...(b[k] || { status: "available", price: null, ...meta }), ...meta, name, star: nextStar } }));
+    if (nextStar) addTarget({ name, ...meta }, { silent: true });
+    else removeTarget(name, { silent: true });
   };
   const assistantGone = () => {
     if (!assistant.name || !assistant.pos) { clearAssistant(); return; }
@@ -1443,11 +1482,14 @@ export default function AuctionWarRoom() {
       const rosterP = draftedByName.get(norm(p.name));
       const status = rosterP ? "mine" : (b.status || "available");
       const price = status === "mine" ? (rosterP?.price ?? b.price ?? null) : (b.price ?? null);
+      const injuryNote = b.injuryNote || injuryNoteFor(p.name);
+      const effStatus = injuryNote && status === "available" ? "gone" : status;
       return {
-        ...p, key: k, status, price, star: !!b.star,
+        ...p, key: k, status: effStatus, price, star: !!b.star,
         est: adjEst(p.pos, p.name), tier: tierOf(p.name),
         rank: POS_RANK[norm(p.name)] || 999,
         overall: OVERALL_RANK[norm(p.name)] || null,
+        injuryNote,
       };
     });
     // custom players tracked off-board that aren't in the built-in DB
@@ -1471,7 +1513,7 @@ export default function AuctionWarRoom() {
       a.name.localeCompare(b.name);
 
     const sorted = filtered.sort(byOverall);
-    return boardShowGone ? sorted : sorted.slice(0, 120);
+    return sorted;
   }, [board, players, boardFilter, boardShowGone, boardStarsOnly, adjEst]);
 
   const boardAvailableCount = useMemo(() => {
@@ -1493,7 +1535,7 @@ export default function AuctionWarRoom() {
   }, [board, players]);
 
   const nominateSuggestions = useMemo(() => {
-    if (spotsLeft <= 0) return { overall: null, need: null, needReason: null };
+    if (spotsLeft <= 0) return { overall: null, need: null, needReason: null, target: null };
 
     const draftedNames = new Set(players.map((p) => norm(p.name)));
     const pool = [];
@@ -1502,6 +1544,7 @@ export default function AuctionWarRoom() {
       const k = boardKey(p.name);
       const b = board[k];
       if (b?.status === "gone" || b?.status === "mine") return;
+      if (isOutForSeason(p.name)) return;
       pool.push({
         ...p,
         key: k,
@@ -1550,8 +1593,30 @@ export default function AuctionWarRoom() {
       needReason = need ? `FLEX ${need.pos}` : null;
     }
 
-    return { overall, need, needReason };
-  }, [spotsLeft, players, board, adjEst, posNeed, posCounts, flexOpen, settings.flexEligible, SLOT_BY_ID]);
+    let target = null;
+    if (targets.length) {
+      const remaining = [];
+      targets.forEach((t) => {
+        const k = boardKey(t.name);
+        if (draftedNames.has(k)) return;
+        const b = board[k];
+        if (b?.status === "gone" || b?.status === "mine") return;
+        if (isOutForSeason(t.name)) return;
+        const fromPool = pool.find((r) => r.key === k);
+        if (fromPool) { remaining.push(fromPool); return; }
+        const row = {
+          id: `t-${k}`, name: t.name, pos: t.pos || "", team: t.team || "", bye: t.bye || null,
+          key: k, star: !!b?.star, est: adjEst(t.pos, t.name),
+          rank: POS_RANK[k] || 999, overall: OVERALL_RANK[k] || 9999,
+        };
+        row.byeConflict = assessByeConflict(players, row, SLOT_BY_ID);
+        remaining.push(row);
+      });
+      target = remaining.sort(rankPick)[0] || null;
+    }
+
+    return { overall, need, needReason, target };
+  }, [spotsLeft, players, board, targets, adjEst, posNeed, posCounts, flexOpen, settings.flexEligible, SLOT_BY_ID]);
 
   const boardCounts = useMemo(() => {
     const vals = Object.values(board);
@@ -1567,6 +1632,104 @@ export default function AuctionWarRoom() {
     if (status === "gone") { setPriceAsk({ mode: "gone", player: row }); return; }
   };
 
+  const addTarget = (p, { silent = false } = {}) => {
+    if (!p?.name) return;
+    const k = boardKey(p.name);
+    if (targets.some((t) => boardKey(t.name) === k)) {
+      if (!silent) showToast(`${p.name} is already on your target list.`, "warn");
+      setTargetName("");
+      return;
+    }
+    setTargets((ts) => [...ts, {
+      name: p.name, pos: p.pos || "", team: p.team || "",
+      bye: p.bye ?? TEAM_BYES[p.team] ?? null,
+    }]);
+    setBoard((b) => ({
+      ...b,
+      [k]: {
+        ...(b[k] || { status: "available", price: null }),
+        name: p.name,
+        pos: p.pos || b[k]?.pos || "",
+        team: p.team || b[k]?.team || "",
+        bye: p.bye ?? b[k]?.bye ?? TEAM_BYES[p.team] ?? null,
+        star: true,
+        status: b[k]?.status || "available",
+        price: b[k]?.price ?? null,
+      },
+    }));
+    setTargetName("");
+    if (!silent) showToast(`${p.name} starred & added to targets.`, "ok");
+  };
+  const addTargetFromInput = () => {
+    const q = targetName.trim();
+    if (q.length < 2) { showToast("Search a player to add.", "warn"); return; }
+    const pos = targetFilter === "ALL" ? null : targetFilter;
+    const hits = matchPlayers(q, pos);
+    if (hits.length === 1) { addTarget(hits[0]); return; }
+    if (hits.length > 1) { showToast("Pick a player from the suggestions.", "warn"); return; }
+    showToast("No player matched that name.", "err");
+  };
+  const removeTarget = (name, { silent = false } = {}) => {
+    const k = boardKey(name);
+    setTargets((ts) => ts.filter((t) => boardKey(t.name) !== k));
+    setBoard((b) => {
+      if (!b[k]?.star) return b;
+      return { ...b, [k]: { ...b[k], star: false } };
+    });
+    if (!silent) showToast(`${name} removed from targets.`, "info");
+  };
+
+  const toggleTarget = (p, opts) => {
+    if (!p?.name) return;
+    const k = boardKey(p.name);
+    if (targets.some((t) => boardKey(t.name) === k)) removeTarget(p.name, opts);
+    else addTarget(p, opts);
+  };
+
+  const targetRows = useMemo(() => {
+    const posIdx = Object.fromEntries(POS_ORDER.map((pos, i) => [pos, i]));
+    const rows = targets.map((t) => {
+      const k = boardKey(t.name);
+      let status = "available";
+      if (players.some((pl) => boardKey(pl.name) === k)) status = "mine";
+      else {
+        const b = board[k];
+        if (b?.status === "gone" || b?.status === "mine") status = b.status;
+      }
+      const injuryNote = board[k]?.injuryNote || injuryNoteFor(t.name);
+      const effStatus = injuryNote && status === "available" ? "gone" : status;
+      return {
+        ...t, key: k, status: effStatus,
+        est: adjEst(t.pos, t.name),
+        rank: POS_RANK[k] || 999,
+        overall: OVERALL_RANK[k] || 9999,
+        bye: t.bye || TEAM_BYES[t.team] || null,
+        injuryNote,
+      };
+    });
+    const filtered = targetFilter === "ALL" ? rows : rows.filter((r) => r.pos === targetFilter);
+    const byOverall = (a, b) => a.overall - b.overall || a.rank - b.rank || a.name.localeCompare(b.name);
+    if (targetSort === "pos") {
+      return [...filtered].sort((a, b) => (posIdx[a.pos] ?? 99) - (posIdx[b.pos] ?? 99) || byOverall(a, b));
+    }
+    return [...filtered].sort(byOverall);
+  }, [targets, players, board, adjEst, targetFilter, targetSort]);
+
+  const targetsLeftAll = useMemo(() => {
+    return targets.filter((t) => {
+      const k = boardKey(t.name);
+      if (players.some((pl) => boardKey(pl.name) === k)) return false;
+      const b = board[k];
+      if (isOutForSeason(t.name)) return false;
+      return b?.status !== "gone" && b?.status !== "mine";
+    }).length;
+  }, [targets, players, board]);
+
+  const targetKeySet = useMemo(
+    () => new Set(targets.map((t) => boardKey(t.name))),
+    [targets],
+  );
+
   /* ------- export / import / reset ------- */
   const exportDraft = () => {
     const label = (activeSeason?.label || "draft").replace(/[–—]/g, "-");
@@ -1575,7 +1738,7 @@ export default function AuctionWarRoom() {
       seasonId: activeSeasonId,
       seasonLabel: activeSeason?.label,
       exported: new Date().toISOString(),
-      players, board, nextPick, plan, settings,
+      players, board, nextPick, plan, settings, targets,
     }, null, 2)], { type: "application/json" });
     const a = document.createElement("a");
     a.href = URL.createObjectURL(blob);
@@ -1597,6 +1760,7 @@ export default function AuctionWarRoom() {
             setNextPick(d.nextPick || d.players.length + 1);
             if (d.plan && typeof d.plan === "object") setPlan({ ...DEFAULT_PLAN, ...d.plan });
             if (d.settings) setSettings(normalizeSettings(d.settings));
+            setTargets(normalizePlanTargets(d.targets));
             setAssistant(EMPTY_ASST);
             setConfirmBox(null); showToast("Draft imported.", "ok");
           },
@@ -2105,17 +2269,38 @@ export default function AuctionWarRoom() {
     pickAssistantPlayer(p);
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
+  const loadTargetToRoom = (p) => {
+    pickAssistantPlayer(p);
+    changeView("room");
+  };
 
   const suggestPanel = (() => {
-    const { overall, need, needReason } = nominateSuggestions;
-    if (!overall && !need) return null;
-    const same = overall && need && overall.key === need.key;
-    const rows = same
-      ? [{ key: "both", player: overall, label: "Best + fills need", reason: needReason }]
-      : [
-          overall && { key: "overall", player: overall, label: "Best available", reason: null },
-          need && { key: "need", player: need, label: "Fills need", reason: needReason },
-        ].filter(Boolean);
+    const { overall, need, needReason, target } = nominateSuggestions;
+    if (!overall && !need && !target) return null;
+    const byKey = new Map();
+    const addRole = (player, role) => {
+      if (!player) return;
+      const prev = byKey.get(player.key) || { player, roles: [] };
+      if (!prev.roles.includes(role)) prev.roles.push(role);
+      byKey.set(player.key, prev);
+    };
+    addRole(target, "target");
+    addRole(overall, "overall");
+    addRole(need, "need");
+    const labelFor = (roles) => {
+      const has = (r) => roles.includes(r);
+      if (has("overall") && has("target") && has("need")) return { label: "Best + target + need", reason: needReason };
+      if (has("overall") && has("need")) return { label: "Best + fills need", reason: needReason };
+      if (has("target") && has("need")) return { label: "Target + fills need", reason: needReason };
+      if (has("overall") && has("target")) return { label: "Best + target", reason: target?.pos ? `Plan ${target.pos}` : null };
+      if (has("target")) return { label: "Your target", reason: target?.pos ? `Plan ${target.pos}` : null };
+      if (has("need")) return { label: "Fills need", reason: needReason };
+      return { label: "Best available", reason: null };
+    };
+    const roleRank = (roles) => Math.min(...roles.map((r) => ({ target: 0, overall: 1, need: 2 }[r] ?? 9)));
+    const rows = [...byKey.values()]
+      .sort((a, b) => roleRank(a.roles) - roleRank(b.roles))
+      .map((row) => ({ key: row.player.key, player: row.player, isTarget: row.roles.includes("target"), ...labelFor(row.roles) }));
     if (!rows.length) return null;
     return (
       <section className="panel suggest-panel">
@@ -2131,7 +2316,7 @@ export default function AuctionWarRoom() {
             <motion.button
               key={row.key}
               type="button"
-              className={`suggest-row${bye ? ` has-bye-warn lv-${bye.level}` : ""}`}
+              className={`suggest-row${row.isTarget ? " is-target" : ""}${bye ? ` has-bye-warn lv-${bye.level}` : ""}`}
               onClick={() => loadSuggestion(row.player)}
               aria-label={`Load ${row.player.name} into assistant${bye ? `. ${bye.message}` : ""}`}
               layout
@@ -2333,7 +2518,7 @@ export default function AuctionWarRoom() {
     <section className="panel wide board-panel">
       <div className="panel-head">
         <span className="eyebrow">Available board</span>
-        <span className="panel-side">{boardAvailableCount} left · {boardShowGone ? "showing drafted" : "hiding drafted"}</span>
+        <span className="panel-side">{boardAvailableCount} available · {boardRows.length} shown · {boardShowGone ? "incl. drafted" : "open only"}</span>
       </div>
             <div>
               <div className="board-controls">
@@ -2392,7 +2577,7 @@ export default function AuctionWarRoom() {
                   </tr></thead>
                   <tbody>
                     {boardRows.map((r) => (
-                      <tr key={r.key} className={r.status !== "available" ? "row-taken" : ""}>
+                      <tr key={r.key} className={`${r.status !== "available" ? "row-taken" : ""}${r.injuryNote ? " row-injured" : ""}`}>
                         <td className="col-star">
                           <motion.button
                             type="button"
@@ -2417,7 +2602,10 @@ export default function AuctionWarRoom() {
                         </td>
                         <td className="num rank-cell col-rank">{r.overall ?? "—"}</td>
                         <td className="num rank-cell col-posrank hide-xs">{r.rank < 999 ? r.rank : "—"}</td>
-                        <td className="pname col-player"><button className="linklike" onClick={() => loadSuggestion(r)} title="Load into Draft Assistant">{r.name}</button></td>
+                        <td className="pname col-player">
+                          <button className="linklike" onClick={() => loadSuggestion(r)} title="Load into Draft Assistant">{r.name}</button>
+                          {r.injuryNote ? <span className="injury-tag" title={r.injuryNote}>OUT</span> : null}
+                        </td>
                         <td className="col-pos"><span className={`posb p-${r.pos}`}>{r.pos}</span></td>
                         <td className="hide-xs">{r.team || "—"}</td>
                         <td className="hide-xs">{r.bye || "—"}</td>
@@ -2523,6 +2711,235 @@ export default function AuctionWarRoom() {
                 </tfoot>
               </table>
             </div>
+    </section>
+  );
+
+  const targetsPanel = (
+    <section className="panel wide targets-panel">
+      <div className="panel-head">
+        <span className="eyebrow">Nomination targets</span>
+        <span className="panel-side">
+          {targets.length === 0
+            ? "Build a nomination list"
+            : `${targetsLeftAll} open · ${targets.length} listed`}
+        </span>
+      </div>
+      <div className="board-controls">
+        <div className="filter-row">
+          {BOARD_FILTERS.map((f) => (
+            <motion.button
+              key={f}
+              type="button"
+              className={`chip ${targetFilter === f ? "on" : ""}`}
+              aria-pressed={targetFilter === f}
+              onClick={() => setTargetFilter(f)}
+              {...press}
+            >
+              {f === "ALL" ? "All" : f}
+            </motion.button>
+          ))}
+        </div>
+        <div className="filter-row">
+          <motion.button
+            type="button"
+            className={`chip ${targetSort === "overall" ? "on" : ""}`}
+            aria-pressed={targetSort === "overall"}
+            onClick={() => setTargetSort("overall")}
+            {...press}
+          >
+            Overall
+          </motion.button>
+          <motion.button
+            type="button"
+            className={`chip ${targetSort === "pos" ? "on" : ""}`}
+            aria-pressed={targetSort === "pos"}
+            onClick={() => setTargetSort("pos")}
+            {...press}
+          >
+            By position
+          </motion.button>
+        </div>
+      </div>
+      {targets.length === 0 ? (
+        <div className="empty-note">Star a player on the board below (★) — stars and targets stay linked. Open targets surface in Draft Room → Nominate next.</div>
+      ) : targetRows.length === 0 ? (
+        <div className="empty-note">No targets at {targetFilter}. Switch the position chip to see the rest of the list.</div>
+      ) : (
+        <div className="table-scroll">
+          <table className="flat target-table">
+            <thead>
+              <tr>
+                <th className="num col-rank">
+                  <button type="button" className={`th-sort${targetSort === "overall" ? " on" : ""}`} onClick={() => setTargetSort("overall")}>#</button>
+                </th>
+                <th className="col-player">Player</th>
+                <th className="col-pos">
+                  <button type="button" className={`th-sort${targetSort === "pos" ? " on" : ""}`} onClick={() => setTargetSort("pos")}>Pos</button>
+                </th>
+                <th className="hide-xs">Team</th>
+                <th className="hide-xs">Bye</th>
+                <th className="num col-est">Est</th>
+                <th>Status</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              {(() => {
+                const showGroups = targetSort === "pos" && targetFilter === "ALL";
+                const out = [];
+                let lastPos = null;
+                targetRows.forEach((r) => {
+                  if (showGroups && r.pos !== lastPos) {
+                    lastPos = r.pos;
+                    out.push(
+                      <tr key={`g-${r.pos || "x"}`} className="target-group">
+                        <td colSpan={8}>{r.pos || "Other"}</td>
+                      </tr>
+                    );
+                  }
+                  const statusLabel = r.status === "mine" ? "Won" : r.status === "gone" ? "Gone" : "Open";
+                  out.push(
+                    <tr key={r.key} className={r.status !== "available" ? "row-taken" : ""}>
+                      <td className="num rank-cell col-rank">{r.overall < 9999 ? r.overall : "—"}</td>
+                      <td className="pname col-player">
+                        <button
+                          className="linklike"
+                          onClick={() => loadTargetToRoom(r)}
+                          title="Load into Draft Assistant"
+                        >
+                          {r.name}
+                        </button>
+                        {r.injuryNote ? <span className="injury-tag" title={r.injuryNote}>OUT</span> : null}
+                      </td>
+                      <td className="col-pos"><span className={`posb p-${r.pos}`}>{r.pos}</span></td>
+                      <td className="hide-xs">{r.team || "—"}</td>
+                      <td className="hide-xs">{r.bye || "—"}</td>
+                      <td className="num col-est">{r.est != null ? money(r.est) : "—"}</td>
+                      <td>
+                        <span className={`target-status st-${r.status}`}>{statusLabel}</span>
+                      </td>
+                      <td className="actions">
+                        <button className="icon-btn danger" title="Remove target" aria-label={`Remove ${r.name}`} onClick={() => removeTarget(r.name)}>
+                          <Ic name="cross-small" fb="✕" />
+                        </button>
+                      </td>
+                    </tr>
+                  );
+                });
+                return out;
+              })()}
+            </tbody>
+          </table>
+        </div>
+      )}
+
+      <div className="targets-board-section">
+        <div className="panel-head targets-board-head">
+          <span className="eyebrow">Full board</span>
+          <span className="panel-side">{boardAvailableCount} available · {boardRows.length} shown</span>
+        </div>
+        <div className="board-controls">
+          <div className="filter-row">
+            {BOARD_FILTERS.map((f) => (
+              <motion.button
+                key={`plan-${f}`}
+                type="button"
+                className={`chip ${boardFilter === f ? "on" : ""}`}
+                aria-pressed={boardFilter === f}
+                onClick={() => setBoardFilter(f)}
+                {...press}
+              >
+                {f === "ALL" ? "All" : f}
+              </motion.button>
+            ))}
+          </div>
+          <div className="filter-row">
+            <motion.button
+              type="button"
+              className={`chip ${boardStarsOnly ? "on" : ""}`}
+              aria-pressed={boardStarsOnly}
+              onClick={() => setBoardStarsOnly((v) => !v)}
+              {...press}
+            >
+              ★ Starred{boardCounts.star ? ` (${boardCounts.star})` : ""}
+            </motion.button>
+            <motion.button
+              type="button"
+              className={`chip ${boardShowGone ? "on" : ""}`}
+              aria-pressed={boardShowGone}
+              onClick={() => setBoardShowGone((v) => !v)}
+              {...press}
+            >
+              <span className="chip-full">{boardShowGone ? "Showing drafted" : "Hiding drafted"}</span>
+              <span className="chip-short">{boardShowGone ? "Show taken" : "Hide taken"}</span>
+            </motion.button>
+          </div>
+        </div>
+        {boardRows.length === 0 ? (
+          <div className="empty-note">No players match these filters.</div>
+        ) : (
+          <div className="table-scroll board-scroll plan-board-scroll">
+            <table className="flat board-table plan-board-table">
+              <thead>
+                <tr>
+                  <th className="col-target" title="Add to nomination list">★</th>
+                  <th className="num col-rank">#</th>
+                  <th className="col-player">Player</th>
+                  <th className="col-pos">Pos</th>
+                  <th className="hide-xs">Team</th>
+                  <th className="num col-est">Est</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                {boardRows.map((r) => {
+                  const onTargets = targetKeySet.has(r.key);
+                  const statusLabel = r.status === "mine" ? "Won" : r.status === "gone" ? "Gone" : "Open";
+                  return (
+                    <tr key={`plan-${r.key}`} className={`${r.status !== "available" ? "row-taken" : ""}${r.injuryNote ? " row-injured" : ""}`}>
+                      <td className="col-target">
+                        <motion.button
+                          type="button"
+                          className={`star-btn target-add-btn${onTargets ? " on" : ""}`}
+                          title={onTargets ? "Remove from targets" : "Star & add to targets"}
+                          aria-pressed={onTargets}
+                          aria-label={onTargets ? `Remove ${r.name} from targets` : `Star ${r.name} and add to targets`}
+                          disabled={!!r.injuryNote}
+                          onClick={() => toggleTarget(r)}
+                          whileTap={reduceMotion ? undefined : { scale: 0.88 }}
+                        >
+                          <Ic name={onTargets ? "star" : "plus-small"} fb={onTargets ? "★" : "+"} />
+                        </motion.button>
+                      </td>
+                      <td className="num rank-cell col-rank">{r.overall ?? "—"}</td>
+                      <td className="pname col-player">
+                        <button className="linklike" onClick={() => loadTargetToRoom(r)} title="Load into Draft Assistant">{r.name}</button>
+                        {r.injuryNote ? <span className="injury-tag" title={r.injuryNote}>OUT</span> : null}
+                      </td>
+                      <td className="col-pos"><span className={`posb p-${r.pos}`}>{r.pos}</span></td>
+                      <td className="hide-xs">{r.team || "—"}</td>
+                      <td className="num col-est">{r.est != null ? money(r.est) : "—"}</td>
+                      <td><span className={`target-status st-${r.status}`}>{statusLabel}</span></td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </div>
+      <div className="target-add">
+        <NameAutocomplete
+          value={targetName}
+          onChange={setTargetName}
+          onSelect={addTarget}
+          placeholder="Add a target…"
+          posFilter={targetFilter === "ALL" ? undefined : targetFilter}
+          ariaLabel="Search player to add as a target"
+          listId="plan-target-ac-list"
+        />
+        <button className="btn primary" onClick={addTargetFromInput}>Add target</button>
+      </div>
     </section>
   );
 
@@ -2735,6 +3152,7 @@ export default function AuctionWarRoom() {
 
         {view === "plan" && (<>
           {planPanel}
+          {targetsPanel}
           {healthPanel}
         </>)}
 
@@ -2753,7 +3171,7 @@ export default function AuctionWarRoom() {
 
       <footer className="foot">
         {activeSeason ? `${activeSeason.name}. ` : ""}
-        Bye weeks preloaded from the official 2026 schedule. Rosters move in the offseason — double-check team/bye when a suggestion looks stale. Icons: <a className="foot-link" href="https://www.flaticon.com/uicons" target="_blank" rel="noreferrer">Uicons by Flaticon</a>.
+        Bye weeks preloaded from the official 2026 schedule. Season-ending injuries (Aug 2026) auto-mark OUT on the board. Rosters move in the offseason — double-check team/bye when a suggestion looks stale. Icons: <a className="foot-link" href="https://www.flaticon.com/uicons" target="_blank" rel="noreferrer">Uicons by Flaticon</a>.
       </footer>
       </div>
 
