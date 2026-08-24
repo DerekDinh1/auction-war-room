@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-24T03:31:42.188Z",
+  "generatedAt": "2026-08-24T04:28:21.448Z",
   "method": "Average of FantasyPros PPR + Half-PPR + Standard; injury/handcuff rank adjustments from player-health.json",
   "rankingSources": [
     {
@@ -22,7 +22,7 @@
     "CBS Sports camp tracker",
     "Adam Schefter / team beat reporters"
   ],
-  "healthUpdatedAt": "2026-08-24T03:31:42.188Z",
+  "healthUpdatedAt": "2026-08-24T04:28:21.448Z",
   "injuryAdjustments": 23,
   "count": 350
 }
