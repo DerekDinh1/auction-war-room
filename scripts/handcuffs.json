@@ -1,0 +1,84 @@
+{
+  "_comment": "Starter \u2192 backups. When starter health drops, backups get a rank boost on refresh.",
+  "RB": {
+    "Ashton Jeanty": [
+      "Mike Washington Jr."
+    ],
+    "Christian McCaffrey": [
+      "Isaac Guerendo",
+      "Kaelon Black"
+    ],
+    "Breece Hall": [
+      "Braelon Allen",
+      "Isaiah Davis"
+    ],
+    "Kenneth Walker III": [
+      "Zach Charbonnet"
+    ],
+    "Josh Jacobs": [
+      "Emanuel Wilson"
+    ],
+    "Jonathan Taylor": [
+      "Tyler Goodson"
+    ],
+    "Saquon Barkley": [
+      "Will Shipley"
+    ],
+    "Derrick Henry": [
+      "Justice Hill"
+    ],
+    "Alvin Kamara": [
+      "Kendre Miller",
+      "Devin Neal"
+    ],
+    "Travis Etienne Jr.": [
+      "Alvin Kamara"
+    ],
+    "Jeremiyah Love": [
+      "Tyler Allgeier",
+      "James Conner"
+    ],
+    "Kyren Williams": [
+      "Blake Corum"
+    ],
+    "James Cook III": [
+      "Ray Davis"
+    ],
+    "Chase Brown": [
+      "Tahj Brooks"
+    ],
+    "De'Von Achane": [
+      "Ollie Gordon II"
+    ],
+    "Omarion Hampton": [
+      "Kimani Vidal"
+    ]
+  },
+  "WR": {
+    "Jayden Higgins": [
+      "Jaylin Noel",
+      "Tank Dell",
+      "Xavier Hutchinson"
+    ],
+    "Puka Nacua": [
+      "Jordan Whittington",
+      "Davante Adams"
+    ],
+    "Nico Collins": [
+      "Jaylin Noel",
+      "Xavier Hutchinson"
+    ],
+    "Emeka Egbuka": [
+      "Jalen McMillan",
+      "Tez Johnson"
+    ]
+  },
+  "QB": {
+    "Joe Burrow": [
+      "Jake Browning"
+    ],
+    "Justin Herbert": [
+      "Easton Stick"
+    ]
+  }
+}

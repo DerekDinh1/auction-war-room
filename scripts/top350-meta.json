@@ -1,0 +1,28 @@
+{
+  "generatedAt": "2026-08-24T03:31:42.188Z",
+  "method": "Average of FantasyPros PPR + Half-PPR + Standard; injury/handcuff rank adjustments from player-health.json",
+  "rankingSources": [
+    {
+      "label": "PPR",
+      "url": "https://www.fantasypros.com/nfl/rankings/ppr-cheatsheets.php"
+    },
+    {
+      "label": "HALF",
+      "url": "https://www.fantasypros.com/nfl/rankings/half-point-ppr-cheatsheets.php"
+    },
+    {
+      "label": "STD",
+      "url": "https://www.fantasypros.com/nfl/rankings/consensus-cheatsheets.php"
+    }
+  ],
+  "healthSources": [
+    "FantasyPros injury news (8/23)",
+    "Yahoo Sports training camp tracker",
+    "Fantasy Alarm weekend injury roundup (8/23)",
+    "CBS Sports camp tracker",
+    "Adam Schefter / team beat reporters"
+  ],
+  "healthUpdatedAt": "2026-08-24T03:31:42.188Z",
+  "injuryAdjustments": 23,
+  "count": 350
+}

@@ -10,7 +10,7 @@ export const LEGACY_STORAGE_KEY = "ffad-2026-v1";
 export const CATALOG_KEY = "awr-seasons-v1";
 
 export const EMPTY_ASST = { name: "", pos: "", team: "", bye: "", proj: "", presetMax: "", bid: "" };
-export const DEFAULT_PLAN = { QB: 15, RB: 75, WR: 80, TE: 12, K: 1, DEF: 2, Bench: 15 };
+export const DEFAULT_PLAN = { QB: 45, RB: 70, WR: 55, TE: 12, K: 1, DEF: 2, Bench: 15 }; // 2QB superflex
 
 /** "2026" → "2026–27" */
 export function seasonLabel(startYear) {
