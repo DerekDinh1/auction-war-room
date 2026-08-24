@@ -33,22 +33,24 @@ function readStoredTheme() {
 }
 
 /* ============================================================
-   NFL AUCTION WAR ROOM — 12-team, $200, 1.5 PPR, 16-man roster
+   NFL AUCTION WAR ROOM — 12-team, $200, 0.5 PPR, 2QB superflex, 14-man roster
    ============================================================ */
 
 const DEFAULT_SETTINGS = {
   budget: 200,
   teams: 12,
-  starters: { QB: 1, RB: 2, WR: 3, TE: 1, FLEX: 1, K: 1, DEF: 1 },
-  bench: 6,
+  starters: { QB: 1, RB: 2, WR: 2, TE: 1, FLEX: 1, SUPERFLEX: 1, K: 1, DEF: 1 },
+  bench: 4,
   flexEligible: { RB: true, WR: true, TE: true, QB: false, K: false, DEF: false },
-  onlyOne: { QB: true, K: true, DEF: true, RB: false, WR: false, TE: false }, // warn on a 2nd
+  superflexEligible: { QB: true, RB: true, WR: true, TE: true, K: false, DEF: false },
+  onlyOne: { QB: false, K: true, DEF: true, RB: false, WR: false, TE: false }, // 2QB: second QB fills SUPERFLEX
 };
 const clampInt = (v, lo, hi) => Math.max(lo, Math.min(hi, Math.round(Number(v) || 0)));
 function normalizeSettings(raw) {
   const s = { ...DEFAULT_SETTINGS, ...(raw || {}) };
   s.starters = { ...DEFAULT_SETTINGS.starters, ...(raw?.starters || {}) };
   s.flexEligible = { ...DEFAULT_SETTINGS.flexEligible, ...(raw?.flexEligible || {}) };
+  s.superflexEligible = { ...DEFAULT_SETTINGS.superflexEligible, ...(raw?.superflexEligible || {}) };
   s.onlyOne = { ...DEFAULT_SETTINGS.onlyOne, ...(raw?.onlyOne || {}) };
   s.budget = clampInt(s.budget, 1, 10000);
   s.teams = clampInt(s.teams, 2, 32);
@@ -69,313 +71,364 @@ const TEAM_ALIASES = { JAC: "JAX", WSH: "WAS", ARZ: "ARI", LA: "LAR", OAK: "LV",
 
 const POSITIONS = ["QB", "RB", "WR", "TE", "K", "DEF"];
 const POS_ORDER = ["QB", "RB", "WR", "TE", "K", "DEF"]; // display order
-const NEED_POS_PRIORITY = ["RB", "WR", "TE", "QB", "K", "DEF"];
+const NEED_POS_PRIORITY = ["RB", "WR", "QB", "TE", "K", "DEF"];
 
-// Built-in player list — Top 300 overall (FantasyPros multi-format avg)
+// Built-in player list — Top 350 overall (FantasyPros multi-format avg + injury/handcuff adj)
 // Average of FantasyPros expert consensus rank_ave across PPR, Half-PPR, and Standard draft rankings
-// Generated 2026-07-26T21:33:20.764Z · 300 players · ordered by overall consensus rank
+// Generated 2026-08-24T04:28:21.448Z · 350 players · ordered by adjusted consensus rank
 const RAW_DB = [
-  ["Ja'Marr Chase","WR","CIN"], // 1 · avg 2.36
-  ["Bijan Robinson","RB","ATL"], // 2 · avg 2.41
-  ["Jahmyr Gibbs","RB","DET"], // 3 · avg 2.65
-  ["Puka Nacua","WR","LAR"], // 4 · avg 3.83
-  ["Jaxon Smith-Njigba","WR","SEA"], // 5 · avg 5.11
-  ["Amon-Ra St. Brown","WR","DET"], // 6 · avg 6.85
-  ["Christian McCaffrey","RB","SF"], // 7 · avg 8.35
-  ["CeeDee Lamb","WR","DAL"], // 8 · avg 9.51
-  ["Jonathan Taylor","RB","IND"], // 9 · avg 9.89
-  ["Justin Jefferson","WR","MIN"], // 10 · avg 10.11
-  ["James Cook III","RB","BUF"], // 11 · avg 13.76
-  ["Drake London","WR","ATL"], // 12 · avg 14.48
-  ["A.J. Brown","WR","NE"], // 13 · avg 15.99
-  ["Nico Collins","WR","HOU"], // 14 · avg 16.21
-  ["Ashton Jeanty","RB","LV"], // 15 · avg 16.28
-  ["Brock Bowers","TE","LV"], // 16 · avg 18.49
-  ["George Pickens","WR","DAL"], // 17 · avg 19.75
-  ["Saquon Barkley","RB","PHI"], // 18 · avg 20.74
-  ["De'Von Achane","RB","MIA"], // 19 · avg 20.89
-  ["Chase Brown","RB","CIN"], // 20 · avg 21.36
-  ["Trey McBride","TE","ARI"], // 21 · avg 22.14
-  ["Omarion Hampton","RB","LAC"], // 22 · avg 22.66
-  ["Rashee Rice","WR","KC"], // 23 · avg 25.03
-  ["Chris Olave","WR","NO"], // 24 · avg 25.65
-  ["Josh Allen","QB","BUF"], // 25 · avg 25.98
-  ["Derrick Henry","RB","BAL"], // 26 · avg 26.20
-  ["Kenneth Walker III","RB","KC"], // 27 · avg 27.44
-  ["DeVonta Smith","WR","PHI"], // 28 · avg 29.55
-  ["Tee Higgins","WR","CIN"], // 29 · avg 32.58
-  ["Zay Flowers","WR","BAL"], // 30 · avg 32.78
-  ["Tetairoa McMillan","WR","CAR"], // 31 · avg 33.16
-  ["Lamar Jackson","QB","BAL"], // 32 · avg 33.49
-  ["Drake Maye","QB","NE"], // 33 · avg 35.70
-  ["Kyren Williams","RB","LAR"], // 34 · avg 37.13
-  ["Jeremiyah Love","RB","ARI"], // 35 · avg 38.20
-  ["Emeka Egbuka","WR","TB"], // 36 · avg 38.69
-  ["Josh Jacobs","RB","GB"], // 37 · avg 38.88
-  ["Garrett Wilson","WR","NYJ"], // 38 · avg 39.60
-  ["Colston Loveland","TE","CHI"], // 39 · avg 40.28
-  ["Ladd McConkey","WR","LAC"], // 40 · avg 40.36
-  ["Breece Hall","RB","NYJ"], // 41 · avg 40.47
-  ["Malik Nabers","WR","NYG"], // 42 · avg 41.91
-  ["Jaylen Waddle","WR","DEN"], // 43 · avg 42.48
-  ["Javonte Williams","RB","DAL"], // 44 · avg 42.88
-  ["Joe Burrow","QB","CIN"], // 45 · avg 43.40
-  ["Terry McLaurin","WR","WAS"], // 46 · avg 44.06
-  ["Davante Adams","WR","LAR"], // 47 · avg 46.96
-  ["Travis Etienne Jr.","RB","NO"], // 48 · avg 47.55
-  ["Luther Burden III","WR","CHI"], // 49 · avg 49.43
-  ["Jameson Williams","WR","DET"], // 50 · avg 50.58
-  ["Cam Skattebo","RB","NYG"], // 51 · avg 52.92
-  ["Jayden Daniels","QB","WAS"], // 52 · avg 53.49
-  ["Mike Evans","WR","SF"], // 53 · avg 53.63
-  ["Christian Watson","WR","GB"], // 54 · avg 55.26
-  ["Bucky Irving","RB","TB"], // 55 · avg 56.19
-  ["Jalen Hurts","QB","PHI"], // 56 · avg 56.86
-  ["Quinshon Judkins","RB","CLE"], // 57 · avg 57.02
-  ["DJ Moore","WR","BUF"], // 58 · avg 57.63
-  ["Tyler Warren","TE","IND"], // 59 · avg 57.74
-  ["D'Andre Swift","RB","CHI"], // 60 · avg 58.40
-  ["TreVeyon Henderson","RB","NE"], // 61 · avg 58.48
-  ["Rome Odunze","WR","CHI"], // 62 · avg 59.52
-  ["David Montgomery","RB","HOU"], // 63 · avg 60.30
-  ["Tucker Kraft","TE","GB"], // 64 · avg 66.69
-  ["Bhayshul Tuten","RB","JAX"], // 65 · avg 67.45
-  ["Caleb Williams","QB","CHI"], // 66 · avg 67.85
-  ["Justin Herbert","QB","LAC"], // 67 · avg 70.06
-  ["Jadarian Price","RB","SEA"], // 68 · avg 70.88
-  ["Marvin Harrison Jr.","WR","ARI"], // 69 · avg 70.99
-  ["Carnell Tate","WR","TEN"], // 70 · avg 72.07
-  ["Jaylen Warren","RB","PIT"], // 71 · avg 74.29
-  ["Trevor Lawrence","QB","JAX"], // 72 · avg 76.76
-  ["Alec Pierce","WR","IND"], // 73 · avg 76.84
-  ["DK Metcalf","WR","PIT"], // 74 · avg 77.60
-  ["Brian Thomas Jr.","WR","JAX"], // 75 · avg 77.94
-  ["Tony Pollard","RB","TEN"], // 76 · avg 78.40
-  ["Dak Prescott","QB","DAL"], // 77 · avg 79.51
-  ["Courtland Sutton","WR","DEN"], // 78 · avg 80.42
-  ["Harold Fannin Jr.","TE","CLE"], // 79 · avg 80.96
-  ["Rhamondre Stevenson","RB","NE"], // 80 · avg 81.12
-  ["Chuba Hubbard","RB","CAR"], // 81 · avg 81.68
-  ["Kyle Pitts Sr.","TE","ATL"], // 82 · avg 82.99
-  ["Sam LaPorta","TE","DET"], // 83 · avg 84.06
-  ["Rico Dowdle","RB","PIT"], // 84 · avg 84.45
-  ["Chris Godwin Jr.","WR","TB"], // 85 · avg 87.43
-  ["Parker Washington","WR","JAX"], // 86 · avg 88.06
-  ["Jordyn Tyson","WR","NO"], // 87 · avg 90.14
-  ["Jaxson Dart","QB","NYG"], // 88 · avg 91.49
-  ["RJ Harvey","RB","DEN"], // 89 · avg 92.41
-  ["Brock Purdy","QB","SF"], // 90 · avg 94.29
-  ["Kyle Monangai","RB","CHI"], // 91 · avg 94.85
-  ["J.K. Dobbins","RB","DEN"], // 92 · avg 96.22
-  ["Michael Wilson","WR","ARI"], // 93 · avg 96.49
-  ["Quentin Johnston","WR","LAC"], // 94 · avg 97.14
-  ["Michael Pittman Jr.","WR","PIT"], // 95 · avg 97.76
-  ["Blake Corum","RB","LAR"], // 96 · avg 98.20
-  ["Makai Lemon","WR","PHI"], // 97 · avg 99.56
-  ["Patrick Mahomes II","QB","KC"], // 98 · avg 100.27
-  ["Bo Nix","QB","DEN"], // 99 · avg 100.75
-  ["George Kittle","TE","SF"], // 100 · avg 101.15
-  ["Ricky Pearsall","WR","SF"], // 101 · avg 101.35 · OUT 2026 (PCL)
-  ["Jakobi Meyers","WR","JAX"], // 102 · avg 102.73
-  ["Jordan Addison","WR","MIN"], // 103 · avg 103.26
-  ["Matthew Stafford","QB","LAR"], // 104 · avg 103.80
-  ["Travis Kelce","TE","KC"], // 105 · avg 105.19
-  ["Wan'Dale Robinson","WR","TEN"], // 106 · avg 106.13
-  ["Kenny Gainwell","RB","TB"], // 107 · avg 106.59
-  ["Rachaad White","RB","WAS"], // 108 · avg 108.55
-  ["Josh Downs","WR","IND"], // 109 · avg 108.83
-  ["Jared Goff","QB","DET"], // 110 · avg 109.74
-  ["Aaron Jones Sr.","RB","MIN"], // 111 · avg 110.36
-  ["Jayden Reed","WR","GB"], // 112 · avg 110.53
-  ["Dalton Kincaid","TE","BUF"], // 113 · avg 111.60
-  ["Kyler Murray","QB","MIN"], // 114 · avg 114.03
-  ["Jacory Croskey-Merritt","RB","WAS"], // 115 · avg 114.80
-  ["Jonathon Brooks","RB","CAR"], // 116 · avg 117.06
-  ["Jake Ferguson","TE","DAL"], // 117 · avg 117.23
-  ["Jordan Mason","RB","MIN"], // 118 · avg 118.03
-  ["Isaiah Likely","TE","NYG"], // 119 · avg 118.39
-  ["Xavier Worthy","WR","KC"], // 120 · avg 119.66
-  ["Dallas Goedert","TE","PHI"], // 121 · avg 120.13
-  ["Jordan Love","QB","GB"], // 122 · avg 120.53
-  ["Baker Mayfield","QB","TB"], // 123 · avg 121.15
-  ["Tyler Shough","QB","NO"], // 124 · avg 124.37
-  ["Mark Andrews","TE","BAL"], // 125 · avg 125.48
-  ["Jayden Higgins","WR","HOU"], // 126 · avg 125.49
-  ["Khalil Shakir","WR","BUF"], // 127 · avg 129.62
-  ["Tyrone Tracy Jr.","RB","NYG"], // 128 · avg 130.74
-  ["Romeo Doubs","WR","NE"], // 129 · avg 132.11
-  ["Chris Rodriguez Jr.","RB","JAX"], // 130 · avg 133.54
-  ["Woody Marks","RB","HOU"], // 131 · avg 134.80
-  ["Tyler Allgeier","RB","ARI"], // 132 · avg 136.69
-  ["Jalen Coker","WR","CAR"], // 133 · avg 137.86
-  ["KC Concepcion","WR","CLE"], // 134 · avg 138.11
-  ["Matthew Golden","WR","GB"], // 135 · avg 138.51
-  ["Malik Willis","QB","MIA"], // 136 · avg 138.53
-  ["Zach Charbonnet","RB","SEA"], // 137 · avg 139.89
-  ["C.J. Stroud","QB","HOU"], // 138 · avg 142.66
-  ["Isiah Pacheco","RB","DET"], // 139 · avg 143.66
-  ["Sam Darnold","QB","SEA"], // 140 · avg 146.15
-  ["Rashid Shaheed","WR","SEA"], // 141 · avg 148.06
-  ["Tyjae Spears","RB","TEN"], // 142 · avg 148.23
-  ["Dylan Sampson","RB","CLE"], // 143 · avg 149.91
-  ["Brenton Strange","TE","JAX"], // 144 · avg 150.53
-  ["Juwan Johnson","TE","NO"], // 145 · avg 151.26
-  ["Alvin Kamara","RB","NO"], // 146 · avg 151.58
-  ["Keaton Mitchell","RB","LAC"], // 147 · avg 154.74
-  ["Jauan Jennings","WR","MIN"], // 148 · avg 156.63
-  ["Hunter Henry","TE","NE"], // 149 · avg 156.79
-  ["Cam Ward","QB","TEN"], // 150 · avg 158.16
-  ["Oronde Gadsden II","TE","LAC"], // 151 · avg 158.35
-  ["Chig Okonkwo","TE","WAS"], // 152 · avg 158.72
-  ["Jonah Coleman","RB","DEN"], // 153 · avg 159.06
-  ["Brian Robinson Jr.","RB","ATL"], // 154 · avg 160.25
-  ["Tank Bigsby","RB","PHI"], // 155 · avg 161.23
-  ["Jerry Jeudy","WR","CLE"], // 156 · avg 162.16
-  ["Denzel Boston","WR","CLE"], // 157 · avg 162.84
-  ["Stefon Diggs","WR","FA"], // 158 · avg 162.89
-  ["Omar Cooper Jr.","WR","NYJ"], // 159 · avg 164.41
-  ["Braelon Allen","RB","NYJ"], // 160 · avg 166.06
-  ["Jalen McMillan","WR","TB"], // 161 · avg 168.46
-  ["Daniel Jones","QB","IND"], // 162 · avg 169.20
-  ["Bryce Young","QB","CAR"], // 163 · avg 169.62
-  ["Adonai Mitchell","WR","NYJ"], // 164 · avg 171.29
-  ["Travis Hunter","WR","JAX"], // 165 · avg 172.07
-  ["Tre Tucker","WR","LV"], // 166 · avg 179.02
-  ["Tre' Harris","WR","LAC"], // 167 · avg 183.89
-  ["Brandon Aubrey","K","DAL"], // 168 · avg 186.50
-  ["Dalton Schultz","TE","HOU"], // 169 · avg 189.14
-  ["Emanuel Wilson","RB","SEA"], // 170 · avg 189.75
-  ["Kayshon Boutte","WR","NE"], // 171 · avg 190.81
-  ["James Conner","RB","ARI"], // 172 · avg 191.55
-  ["Emmett Johnson","RB","KC"], // 173 · avg 191.71
-  ["Ka'imi Fairbairn","K","HOU"], // 174 · avg 192.02
-  ["Ryan Flournoy","WR","DAL"], // 175 · avg 192.15
-  ["Antonio Williams","WR","WAS"], // 176 · avg 192.63
-  ["Mike Washington Jr.","RB","LV"], // 177 · avg 192.90
-  ["Deebo Samuel Sr.","WR","FA"], // 178 · avg 193.28
-  ["Kimani Vidal","RB","LAC"], // 179 · avg 194.70
-  ["Cameron Dicker","K","LAC"], // 180 · avg 195.03
-  ["Ray Davis","RB","BUF"], // 181 · avg 197.10
-  ["Troy Franklin","WR","DEN"], // 182 · avg 197.24
-  ["Sean Tucker","RB","TB"], // 183 · avg 198.79
-  ["Isaac TeSlaa","WR","DET"], // 184 · avg 198.80
-  ["Cam Little","K","JAX"], // 185 · avg 199.10
-  ["AJ Barner","TE","SEA"], // 186 · avg 200.13
-  ["Calvin Ridley","WR","TEN"], // 187 · avg 200.66
-  ["Jason Myers","K","SEA"], // 188 · avg 200.93
-  ["Jaylin Noel","WR","HOU"], // 189 · avg 201.08
-  ["T.J. Hockenson","TE","MIN"], // 190 · avg 201.95
-  ["Kenyon Sadiq","TE","NYJ"], // 191 · avg 202.01
-  ["Jalen Nailor","WR","LV"], // 192 · avg 202.85
-  ["Nicholas Singleton","RB","TEN"], // 193 · avg 204.18
-  ["Kaytron Allen","RB","WAS"], // 194 · avg 207.73
-  ["Darnell Mooney","WR","NYG"], // 195 · avg 208.22
-  ["Jacoby Brissett","QB","ARI"], // 196 · avg 209.17
-  ["Eddy Pineiro","K","SF"], // 197 · avg 210.21
-  ["Tyler Loop","K","BAL"], // 198 · avg 210.24
-  ["Greg Dulcich","TE","MIA"], // 199 · avg 210.94
-  ["Evan McPherson","K","CIN"], // 200 · avg 215.31
-  ["Brandon Aiyuk","WR","SF"], // 201 · avg 216.16
-  ["Dontayvion Wicks","WR","PHI"], // 202 · avg 217.18
-  ["Pat Bryant","WR","DEN"], // 203 · avg 217.45
-  ["Cairo Santos","K","CHI"], // 204 · avg 217.78
-  ["Andy Borregales","K","NE"], // 205 · avg 220.26
-  ["Jaylen Wright","RB","MIA"], // 206 · avg 220.98
-  ["Gunnar Helm","TE","TEN"], // 207 · avg 222.79
-  ["Malik Washington","WR","MIA"], // 208 · avg 223.62
-  ["Rashod Bateman","WR","BAL"], // 209 · avg 224.74
-  ["Tank Dell","WR","HOU"], // 210 · avg 225.78
-  ["Chimere Dike","WR","TEN"], // 211 · avg 225.89
-  ["Chase McLaughlin","K","TB"], // 212 · avg 226.96
-  ["MarShawn Lloyd","RB","GB"], // 213 · avg 227.96
-  ["Jake Bates","K","DET"], // 214 · avg 228.73
-  ["Tyreek Hill","WR","FA"], // 215 · avg 229.27
-  ["Terrance Ferguson","TE","LAR"], // 216 · avg 231.35
-  ["De'Zhaun Stribling","WR","SF"], // 217 · avg 232.26
-  ["Germie Bernard","WR","PIT"], // 218 · avg 232.37
-  ["Ollie Gordon II","RB","MIA"], // 219 · avg 232.93
-  ["Nick Folk","K","ATL"], // 220 · avg 234.53
-  ["Harrison Mevis","K","LAR"], // 221 · avg 234.66
-  ["Cooper Kupp","WR","SEA"], // 222 · avg 235.48
-  ["Aaron Rodgers","QB","PIT"], // 223 · avg 235.55
-  ["Pat Freiermuth","TE","PIT"], // 224 · avg 237.52
-  ["Elic Ayomanor","WR","TEN"], // 225 · avg 238.01
-  ["Brandon McManus","K","FA"], // 226 · avg 238.59
-  ["Zachariah Branch","WR","ATL"], // 227 · avg 238.63
-  ["Blake Grupe","K","IND"], // 228 · avg 239.29
-  ["Justice Hill","RB","BAL"], // 229 · avg 240.43
-  ["Daniel Carlson","K","LV"], // 230 · avg 241.84
-  ["Demond Claiborne","RB","MIN"], // 231 · avg 242.10
-  ["Jaydon Blue","RB","DAL"], // 232 · avg 242.71
-  ["David Njoku","TE","LAC"], // 233 · avg 242.88
-  ["Ryan Fitzgerald","K","CAR"], // 234 · avg 244.13
-  ["Geno Smith","QB","NYJ"], // 235 · avg 244.17
-  ["Cade Otton","TE","TB"], // 236 · avg 244.57
-  ["Harrison Butker","K","KC"], // 237 · avg 245.16
-  ["Chris Bell","WR","MIA"], // 238 · avg 245.46
-  ["Chris Boswell","K","PIT"], // 239 · avg 245.70
-  ["Keon Coleman","WR","BUF"], // 240 · avg 247.43
-  ["Jake Moody","K","WAS"], // 241 · avg 248.00
-  ["Elijah Sarratt","WR","BAL"], // 242 · avg 249.88
-  ["Trey Smack","K","GB"], // 243 · avg 249.93
-  ["Devin Neal","RB","NO"], // 244 · avg 250.08
-  ["Ben Sauls","K","NYG"], // 245 · avg 252.42
-  ["Ty Johnson","RB","BUF"], // 246 · avg 252.74
-  ["Colby Parkinson","TE","LAR"], // 247 · avg 252.84
-  ["Jack Bech","WR","LV"], // 248 · avg 252.98
-  ["Ted Hurst III","WR","TB"], // 249 · avg 254.00
-  ["Kaleb Johnson","RB","PIT"], // 250 · avg 254.72
-  ["Chris Brooks","RB","GB"], // 251 · avg 255.01
-  ["Christian Kirk","WR","SF"], // 252 · avg 255.68
-  ["Jordan James","RB","SF"], // 253 · avg 256.25
-  ["Isaiah Davis","RB","NYJ"], // 254 · avg 257.04
-  ["DJ Giddens","RB","IND"], // 255 · avg 257.50
-  ["Malachi Fields","WR","NYG"], // 256 · avg 257.56
-  ["Spencer Shrader","K","IND"], // 257 · avg 257.61
-  ["Evan Engram","TE","DEN"], // 258 · avg 257.84
-  ["Fernando Mendoza","QB","LV"], // 259 · avg 258.25
-  ["Malik Davis","RB","DAL"], // 260 · avg 258.65
-  ["Tory Horton","WR","SEA"], // 261 · avg 259.45
-  ["Marvin Mims Jr.","WR","DEN"], // 262 · avg 259.72
-  ["George Holani","RB","SEA"], // 263 · avg 259.84
-  ["Tyler Bass","K","BUF"], // 264 · avg 260.14
-  ["Will Reichard","K","MIN"], // 265 · avg 260.42
-  ["Trey Benson","RB","ARI"], // 266 · avg 261.27
-  ["Mike Gesicki","TE","CIN"], // 267 · avg 261.55
-  ["Eli Stowers","TE","PHI"], // 268 · avg 262.69
-  ["Chris Brazzell II","WR","CAR"], // 269 · avg 262.89 · OUT 2026 (LCL)
-  ["Tyquan Thornton","WR","KC"], // 270 · avg 263.43
-  ["Samaje Perine","RB","CIN"], // 271 · avg 264.05
-  ["Darius Slayton","WR","NYG"], // 272 · avg 264.83
-  ["Kaelon Black","RB","SF"], // 273 · avg 265.63
-  ["Kyle Williams","WR","NE"], // 274 · avg 265.77
-  ["Theo Johnson","TE","NYG"], // 275 · avg 266.26
-  ["Andrei Iosivas","WR","CIN"], // 276 · avg 266.53
-  ["Xavier Legette","WR","CAR"], // 277 · avg 267.90
-  ["Kendre Miller","RB","NO"], // 278 · avg 268.12
-  ["Najee Harris","RB","LAC"], // 279 · avg 269.20
-  ["Wil Lutz","K","DEN"], // 280 · avg 269.79
-  ["Mason Taylor","TE","NYJ"], // 281 · avg 270.38
-  ["Keenan Allen","WR","LAC"], // 282 · avg 271.64
-  ["Tua Tagovailoa","QB","ATL"], // 283 · avg 275.30
-  ["Devaughn Vele","WR","NO"], // 284 · avg 275.33
-  ["Mack Hollins","WR","NE"], // 285 · avg 275.53
-  ["Seth McGowan","RB","IND"], // 286 · avg 275.78
-  ["Joey Slye","K","TEN"], // 287 · avg 275.93
-  ["LeQuint Allen Jr.","RB","JAX"], // 288 · avg 276.35
-  ["Jerome Ford","RB","WAS"], // 289 · avg 279.05
-  ["Brashard Smith","RB","KC"], // 290 · avg 280.17
-  ["Ja'Kobi Lane","WR","BAL"], // 291 · avg 280.38
-  ["Skyler Bell","WR","BUF"], // 292 · avg 280.82
-  ["Adam Randall","RB","BAL"], // 293 · avg 281.15
-  ["Charlie Smyth","K","NO"], // 294 · avg 281.43
-  ["Jake Elliott","K","PHI"], // 295 · avg 281.84
-  ["Emari Demercado","RB","KC"], // 296 · avg 282.81
-  ["Michael Penix Jr.","QB","ATL"], // 297 · avg 283.18
-  ["Devin Singletary","RB","NYG"], // 298 · avg 283.39
-  ["Jake Tonges","TE","SF"], // 299 · avg 283.47
-  ["Hollywood Brown","WR","PHI"], // 300 · avg 283.70
+  ["Jahmyr Gibbs","RB","DET"], // 1 · avg 1.33
+  ["Ja'Marr Chase","WR","CIN"], // 2 · avg 2.00
+  ["Bijan Robinson","RB","ATL"], // 3 · avg 3.00
+  ["Jaxon Smith-Njigba","WR","SEA"], // 4 · avg 5.00
+  ["Amon-Ra St. Brown","WR","DET"], // 5 · avg 6.00
+  ["CeeDee Lamb","WR","DAL"], // 6 · avg 8.00
+  ["Jonathan Taylor","RB","IND"], // 7 · avg 8.33
+  ["Christian McCaffrey","RB","SF"], // 8 · avg 9.00
+  ["Justin Jefferson","WR","MIN"], // 9 · avg 9.67
+  ["James Cook III","RB","BUF"], // 10 · avg 11.33
+  ["Drake London","WR","ATL"], // 11 · avg 12.33
+  ["A.J. Brown","WR","NE"], // 12 · avg 12.67
+  ["Nico Collins","WR","HOU"], // 13 · avg 14.67
+  ["Puka Nacua","WR","LAR"], // 14 · avg 3.67 · adj +12
+  ["Chase Brown","RB","CIN"], // 15 · avg 15.67
+  ["Brock Bowers","TE","LV"], // 16 · avg 16.33
+  ["Saquon Barkley","RB","PHI"], // 17 · avg 18.33
+  ["Davante Adams","WR","LAR"], // 18 · avg 46.67 · adj -28
+  ["George Pickens","WR","DAL"], // 19 · avg 19.33
+  ["De'Von Achane","RB","MIA"], // 20 · avg 20.33
+  ["Trey McBride","TE","ARI"], // 21 · avg 20.67
+  ["Chris Olave","WR","NO"], // 22 · avg 21.67
+  ["Omarion Hampton","RB","LAC"], // 23 · avg 22.00
+  ["Kenneth Walker III","RB","KC"], // 24 · avg 22.67
+  ["Derrick Henry","RB","BAL"], // 25 · avg 23.67
+  ["Rashee Rice","WR","KC"], // 26 · avg 24.33
+  ["Malik Nabers","WR","NYG"], // 27 · avg 25.67
+  ["DeVonta Smith","WR","PHI"], // 28 · avg 26.67
+  ["Josh Allen","QB","BUF"], // 29 · avg 26.67
+  ["Zay Flowers","WR","BAL"], // 30 · avg 28.33
+  ["Tee Higgins","WR","CIN"], // 31 · avg 32.33
+  ["Tetairoa McMillan","WR","CAR"], // 32 · avg 33.33
+  ["Kyren Williams","RB","LAR"], // 33 · avg 33.67
+  ["Lamar Jackson","QB","BAL"], // 34 · avg 34.00
+  ["Javonte Williams","RB","DAL"], // 35 · avg 37.00
+  ["Garrett Wilson","WR","NYJ"], // 36 · avg 38.00
+  ["Jaylen Waddle","WR","DEN"], // 37 · avg 38.33
+  ["Ladd McConkey","WR","LAC"], // 38 · avg 38.33
+  ["Josh Jacobs","RB","GB"], // 39 · avg 38.67
+  ["Drake Maye","QB","NE"], // 40 · avg 39.33
+  ["Colston Loveland","TE","CHI"], // 41 · avg 39.67
+  ["Terry McLaurin","WR","WAS"], // 42 · avg 45.67
+  ["Travis Etienne Jr.","RB","NO"], // 43 · avg 46.33
+  ["Joe Burrow","QB","CIN"], // 44 · avg 49.00
+  ["Breece Hall","RB","NYJ"], // 45 · avg 38.00 · adj +12
+  ["Jameson Williams","WR","DET"], // 46 · avg 50.67
+  ["D'Andre Swift","RB","CHI"], // 47 · avg 51.00
+  ["Emeka Egbuka","WR","TB"], // 48 · avg 39.67 · adj +12
+  ["Luther Burden III","WR","CHI"], // 49 · avg 51.67
+  ["Cam Skattebo","RB","NYG"], // 50 · avg 53.33
+  ["Jeremiyah Love","RB","ARI"], // 51 · avg 41.67 · adj +12
+  ["Ashton Jeanty","RB","LV"], // 52 · avg 33.00 · adj +22
+  ["Jayden Daniels","QB","WAS"], // 53 · avg 55.00
+  ["Tyler Warren","TE","IND"], // 54 · avg 55.33
+  ["DJ Moore","WR","BUF"], // 55 · avg 55.67
+  ["Christian Watson","WR","GB"], // 56 · avg 56.00
+  ["Quinshon Judkins","RB","CLE"], // 57 · avg 56.33
+  ["Bucky Irving","RB","TB"], // 58 · avg 57.00
+  ["Mike Evans","WR","SF"], // 59 · avg 57.00
+  ["Rome Odunze","WR","CHI"], // 60 · avg 57.00
+  ["David Montgomery","RB","HOU"], // 61 · avg 57.67
+  ["Jalen Hurts","QB","PHI"], // 62 · avg 60.00
+  ["Bhayshul Tuten","RB","JAC"], // 63 · avg 63.67
+  ["TreVeyon Henderson","RB","NE"], // 64 · avg 65.00
+  ["Parker Washington","WR","JAC"], // 65 · avg 65.67
+  ["Jadarian Price","RB","SEA"], // 66 · avg 66.00
+  ["Mike Washington Jr.","RB","LV"], // 67 · avg 104.33 · adj -38
+  ["Caleb Williams","QB","CHI"], // 68 · avg 68.00
+  ["Tucker Kraft","TE","GB"], // 69 · avg 68.33
+  ["Carnell Tate","WR","TEN"], // 70 · avg 69.00
+  ["Marvin Harrison Jr.","WR","ARI"], // 71 · avg 69.00
+  ["Justin Herbert","QB","LAC"], // 72 · avg 71.33
+  ["Brian Thomas Jr.","WR","JAC"], // 73 · avg 72.33
+  ["Jaylen Warren","RB","PIT"], // 74 · avg 73.00
+  ["Rhamondre Stevenson","RB","NE"], // 75 · avg 75.33
+  ["Trevor Lawrence","QB","JAC"], // 76 · avg 76.00
+  ["Harold Fannin Jr.","TE","CLE"], // 77 · avg 76.67
+  ["DK Metcalf","WR","PIT"], // 78 · avg 77.33
+  ["Tony Pollard","RB","TEN"], // 79 · avg 77.67
+  ["Dak Prescott","QB","DAL"], // 80 · avg 78.33
+  ["Chris Godwin Jr.","WR","TB"], // 81 · avg 80.33
+  ["Courtland Sutton","WR","DEN"], // 82 · avg 82.33
+  ["Rico Dowdle","RB","PIT"], // 83 · avg 82.67
+  ["Kyle Pitts Sr.","TE","ATL"], // 84 · avg 83.00
+  ["Jonathon Brooks","RB","CAR"], // 85 · avg 86.00
+  ["Quentin Johnston","WR","LAC"], // 86 · avg 89.00
+  ["J.K. Dobbins","RB","DEN"], // 87 · avg 89.67
+  ["Michael Wilson","WR","ARI"], // 88 · avg 90.00
+  ["Sam LaPorta","TE","DET"], // 89 · avg 80.33 · adj +12
+  ["Alec Pierce","WR","IND"], // 90 · avg 92.67
+  ["Blake Corum","RB","LAR"], // 91 · avg 94.67
+  ["Brock Purdy","QB","SF"], // 92 · avg 94.67
+  ["Chuba Hubbard","RB","CAR"], // 93 · avg 94.67
+  ["Jaxson Dart","QB","NYG"], // 94 · avg 97.67
+  ["RJ Harvey","RB","DEN"], // 95 · avg 97.67
+  ["Josh Downs","WR","IND"], // 96 · avg 98.67
+  ["Travis Kelce","TE","KC"], // 97 · avg 100.33
+  ["Tyler Allgeier","RB","ARI"], // 98 · avg 129.33 · adj -28
+  ["Jordan Addison","WR","MIN"], // 99 · avg 101.67
+  ["Wan'Dale Robinson","WR","TEN"], // 100 · avg 101.67
+  ["Jacory Croskey-Merritt","RB","WAS"], // 101 · avg 102.00
+  ["Bo Nix","QB","DEN"], // 102 · avg 102.33
+  ["Patrick Mahomes II","QB","KC"], // 103 · avg 103.00
+  ["Michael Pittman Jr.","WR","PIT"], // 104 · avg 91.33 · adj +12
+  ["George Kittle","TE","SF"], // 105 · avg 92.67 · adj +12
+  ["Jayden Reed","WR","GB"], // 106 · avg 104.67
+  ["Stefon Diggs","WR","WAS"], // 107 · avg 104.67
+  ["Jordan Mason","RB","MIN"], // 108 · avg 105.00
+  ["Kenny Gainwell","RB","TB"], // 109 · avg 105.33
+  ["Matthew Stafford","QB","LAR"], // 110 · avg 107.00
+  ["Dalton Kincaid","TE","BUF"], // 111 · avg 108.67
+  ["Rachaad White","RB","WAS"], // 112 · avg 108.67
+  ["Jared Goff","QB","DET"], // 113 · avg 109.33
+  ["Jakobi Meyers","WR","JAC"], // 114 · avg 110.33
+  ["Makai Lemon","WR","PHI"], // 115 · avg 110.33
+  ["Kyler Murray","QB","MIN"], // 116 · avg 114.00
+  ["Aaron Jones Sr.","RB","MIN"], // 117 · avg 116.33
+  ["Dallas Goedert","TE","PHI"], // 118 · avg 117.00
+  ["Isaiah Likely","TE","NYG"], // 119 · avg 117.33
+  ["Mark Andrews","TE","BAL"], // 120 · avg 121.33
+  ["Baker Mayfield","QB","TB"], // 121 · avg 123.00
+  ["Jake Ferguson","TE","DAL"], // 122 · avg 123.67
+  ["Jordan Love","QB","GB"], // 123 · avg 124.00
+  ["KC Concepcion","WR","CLE"], // 124 · avg 124.00
+  ["Xavier Worthy","WR","KC"], // 125 · avg 124.33
+  ["Chris Rodriguez Jr.","RB","JAC"], // 126 · avg 126.00
+  ["Matthew Golden","WR","GB"], // 127 · avg 126.00
+  ["Jalen Coker","WR","CAR"], // 128 · avg 128.00
+  ["Tyler Shough","QB","NO"], // 129 · avg 128.00
+  ["Kyle Monangai","RB","CHI"], // 130 · avg 106.33 · adj +22
+  ["Khalil Shakir","WR","BUF"], // 131 · avg 129.67
+  ["Romeo Doubs","WR","NE"], // 132 · avg 131.67
+  ["Woody Marks","RB","HOU"], // 133 · avg 133.00
+  ["Braelon Allen","RB","NYJ"], // 134 · avg 161.00 · adj -28
+  ["Malik Willis","QB","MIA"], // 135 · avg 134.00
+  ["Jalen McMillan","WR","TB"], // 136 · avg 162.33 · adj -28
+  ["Juwan Johnson","TE","NO"], // 137 · avg 134.67
+  ["Deebo Samuel Sr.","WR","SF"], // 138 · avg 137.33
+  ["De'Zhaun Stribling","WR","SF"], // 139 · avg 140.33
+  ["Tyjae Spears","RB","TEN"], // 140 · avg 140.33
+  ["Keaton Mitchell","RB","LAC"], // 141 · avg 142.67
+  ["Tyrone Tracy Jr.","RB","NYG"], // 142 · avg 142.67
+  ["Sam Darnold","QB","SEA"], // 143 · avg 143.00
+  ["C.J. Stroud","QB","HOU"], // 144 · avg 143.33
+  ["Jonah Coleman","RB","DEN"], // 145 · avg 147.33
+  ["Rashid Shaheed","WR","SEA"], // 146 · avg 147.33
+  ["Tank Bigsby","RB","PHI"], // 147 · avg 148.00
+  ["Hunter Henry","TE","NE"], // 148 · avg 148.33
+  ["Daniel Jones","QB","IND"], // 149 · avg 149.00
+  ["Denzel Boston","WR","CLE"], // 150 · avg 149.67
+  ["Brenton Strange","TE","JAC"], // 151 · avg 150.00
+  ["Dylan Sampson","RB","CLE"], // 152 · avg 150.33
+  ["Chig Okonkwo","TE","WAS"], // 153 · avg 151.33
+  ["Cam Ward","QB","TEN"], // 154 · avg 154.00
+  ["Isiah Pacheco","RB","DET"], // 155 · avg 155.33
+  ["Adonai Mitchell","WR","NYJ"], // 156 · avg 156.67
+  ["Brian Robinson Jr.","RB","ATL"], // 157 · avg 157.33
+  ["Tre Tucker","WR","LV"], // 158 · avg 161.00
+  ["Jauan Jennings","WR","MIN"], // 159 · avg 161.33
+  ["Dalton Schultz","TE","HOU"], // 160 · avg 161.67
+  ["Jerry Jeudy","WR","CLE"], // 161 · avg 162.00
+  ["Bryce Young","QB","CAR"], // 162 · avg 165.33
+  ["MarShawn Lloyd","RB","GB"], // 163 · avg 168.67
+  ["Tre' Harris","WR","LAC"], // 164 · avg 170.33
+  ["Jalen Nailor","WR","LV"], // 165 · avg 173.67
+  ["Omar Cooper Jr.","WR","NYJ"], // 166 · avg 174.67
+  ["Oronde Gadsden II","TE","LAC"], // 167 · avg 176.33
+  ["Dontayvion Wicks","WR","PHI"], // 168 · avg 176.67
+  ["Emmett Johnson","RB","KC"], // 169 · avg 177.00
+  ["Ray Davis","RB","BUF"], // 170 · avg 177.67
+  ["James Conner","RB","ARI"], // 171 · avg 205.67 · adj -28
+  ["AJ Barner","TE","SEA"], // 172 · avg 178.00
+  ["Zach Charbonnet","RB","SEA"], // 173 · avg 144.33 · adj +35
+  ["Ryan Flournoy","WR","DAL"], // 174 · avg 179.33
+  ["Sean Tucker","RB","TB"], // 175 · avg 181.00
+  ["T.J. Hockenson","TE","MIN"], // 176 · avg 181.33
+  ["Jacoby Brissett","QB","ARI"], // 177 · avg 182.00
+  ["Travis Hunter","WR","JAC"], // 178 · avg 185.67
+  ["Pat Bryant","WR","DEN"], // 179 · avg 186.00
+  ["Malik Washington","WR","MIA"], // 180 · avg 186.33
+  ["Kayshon Boutte","WR","NE"], // 181 · avg 187.00
+  ["Terrance Ferguson","TE","LAR"], // 182 · avg 187.00
+  ["Jaylin Noel","WR","HOU"], // 183 · avg 188.33
+  ["Kimani Vidal","RB","LAC"], // 184 · avg 189.33
+  ["Calvin Ridley","WR","TEN"], // 185 · avg 191.67
+  ["Nicholas Singleton","RB","TEN"], // 186 · avg 193.67
+  ["Brandon Aubrey","K","DAL"], // 187 · avg 194.33
+  ["Keenan Allen","WR","IND"], // 188 · avg 196.67
+  ["Alvin Kamara","RB","NO"], // 189 · avg 152.67 · adj +45
+  ["Kenyon Sadiq","TE","NYJ"], // 190 · avg 198.00
+  ["Tank Dell","WR","HOU"], // 191 · avg 198.33
+  ["Cameron Dicker","K","LAC"], // 192 · avg 201.00
+  ["Ka'imi Fairbairn","K","HOU"], // 193 · avg 202.67
+  ["Gunnar Helm","TE","TEN"], // 194 · avg 205.00
+  ["Cam Little","K","JAC"], // 195 · avg 206.00
+  ["Isaac TeSlaa","WR","DET"], // 196 · avg 209.33
+  ["Jason Myers","K","SEA"], // 197 · avg 210.00
+  ["Kaytron Allen","RB","WAS"], // 198 · avg 210.00
+  ["Emanuel Wilson","RB","SEA"], // 199 · avg 210.33
+  ["Aaron Rodgers","QB","PIT"], // 200 · avg 211.00
+  ["Geno Smith","QB","NYJ"], // 201 · avg 212.00
+  ["Rashod Bateman","WR","BAL"], // 202 · avg 212.00
+  ["Jaydon Blue","RB","DAL"], // 203 · avg 212.33
+  ["Pat Freiermuth","TE","PIT"], // 204 · avg 214.33
+  ["Tyler Loop","K","BAL"], // 205 · avg 214.67
+  ["Darnell Mooney","WR","NYG"], // 206 · avg 216.67
+  ["Eddy Pineiro","K","SF"], // 207 · avg 217.00
+  ["Troy Franklin","WR","DEN"], // 208 · avg 217.00
+  ["Cade Otton","TE","TB"], // 209 · avg 220.67
+  ["Jake Bates","K","DET"], // 210 · avg 224.00
+  ["Cairo Santos","K","CHI"], // 211 · avg 224.67
+  ["Isaiah Davis","RB","NYJ"], // 212 · avg 253.00 · adj -28
+  ["Jaylen Wright","RB","MIA"], // 213 · avg 227.00
+  ["Cooper Kupp","WR","SEA"], // 214 · avg 228.33
+  ["Evan McPherson","K","CIN"], // 215 · avg 229.67
+  ["Jordyn Tyson","WR","NO"], // 216 · avg 130.67 · adj +100
+  ["Harrison Mevis","K","LAR"], // 217 · avg 230.67
+  ["Zachariah Branch","WR","ATL"], // 218 · avg 232.33
+  ["Devin Neal","RB","NO"], // 219 · avg 283.33 · adj -50
+  ["Andy Borregales","K","NE"], // 220 · avg 233.67
+  ["Chase McLaughlin","K","TB"], // 221 · avg 233.67
+  ["Germie Bernard","WR","PIT"], // 222 · avg 234.67
+  ["George Holani","RB","SEA"], // 223 · avg 236.00
+  ["David Njoku","TE","LAC"], // 224 · avg 238.00
+  ["Antonio Williams","WR","WAS"], // 225 · avg 238.67
+  ["Ollie Gordon II","RB","MIA"], // 226 · avg 239.00
+  ["Evan Engram","TE","DEN"], // 227 · avg 240.33
+  ["Kendre Miller","RB","NO"], // 228 · avg 291.00 · adj -50
+  ["Fernando Mendoza","QB","LV"], // 229 · avg 242.33
+  ["Justice Hill","RB","BAL"], // 230 · avg 243.67
+  ["Colby Parkinson","TE","LAR"], // 231 · avg 246.33
+  ["Harrison Butker","K","KC"], // 232 · avg 247.00
+  ["Jack Bech","WR","LV"], // 233 · avg 247.33
+  ["Malachi Fields","WR","NYG"], // 234 · avg 248.00
+  ["Demond Claiborne","RB","MIN"], // 235 · avg 249.33
+  ["Ja'Kobi Lane","WR","BAL"], // 236 · avg 249.67
+  ["Ted Hurst III","WR","TB"], // 237 · avg 251.00
+  ["Chimere Dike","WR","TEN"], // 238 · avg 251.33
+  ["Elic Ayomanor","WR","TEN"], // 239 · avg 251.67
+  ["Keon Coleman","WR","BUF"], // 240 · avg 251.67
+  ["Chris Boswell","K","PIT"], // 241 · avg 252.00
+  ["Kaelon Black","RB","SF"], // 242 · avg 252.33
+  ["Devaughn Vele","WR","NO"], // 243 · avg 254.67
+  ["Tory Horton","WR","SEA"], // 244 · avg 257.00
+  ["Chris Bell","WR","MIA"], // 245 · avg 257.67
+  ["Greg Dulcich","TE","MIA"], // 246 · avg 258.00
+  ["Tua Tagovailoa","QB","ATL"], // 247 · avg 258.00
+  ["Chris Brooks","RB","GB"], // 248 · avg 261.67
+  ["Samaje Perine","RB","CIN"], // 249 · avg 262.67
+  ["Jordan James","RB","SF"], // 250 · avg 263.67
+  ["Najee Harris","RB","NYG"], // 251 · avg 265.67
+  ["Caleb Douglas","WR","MIA"], // 252 · avg 268.00
+  ["Ty Johnson","RB","BUF"], // 253 · avg 268.33
+  ["Elijah Sarratt","WR","BAL"], // 254 · avg 269.67
+  ["Wil Lutz","K","DEN"], // 255 · avg 269.67
+  ["Christian Kirk","WR","SF"], // 256 · avg 270.67
+  ["Tyquan Thornton","WR","KC"], // 257 · avg 271.33
+  ["Will Reichard","K","MIN"], // 258 · avg 272.33
+  ["LeQuint Allen Jr.","RB","JAC"], // 259 · avg 273.00
+  ["Mason Taylor","TE","NYJ"], // 260 · avg 275.00
+  ["Darius Slayton","WR","NYG"], // 261 · avg 275.33
+  ["Kirk Cousins","QB","LV"], // 262 · avg 278.00
+  ["Michael Penix Jr.","QB","ATL"], // 263 · avg 278.67
+  ["Theo Johnson","TE","NYG"], // 264 · avg 279.33
+  ["Malik Davis","RB","DAL"], // 265 · avg 279.67
+  ["DJ Giddens","RB","IND"], // 266 · avg 281.00
+  ["Xavier Legette","WR","CAR"], // 267 · avg 281.00
+  ["Trey Benson","RB","ARI"], // 268 · avg 282.00
+  ["Eli Stowers","TE","PHI"], // 269 · avg 283.00
+  ["Marvin Mims Jr.","WR","DEN"], // 270 · avg 283.00
+  ["Shedeur Sanders","QB","CLE"], // 271 · avg 283.67
+  ["Deshaun Watson","QB","CLE"], // 272 · avg 284.00
+  ["Seth McGowan","RB","IND"], // 273 · avg 287.33
+  ["Adam Randall","RB","BAL"], // 274 · avg 289.67
+  ["Cyrus Allen","WR","KC"], // 275 · avg 289.67
+  ["Brashard Smith","RB","KC"], // 276 · avg 293.33
+  ["Devin Singletary","RB","NYG"], // 277 · avg 295.33
+  ["Kaleb Johnson","RB","PIT"], // 278 · avg 296.00
+  ["Emari Demercado","RB","KC"], // 279 · avg 296.33
+  ["Hollywood Brown","WR","PHI"], // 280 · avg 299.33
+  ["Kyle Williams","WR","NE"], // 281 · avg 300.67
+  ["Trevor Etienne","RB","CAR"], // 282 · avg 301.00
+  ["Mack Hollins","WR","NE"], // 283 · avg 302.00
+  ["Mike Gesicki","TE","CIN"], // 284 · avg 303.67
+  ["Brandon Aiyuk","WR","SF"], // 285 · avg 305.00
+  ["Isaiah Bond","WR","CLE"], // 286 · avg 305.00
+  ["Jerome Ford","RB","WAS"], // 287 · avg 307.00
+  ["Isaac Guerendo","RB","SF"], // 288 · avg 307.33
+  ["Skyler Bell","WR","BUF"], // 289 · avg 307.33
+  ["Charlie Smyth","K","NO"], // 290 · avg 308.00
+  ["Tahj Brooks","RB","CIN"], // 291 · avg 308.33
+  ["Tyreek Hill","WR","FA"], // 292 · avg 312.33
+  ["Tez Johnson","WR","TB"], // 293 · avg 340.67 · adj -28
+  ["Jake Tonges","TE","SF"], // 294 · avg 314.67
+  ["Jaleel McLaughlin","RB","DEN"], // 295 · avg 315.00
+  ["Jarquez Hunter","RB","LAR"], // 296 · avg 315.00
+  ["Andrei Iosivas","WR","CIN"], // 297 · avg 315.67
+  ["Oscar Delp","TE","NO"], // 298 · avg 316.67
+  ["Audric Estime","RB","NO"], // 299 · avg 317.67
+  ["Darren Waller","TE","CAR"], // 300 · avg 319.00
+  ["Will Shipley","RB","PHI"], // 301 · avg 319.00
+  ["Darnell Washington","TE","PIT"], // 302 · avg 320.67
+  ["Michael Mayer","TE","LV"], // 303 · avg 323.67
+  ["Jahan Dotson","WR","ATL"], // 304 · avg 324.33
+  ["Kareem Hunt","RB","FA"], // 305 · avg 327.33
+  ["Elijah Arroyo","TE","SEA"], // 306 · avg 327.67
+  ["DeMario Douglas","WR","NE"], // 307 · avg 328.00
+  ["J.J. McCarthy","QB","MIN"], // 308 · avg 328.33
+  ["Jalen Tolbert","WR","MIA"], // 309 · avg 329.33
+  ["Joe Mixon","RB","FA"], // 310 · avg 329.33
+  ["Carson Beck","QB","ARI"], // 311 · avg 331.33
+  ["Bryce Lance","WR","NO"], // 312 · avg 332.00
+  ["Tyler Higbee","TE","LAR"], // 313 · avg 335.33
+  ["Xavier Hutchinson","WR","HOU"], // 314 · avg 337.00
+  ["Cedric Tillman","WR","CLE"], // 315 · avg 338.33
+  ["Charlie Kolar","TE","LAC"], // 316 · avg 338.33
+  ["Konata Mumpfield","WR","LAR"], // 317 · avg 339.67
+  ["Erick All Jr.","TE","CIN"], // 318 · avg 341.00
+  ["Cole Kmet","TE","CHI"], // 319 · avg 343.00
+  ["Eli Raridon","TE","NE"], // 320 · avg 343.00
+  ["Calvin Austin III","WR","NYG"], // 321 · avg 344.00
+  ["Mac Jones","QB","SF"], // 322 · avg 345.00
+  ["Max Klare","TE","LAR"], // 323 · avg 346.00
+  ["Jalen Royals","WR","KC"], // 324 · avg 346.33
+  ["Noah Gray","TE","KC"], // 325 · avg 347.67
+  ["Olamide Zaccheaus","WR","ATL"], // 326 · avg 347.67
+  ["Dawson Knox","TE","BUF"], // 327 · avg 349.33
+  ["Luke McCaffrey","WR","WAS"], // 328 · avg 349.67
+  ["Brenen Thompson","WR","LAC"], // 329 · avg 355.00
+  ["Jake Elliott","K","PHI"], // 330 · avg 355.33
+  ["Eli Heidenreich","RB","PIT"], // 331 · avg 355.67
+  ["Kendrick Bourne","WR","ARI"], // 332 · avg 355.67
+  ["Bam Knight","RB","ARI"], // 333 · avg 356.00
+  ["Joshua Palmer","WR","BUF"], // 334 · avg 358.67
+  ["Justin Fields","QB","KC"], // 335 · avg 358.67
+  ["Ja'Tavion Sanders","TE","CAR"], // 336 · avg 359.67
+  ["Justin Joly","TE","DEN"], // 337 · avg 361.67
+  ["Ty Simpson","QB","LAR"], // 338 · avg 364.33
+  ["Tyler Bass","K","BUF"], // 339 · avg 365.67
+  ["Treylon Burks","WR","WAS"], // 340 · avg 366.33
+  ["Michael Carter","RB","TEN"], // 341 · avg 367.00
+  ["Roman Wilson","WR","PIT"], // 342 · avg 370.67
+  ["Kalif Raymond","WR","CHI"], // 343 · avg 371.67
+  ["Malik Benson","WR","LV"], // 344 · avg 372.67
+  ["Jawhar Jordan","RB","HOU"], // 345 · avg 373.00
+  ["Jordan Whittington","WR","LAR"], // 346 · avg 401.67 · adj -28
+  ["Anthony Richardson Sr.","QB","IND"], // 347 · avg 374.00
+  ["KaVontae Turpin","WR","DAL"], // 348 · avg 375.00
+  ["Phil Mafah","RB","DAL"], // 349 · avg 377.00
+  ["Dont'e Thornton Jr.","WR","LV"], // 350 · avg 378.33
 ];
+
 
 const DEF_NAMES = {
   ARI:"Cardinals", ATL:"Falcons", BAL:"Ravens", BUF:"Bills", CAR:"Panthers", CHI:"Bears",
@@ -391,16 +444,142 @@ const PLAYER_DB = [
 ].map(([name, pos, team], i) => ({ id: `db${i}`, name, pos, team, bye: TEAM_BYES[team] }));
 
 const norm = (s) => (s || "").toLowerCase().replace(/[’‘]/g, "'").replace(/[.\-]/g, "").trim();
-// Confirmed out for 2026 (training camp / preseason, Aug 2026)
-const OUT_FOR_SEASON = {
-  [norm("Ricky Pearsall")]: "PCL surgery — out for 2026",
-  [norm("Chris Brazzell II")]: "LCL tear — out for 2026",
+// Player health — updated 2026-08-24T04:28:21.448Z
+// Sources: FantasyPros injury news (8/23); Yahoo Sports training camp tracker; Fantasy Alarm weekend injury roundup (8/23); CBS Sports camp tracker; Adam Schefter / team beat reporters
+// Regenerate via: npm run refresh-board
+const PLAYER_HEALTH = {
+  [norm("Ashton Jeanty")]: { status: "D", note: "Right knee — helped off practice 8/23, unable to bear weight; team paused practice; awaiting MRI", sources: ["FantasyPros","Fantasy Alarm","Adam Schefter"], updatedAt: "2026-08-23" },
+  [norm("Ricky Pearsall")]: { status: "OFS", note: "PCL surgery — out for 2026", sources: ["Yahoo Sports","CBS Sports"], updatedAt: "2026-08-20" },
+  [norm("Chris Brazzell II")]: { status: "OFS", note: "LCL tear — out for 2026", sources: ["Yahoo Sports"], updatedAt: "2026-08-18" },
+  [norm("Jayden Higgins")]: { status: "OFS", note: "Torn ACL — out for 2026 (Ian Rapoport)", sources: ["FantasyPros","Yahoo Sports"], updatedAt: "2026-08-20" },
+  [norm("Jordyn Tyson")]: { status: "IR", note: "Hamstring — expected ~2 months, may start on IR", sources: ["Yahoo Sports","Fantasy Alarm","AS USA"], updatedAt: "2026-08-22" },
+  [norm("Alvin Kamara")]: { status: "OUT", note: "MCL sprain — expected out ~1 month", sources: ["Fantasy Alarm"], updatedAt: "2026-08-22" },
+  [norm("Zach Charbonnet")]: { status: "PUP", note: "ACL recovery — has not returned to practice (active/PUP)", sources: ["Yahoo Sports","Fantasy Alarm","AS USA"], updatedAt: "2026-08-22" },
+  [norm("Breece Hall")]: { status: "Q", note: "Groin — expected out 2–3 weeks; team hopeful for Week 1", sources: ["AS USA","Fantasy Alarm"], updatedAt: "2026-08-22" },
+  [norm("Jeremiyah Love")]: { status: "Q", note: "High-ankle sprain — multi-week; Week 1 in doubt", sources: ["Fantasy Alarm","Yahoo Sports"], updatedAt: "2026-08-21" },
+  [norm("Emeka Egbuka")]: { status: "Q", note: "Turf toe sprain — Week 1 availability in doubt", sources: ["Fantasy Alarm","Yahoo Sports"], updatedAt: "2026-08-22" },
+  [norm("Sam LaPorta")]: { status: "Q", note: "Hip/undisclosed — missed recent practice", sources: ["FantasyPros","Fantasy Alarm"], updatedAt: "2026-08-21" },
+  [norm("Puka Nacua")]: { status: "Q", note: "Groin soreness — minor per McVay, monitoring", sources: ["Yahoo Sports"], updatedAt: "2026-08-22" },
+  [norm("Kyle Monangai")]: { status: "D", note: "Hyperextended knee — multiple weeks, Week 1 in doubt", sources: ["Yahoo Sports","Fantasy Alarm"], updatedAt: "2026-08-21" },
+  [norm("Michael Pittman Jr.")]: { status: "Q", note: "Hamstring — minor, expected ready Week 1", sources: ["FantasyPros"], updatedAt: "2026-08-21" },
+  [norm("George Kittle")]: { status: "Q", note: "Working back from Achilles; limited in camp", sources: ["AS USA"], updatedAt: "2026-08-20" },
 };
-const injuryNoteFor = (name) => OUT_FOR_SEASON[norm(name)] || null;
-const isOutForSeason = (name) => !!injuryNoteFor(name);
+const healthFor = (name) => PLAYER_HEALTH[norm(name)] || null;
+const injuryNoteFor = (name) => {
+  const h = healthFor(name);
+  if (!h) return null;
+  if (h.status === "OFS" || h.status === "IR" || h.status === "OUT") return h.note;
+  return null;
+};
+const healthBlocksDraft = (name) => {
+  const s = healthFor(name)?.status;
+  return s === "OFS" || s === "IR" || s === "OUT";
+};
+
+const HEALTH_LABELS = { Q: "Q", D: "D", OUT: "OUT", IR: "IR", OFS: "OFS", PUP: "PUP" };
+function healthSnippet(note, max = 48) {
+  if (!note) return "";
+  let s = note.split(" — ")[0].split(" - ")[0].trim();
+  if (s.length > max) s = `${s.slice(0, max - 1)}…`;
+  return s;
+}
+function HealthTip({ label, note, sources, updatedAt, statusClass, variant = "badge" }) {
+  const triggerRef = useRef(null);
+  const tipRef = useRef(null);
+  const [open, setOpen] = useState(false);
+  const [place, setPlace] = useState(null); // null until measured — avoids flash at 0,0
+  const snippet = healthSnippet(note);
+  const meta = [sources?.length ? sources.join(", ") : "", updatedAt ? `Updated ${updatedAt}` : ""].filter(Boolean).join(" · ");
+  const fallback = [snippet ? `${label} — ${snippet}` : label, note, meta].filter(Boolean).join(" · ");
+
+  const reposition = useCallback(() => {
+    const el = triggerRef.current;
+    const tip = tipRef.current;
+    if (!el || !tip) return;
+    const r = el.getBoundingClientRect();
+    const tw = tip.offsetWidth || 200;
+    const th = tip.offsetHeight || 80;
+    const gap = 8;
+    const pad = 8;
+    const spaceAbove = r.top - pad;
+    const spaceBelow = window.innerHeight - r.bottom - pad;
+    const side = spaceAbove >= th + gap || spaceAbove >= spaceBelow ? "above" : "below";
+    let top = side === "above" ? r.top - th - gap : r.bottom + gap;
+    let left = r.left + r.width / 2 - tw / 2;
+    left = Math.max(pad, Math.min(left, window.innerWidth - tw - pad));
+    top = Math.max(pad, Math.min(top, window.innerHeight - th - pad));
+    setPlace({ top, left, side });
+  }, []);
+
+  useLayoutEffect(() => {
+    if (!open) {
+      setPlace(null);
+      return undefined;
+    }
+    reposition();
+    // second pass after paint in case first measure used fallback size
+    const raf = requestAnimationFrame(reposition);
+    const onScroll = () => reposition();
+    const onResize = () => reposition();
+    window.addEventListener("scroll", onScroll, true);
+    window.addEventListener("resize", onResize);
+    return () => {
+      cancelAnimationFrame(raf);
+      window.removeEventListener("scroll", onScroll, true);
+      window.removeEventListener("resize", onResize);
+    };
+  }, [open, reposition]);
+
+  if (!note) {
+    return <span className={`health-tag ${statusClass}${variant === "injury" ? " injury-tag" : ""}`}>{label}</span>;
+  }
+  return (
+    <span
+      ref={triggerRef}
+      className={`health-tag has-tip ${statusClass}${variant === "injury" ? " injury-tag" : ""}${open ? " is-open" : ""}`}
+      title={open ? undefined : fallback}
+      tabIndex={0}
+      onMouseEnter={() => setOpen(true)}
+      onMouseLeave={() => setOpen(false)}
+      onFocus={() => setOpen(true)}
+      onBlur={() => setOpen(false)}
+    >
+      <span className="health-tag-label">{label}</span>
+      {open ? (
+        <span
+          ref={tipRef}
+          className={`health-tip side-${place?.side || "above"}${place ? " is-ready" : ""}`}
+          role="tooltip"
+          style={place ? { top: place.top, left: place.left } : { top: -9999, left: -9999 }}
+        >
+          <span className="health-tip-snippet">{snippet || note}</span>
+          {note && snippet && note.length > snippet.length ? <span className="health-tip-detail">{note}</span> : null}
+          {meta ? <span className="health-tip-meta">{meta}</span> : null}
+        </span>
+      ) : null}
+    </span>
+  );
+}
+function HealthBadge({ health }) {
+  if (!health) return <span className="health-tag st-active">—</span>;
+  const label = HEALTH_LABELS[health.status] || health.status;
+  return (
+    <HealthTip
+      label={label}
+      note={health.note}
+      sources={health.sources}
+      updatedAt={health.updatedAt}
+      statusClass={`st-${health.status}`}
+    />
+  );
+}
+function InjuryTag({ note, label = "OUT" }) {
+  return <HealthTip label={label} note={note} statusClass="st-OUT" variant="injury" />;
+}
+const isOutForSeason = (name) => healthFor(name)?.status === "OFS";
 const seedOutForSeasonBoard = (boardData) => {
   const next = { ...(boardData || {}) };
-  Object.entries(OUT_FOR_SEASON).forEach(([key, note]) => {
+  Object.entries(PLAYER_HEALTH).filter(([, h]) => h.status === "OFS" || h.status === "IR" || h.status === "OUT").forEach(([key, h]) => {
     const p = PLAYER_DB.find((x) => norm(x.name) === key);
     if (!p) return;
     const cur = next[key];
@@ -409,7 +588,7 @@ const seedOutForSeasonBoard = (boardData) => {
       ...(cur || {}),
       name: p.name, pos: p.pos, team: p.team, bye: p.bye,
       status: "gone", price: cur?.price ?? null, star: !!cur?.star,
-      injuryNote: note,
+      injuryNote: h.note,
     };
   });
   return next;
@@ -421,16 +600,58 @@ PLAYER_DB.forEach((p) => { (POS_LISTS[p.pos] = POS_LISTS[p.pos] || []).push(p); 
 const POS_RANK = {};
 Object.values(POS_LISTS).forEach((list) => list.forEach((p, i) => { POS_RANK[norm(p.name)] = i + 1; }));
 const OVERALL_RANK = {};
-RAW_DB.forEach(([name], i) => { OVERALL_RANK[norm(name)] = i + 1; }); // 1–300 consensus board order
-function estValue(pos, name) {
+RAW_DB.forEach(([name], i) => { OVERALL_RANK[norm(name)] = i + 1; }); // 1–350 consensus board order (1QB)
+
+function isSuperflexLeague(settings) {
+  return (settings?.starters?.SUPERFLEX || 0) > 0 && settings?.superflexEligible?.QB !== false;
+}
+
+/** Auction $ estimate; pass league settings for 2QB/superflex QB premium. */
+function estValue(pos, name, settings = null) {
   const r = POS_RANK[norm(name)];
   if (!r) return null;
+  const sf = isSuperflexLeague(settings);
   let v;
-  if (pos === "RB" || pos === "WR") v = 62 * Math.exp(-0.085 * (r - 1));
-  else if (pos === "QB") v = 26 * Math.exp(-0.2 * (r - 1));
-  else if (pos === "TE") v = 30 * Math.exp(-0.3 * (r - 1));
-  else v = r <= 3 ? 2 : 1;
+  if (pos === "RB" || pos === "WR") {
+    v = (sf ? 58 : 62) * Math.exp(-0.085 * (r - 1));
+  } else if (pos === "QB") {
+    v = sf
+      ? 62 * Math.exp(-0.095 * (r - 1))   // 2QB: Allen ~$62, QB12 ~$23, QB24 ~$8
+      : 26 * Math.exp(-0.2 * (r - 1));
+  } else if (pos === "TE") {
+    v = 30 * Math.exp(-0.3 * (r - 1));
+  } else {
+    v = r <= 3 ? 2 : 1;
+  }
   return Math.max(1, Math.round(v));
+}
+
+/** Value-based draft order for superflex; falls back to consensus overall rank in 1QB. */
+function buildDraftRank(settings) {
+  if (!isSuperflexLeague(settings)) return OVERALL_RANK;
+  const entries = RAW_DB.map(([name, pos]) => ({
+    key: norm(name),
+    est: estValue(pos, name, settings) || 0,
+    consensus: OVERALL_RANK[norm(name)] || 9999,
+  }));
+  entries.sort((a, b) => b.est - a.est || a.consensus - b.consensus || a.key.localeCompare(b.key));
+  const map = {};
+  entries.forEach((e, i) => { map[e.key] = i + 1; });
+  return map;
+}
+
+function slotCostEst(settings) {
+  const sf = isSuperflexLeague(settings);
+  return {
+    QB: sf ? 14 : 8,
+    RB: 13,
+    WR: 12,
+    TE: 6,
+    FLEX: sf ? 10 : 8,
+    SUPERFLEX: 14,
+    K: 1,
+    DEF: 1,
+  };
 }
 const tierOf = (name) => { const r = POS_RANK[norm(name)]; return r ? Math.ceil(r / 6) : null; };
 
@@ -542,13 +763,14 @@ function fuzzySearch(query, { pos = null, limit = 8 } = {}) {
   return scored.slice(0, limit).map((x) => x[1]);
 }
 const PLAN_CATS = ["QB", "RB", "WR", "TE", "K", "DEF", "Bench"];
-const DEFAULT_PLAN = { QB: 15, RB: 75, WR: 80, TE: 12, K: 1, DEF: 2, Bench: 15 };
+const DEFAULT_PLAN = { QB: 45, RB: 70, WR: 55, TE: 12, K: 1, DEF: 2, Bench: 15 }; // 2QB superflex budget split
 const EMPTY_ASST = { name: "", pos: "", team: "", bye: "", proj: "", presetMax: "", bid: "" };
 
 // ---------- roster slots (built from settings) ----------
 function buildRoster(settings) {
   const st = settings.starters;
   const flexAccepts = POSITIONS.filter((p) => settings.flexEligible[p]);
+  const superflexAccepts = POSITIONS.filter((p) => settings.superflexEligible?.[p]);
   const slots = [];
   const addMany = (pos, n) => {
     for (let i = 1; i <= n; i++) {
@@ -559,9 +781,13 @@ function buildRoster(settings) {
   addMany("RB", st.RB);
   addMany("WR", st.WR);
   addMany("TE", st.TE);
-  for (let i = 1; i <= st.FLEX; i++) {
+  for (let i = 1; i <= (st.FLEX || 0); i++) {
     slots.push({ id: st.FLEX === 1 ? "FLEX" : `FLEX${i}`, label: st.FLEX === 1 ? "FLEX" : `FLEX${i}`,
       accepts: flexAccepts.length ? flexAccepts : POSITIONS, starter: true, pos: "FLEX" });
+  }
+  for (let i = 1; i <= (st.SUPERFLEX || 0); i++) {
+    slots.push({ id: st.SUPERFLEX === 1 ? "SUPERFLEX" : `SUPERFLEX${i}`, label: st.SUPERFLEX === 1 ? "SUPERFLEX" : `SUPERFLEX${i}`,
+      accepts: superflexAccepts.length ? superflexAccepts : POSITIONS, starter: true, pos: "SUPERFLEX" });
   }
   addMany("K", st.K);
   addMany("DEF", st.DEF);
@@ -572,7 +798,8 @@ function buildRoster(settings) {
   const autoOrder = {};
   POSITIONS.forEach((pos) => {
     autoOrder[pos] = slots.filter((x) => x.starter && x.accepts.includes(pos) && x.pos === pos).map((x) => x.id)
-      .concat(slots.filter((x) => x.starter && x.pos === "FLEX" && x.accepts.includes(pos)).map((x) => x.id));
+      .concat(slots.filter((x) => x.starter && x.pos === "FLEX" && x.accepts.includes(pos)).map((x) => x.id))
+      .concat(slots.filter((x) => x.starter && x.pos === "SUPERFLEX" && x.accepts.includes(pos)).map((x) => x.id));
   });
   const benchIds = slots.filter((x) => !x.starter).map((x) => x.id);
   const size = slots.length;
@@ -584,8 +811,6 @@ function autoSlot(pos, occupied, roster) {
   return null;
 }
 // rough $ each open starting slot should command, by position
-const SLOT_COST_EST = { QB: 8, RB: 13, WR: 12, TE: 6, FLEX: 8, K: 1, DEF: 1 };
-
 const BOARD_FILTERS = ["ALL", "QB", "RB", "WR", "TE", "K", "DEF"];
 const boardKey = (name) => norm(name);
 
@@ -979,6 +1204,8 @@ export default function AuctionWarRoom() {
   const SLOT_BY_ID = roster.byId;
   const ROSTER_SIZE = roster.size;
   const BUDGET = settings.budget;
+  const draftRank = useMemo(() => buildDraftRank(settings), [settings]);
+  const slotCosts = useMemo(() => slotCostEst(settings), [settings]);
   const onlyOnePositions = useMemo(() => POSITIONS.filter((p) => settings.onlyOne[p]), [settings.onlyOne]);
   // required count per position: dedicated starters (FLEX counted separately)
   const posNeed = useMemo(() => {
@@ -1018,6 +1245,7 @@ export default function AuctionWarRoom() {
   const occupied = useMemo(() => new Map(players.map((p) => [p.slot, p])), [players]);
   const openStarters = SLOTS.filter((s) => s.starter && !occupied.has(s.id));
   const flexOpen = openStarters.filter((s) => s.pos === "FLEX").length;
+  const superflexOpen = openStarters.filter((s) => s.pos === "SUPERFLEX").length;
 
   const posCounts = useMemo(() => {
     const c = { QB: 0, RB: 0, WR: 0, TE: 0, K: 0, DEF: 0 };
@@ -1104,7 +1332,7 @@ export default function AuctionWarRoom() {
 
   /* ------- budget health & plan ------- */
   const benchOpen = Math.max(0, spotsLeft - openStarters.length);
-  const fillCost = openStarters.reduce((s, sl) => s + (SLOT_COST_EST[sl.pos] || 5), 0) + benchOpen;
+  const fillCost = openStarters.reduce((s, sl) => s + (slotCosts[sl.pos] || 5), 0) + benchOpen;
   const budgetHealth = spotsLeft === 0 ? "done" : remaining >= fillCost * 1.5 ? "strong" : remaining >= fillCost ? "moderate" : "tight";
   const avgPerStarter = openStarters.length > 0 ? Math.max(0, (remaining - benchOpen)) / openStarters.length : 0;
   const planSpend = useMemo(() => {
@@ -1118,7 +1346,7 @@ export default function AuctionWarRoom() {
   const analysis = useMemo(() => {
     if (!assistant.name || !assistant.pos) return null;
     const pos = assistant.pos;
-    const est = estValue(pos, assistant.name);
+    const est = estValue(pos, assistant.name, settings);
     const projIn = assistant.proj !== "" && Number.isFinite(Number(assistant.proj)) ? Number(assistant.proj) : null;
     const V = projIn != null ? projIn : est;
     const preset = assistant.presetMax !== "" && Number.isFinite(Number(assistant.presetMax)) ? Number(assistant.presetMax) : null;
@@ -1126,11 +1354,13 @@ export default function AuctionWarRoom() {
     const bid = hasBid ? Math.max(0, Math.round(Number(assistant.bid)) || 0) : 0;
     const slot = autoSlot(pos, new Set(players.map((p) => p.slot)), roster);
     const slotLabel = slot ? SLOT_BY_ID[slot].label : null;
-    const fillsDedicated = !!slot && slot !== "FLEX" && !slot.startsWith("B");
-    const fillsFlex = slot === "FLEX";
+    const fillsDedicated = !!slot && slot !== "FLEX" && !slot.startsWith("SUPERFLEX") && !slot.startsWith("B");
+    const fillsFlex = slot === "FLEX" || (slot && slot.startsWith("FLEX"));
+    const fillsSuperflex = slot === "SUPERFLEX" || (slot && slot.startsWith("SUPERFLEX"));
     const dup = !!settings.onlyOne[pos] && posCounts[pos] >= 1;
-    const depthTargets = { QB: posNeed.QB, RB: posNeed.RB + 3, WR: posNeed.WR + 3, TE: posNeed.TE, K: posNeed.K, DEF: posNeed.DEF };
-    const deep = posCounts[pos] >= (depthTargets[pos] || 1) && !fillsDedicated && !fillsFlex;
+    const qbDepth = (posNeed.QB || 0) + ((settings.starters.SUPERFLEX || 0) && settings.superflexEligible?.QB ? settings.starters.SUPERFLEX : 0);
+    const depthTargets = { QB: qbDepth, RB: posNeed.RB + 3, WR: posNeed.WR + 3, TE: posNeed.TE, K: posNeed.K, DEF: posNeed.DEF };
+    const deep = posCounts[pos] >= (depthTargets[pos] || 1) && !fillsDedicated && !fillsFlex && !fillsSuperflex;
 
     // bye impact if added
     const byeConflict = assessByeConflict(
@@ -1143,6 +1373,7 @@ export default function AuctionWarRoom() {
     let mult;
     if (dup) mult = 0.45;
     else if (fillsDedicated) mult = 1.15;
+    else if (fillsSuperflex) mult = 1.08;
     else if (fillsFlex) mult = 1.05;
     else if (deep) mult = 0.85;
     else mult = 0.95;
@@ -1197,15 +1428,15 @@ export default function AuctionWarRoom() {
     if (budgetHealth === "tight" && tier === "bid") { tier = "value"; why.push("Budget is tight — don't stretch past the number."); }
 
     return { pos, V, est, projIn, preset, bid, hasBid, suggested, recMax, absMax: maxBid, tier, why: why.join(" "), slot, slotLabel, discount, byeConflict };
-  }, [assistant, players, posCounts, openStarters, maxBid, spotsLeft, budgetHealth, SLOT_BY_ID]);
+  }, [assistant, players, posCounts, openStarters, maxBid, spotsLeft, budgetHealth, SLOT_BY_ID, settings]);
 
   /* ------- market inflation from off-the-board prices ------- */
   const market = useMemo(() => {
     const sales = [];
-    players.forEach((p) => { const e = estValue(p.pos, p.name); if (e != null && e >= 3) sales.push([e, p.price]); });
+    players.forEach((p) => { const e = estValue(p.pos, p.name, settings); if (e != null && e >= 3) sales.push([e, p.price]); });
     Object.values(board).forEach((b) => {
       if (b.status !== "gone" || b.price == null) return;
-      const e = estValue(b.pos, b.name);
+      const e = estValue(b.pos, b.name, settings);
       if (e != null && e >= 3) sales.push([e, b.price]);
     });
     if (sales.length < 3) return { factor: 1, pct: 0, n: sales.length };
@@ -1213,12 +1444,12 @@ export default function AuctionWarRoom() {
     const totalPaid = sales.reduce((s, x) => s + x[1], 0);
     const factor = Math.max(0.6, Math.min(1.6, totalPaid / Math.max(1, totalEst)));
     return { factor, pct: Math.round((factor - 1) * 100), n: sales.length };
-  }, [players, board]);
+  }, [players, board, settings]);
   const adjEst = useCallback((pos, name) => {
-    const e = estValue(pos, name);
+    const e = estValue(pos, name, settings);
     if (e == null) return null;
     return Math.max(1, Math.round(e * market.factor));
-  }, [market.factor]);
+  }, [market.factor, settings]);
 
   const alternatives = useMemo(() => {
     if (!assistant.pos) return [];
@@ -1482,14 +1713,16 @@ export default function AuctionWarRoom() {
       const rosterP = draftedByName.get(norm(p.name));
       const status = rosterP ? "mine" : (b.status || "available");
       const price = status === "mine" ? (rosterP?.price ?? b.price ?? null) : (b.price ?? null);
+      const health = healthFor(p.name);
       const injuryNote = b.injuryNote || injuryNoteFor(p.name);
       const effStatus = injuryNote && status === "available" ? "gone" : status;
       return {
         ...p, key: k, status: effStatus, price, star: !!b.star,
         est: adjEst(p.pos, p.name), tier: tierOf(p.name),
         rank: POS_RANK[norm(p.name)] || 999,
-        overall: OVERALL_RANK[norm(p.name)] || null,
-        injuryNote,
+        overall: draftRank[norm(p.name)] || null,
+        consensus: OVERALL_RANK[norm(p.name)] || null,
+        health, injuryNote,
       };
     });
     // custom players tracked off-board that aren't in the built-in DB
@@ -1514,7 +1747,7 @@ export default function AuctionWarRoom() {
 
     const sorted = filtered.sort(byOverall);
     return sorted;
-  }, [board, players, boardFilter, boardShowGone, boardStarsOnly, adjEst]);
+  }, [board, players, boardFilter, boardShowGone, boardStarsOnly, adjEst, draftRank]);
 
   const boardAvailableCount = useMemo(() => {
     const draftedNames = new Set(players.map((p) => norm(p.name)));
@@ -1544,14 +1777,14 @@ export default function AuctionWarRoom() {
       const k = boardKey(p.name);
       const b = board[k];
       if (b?.status === "gone" || b?.status === "mine") return;
-      if (isOutForSeason(p.name)) return;
+      if (healthBlocksDraft(p.name)) return;
       pool.push({
         ...p,
         key: k,
         star: !!b?.star,
         est: adjEst(p.pos, p.name),
         rank: POS_RANK[norm(p.name)] || 999,
-        overall: OVERALL_RANK[norm(p.name)] || 9999,
+        overall: draftRank[norm(p.name)] || 9999,
         byeConflict: assessByeConflict(players, p, SLOT_BY_ID),
       });
     });
@@ -1567,7 +1800,7 @@ export default function AuctionWarRoom() {
       pool.push(custom);
     });
 
-    // Best = highest on the top-300 overall board (not auction $)
+    // Best = top of draft board (value-based in 2QB superflex, consensus in 1QB)
     const rankPick = (a, b) =>
       a.overall - b.overall ||
       a.rank - b.rank ||
@@ -1588,6 +1821,9 @@ export default function AuctionWarRoom() {
       const pos = shortfalls[0].pos;
       need = pool.filter((p) => p.pos === pos).sort(rankPick)[0] || null;
       needReason = need ? `Need ${pos}` : null;
+    } else if (superflexOpen > 0) {
+      need = pool.filter((p) => settings.superflexEligible?.[p.pos]).sort(rankPick)[0] || null;
+      needReason = need ? `SUPERFLEX ${need.pos}` : null;
     } else if (flexOpen > 0) {
       need = pool.filter((p) => settings.flexEligible[p.pos]).sort(rankPick)[0] || null;
       needReason = need ? `FLEX ${need.pos}` : null;
@@ -1607,7 +1843,7 @@ export default function AuctionWarRoom() {
         const row = {
           id: `t-${k}`, name: t.name, pos: t.pos || "", team: t.team || "", bye: t.bye || null,
           key: k, star: !!b?.star, est: adjEst(t.pos, t.name),
-          rank: POS_RANK[k] || 999, overall: OVERALL_RANK[k] || 9999,
+          rank: POS_RANK[k] || 999, overall: draftRank[k] || 9999,
         };
         row.byeConflict = assessByeConflict(players, row, SLOT_BY_ID);
         remaining.push(row);
@@ -1616,7 +1852,7 @@ export default function AuctionWarRoom() {
     }
 
     return { overall, need, needReason, target };
-  }, [spotsLeft, players, board, targets, adjEst, posNeed, posCounts, flexOpen, settings.flexEligible, SLOT_BY_ID]);
+  }, [spotsLeft, players, board, targets, adjEst, draftRank, posNeed, posCounts, flexOpen, superflexOpen, settings.flexEligible, settings.superflexEligible, SLOT_BY_ID]);
 
   const boardCounts = useMemo(() => {
     const vals = Object.values(board);
@@ -1702,9 +1938,9 @@ export default function AuctionWarRoom() {
         ...t, key: k, status: effStatus,
         est: adjEst(t.pos, t.name),
         rank: POS_RANK[k] || 999,
-        overall: OVERALL_RANK[k] || 9999,
+        overall: draftRank[k] || 9999,
         bye: t.bye || TEAM_BYES[t.team] || null,
-        injuryNote,
+        health: healthFor(t.name), injuryNote,
       };
     });
     const filtered = targetFilter === "ALL" ? rows : rows.filter((r) => r.pos === targetFilter);
@@ -1713,7 +1949,7 @@ export default function AuctionWarRoom() {
       return [...filtered].sort((a, b) => (posIdx[a.pos] ?? 99) - (posIdx[b.pos] ?? 99) || byOverall(a, b));
     }
     return [...filtered].sort(byOverall);
-  }, [targets, players, board, adjEst, targetFilter, targetSort]);
+  }, [targets, players, board, adjEst, draftRank, targetFilter, targetSort]);
 
   const targetsLeftAll = useMemo(() => {
     return targets.filter((t) => {
@@ -2353,7 +2589,7 @@ export default function AuctionWarRoom() {
           <section className="panel needs-panel">
             <div className="panel-head">
               <span className="eyebrow">Position needs</span>
-              <span className="panel-side">{flexOpen > 0 ? `+${flexOpen} FLEX open` : "starters / required"}</span>
+              <span className="panel-side">{superflexOpen > 0 ? `+${superflexOpen} SF` : flexOpen > 0 ? `+${flexOpen} FLEX` : "starters / required"}</span>
             </div>
             <div className="pos-grid">
               {POS_ORDER.map((pos) => {
@@ -2364,7 +2600,7 @@ export default function AuctionWarRoom() {
                 const note = short ? `need ${need - have}`
                   : over ? `${have - need} extra`
                   : need === 0 ? "not required"
-                  : flexOpen > 0 && settings.flexEligible[pos] ? "✓ flex-able"
+                  : (superflexOpen > 0 && settings.superflexEligible?.[pos]) || (flexOpen > 0 && settings.flexEligible[pos]) ? "✓ flex-able"
                   : "✓";
                 return (
                   <div key={pos} className={`pos-cell ${short ? "short" : over ? "over" : "ok"}`}>
@@ -2437,7 +2673,7 @@ export default function AuctionWarRoom() {
                           <span className="tps-price">{money(p.price)}</span>
                         </span>
                       ) : (
-                        <span className="tps-open">{s.starter ? (s.pos === "FLEX" ? `Needs ${s.accepts.join("/")}` : "Open") : "Open"}</span>
+                        <span className="tps-open">{s.starter ? (s.pos === "FLEX" || s.pos === "SUPERFLEX" ? `Needs ${s.accepts.join("/")}` : "Open") : "Open"}</span>
                       )}
                     </div>
                   );
@@ -2565,10 +2801,11 @@ export default function AuctionWarRoom() {
                 <table className="flat board-table">
                   <thead><tr>
                     <th className="col-star"></th>
-                    <th className="num col-rank" title="Top-300 overall consensus rank">#</th>
+                    <th className="num col-rank" title={isSuperflexLeague(settings) ? "2QB draft rank (by est. auction value)" : "Top-350 overall consensus rank"}>#</th>
                     <th className="num col-posrank hide-xs" title="Rank within position">Pos#</th>
                     <th className="col-player">Player</th>
                     <th className="col-pos">Pos</th>
+                    <th className="col-health hide-xs" title="Injury designation — updated via refresh-board">Health</th>
                     <th className="hide-xs">Team</th>
                     <th className="hide-xs">Bye</th>
                     <th className="num col-est">Est</th>
@@ -2604,9 +2841,10 @@ export default function AuctionWarRoom() {
                         <td className="num rank-cell col-posrank hide-xs">{r.rank < 999 ? r.rank : "—"}</td>
                         <td className="pname col-player">
                           <button className="linklike" onClick={() => loadSuggestion(r)} title="Load into Draft Assistant">{r.name}</button>
-                          {r.injuryNote ? <span className="injury-tag" title={r.injuryNote}>OUT</span> : null}
+                          {r.health && healthBlocksDraft(r.name) ? <InjuryTag note={r.health.note || r.injuryNote} /> : r.injuryNote ? <InjuryTag note={r.injuryNote} /> : null}
                         </td>
                         <td className="col-pos"><span className={`posb p-${r.pos}`}>{r.pos}</span></td>
+                        <td className="col-health hide-xs"><HealthBadge health={r.health} /></td>
                         <td className="hide-xs">{r.team || "—"}</td>
                         <td className="hide-xs">{r.bye || "—"}</td>
                         <td className="num col-est">{r.est != null ? money(r.est) : "—"}</td>
@@ -2776,6 +3014,7 @@ export default function AuctionWarRoom() {
                 <th className="col-pos">
                   <button type="button" className={`th-sort${targetSort === "pos" ? " on" : ""}`} onClick={() => setTargetSort("pos")}>Pos</button>
                 </th>
+                <th className="col-health hide-xs">Health</th>
                 <th className="hide-xs">Team</th>
                 <th className="hide-xs">Bye</th>
                 <th className="num col-est">Est</th>
@@ -2793,7 +3032,7 @@ export default function AuctionWarRoom() {
                     lastPos = r.pos;
                     out.push(
                       <tr key={`g-${r.pos || "x"}`} className="target-group">
-                        <td colSpan={8}>{r.pos || "Other"}</td>
+                        <td colSpan={9}>{r.pos || "Other"}</td>
                       </tr>
                     );
                   }
@@ -2809,9 +3048,10 @@ export default function AuctionWarRoom() {
                         >
                           {r.name}
                         </button>
-                        {r.injuryNote ? <span className="injury-tag" title={r.injuryNote}>OUT</span> : null}
+                        {r.health && healthBlocksDraft(r.name) ? <InjuryTag note={r.health.note || r.injuryNote} /> : r.injuryNote ? <InjuryTag note={r.injuryNote} /> : null}
                       </td>
                       <td className="col-pos"><span className={`posb p-${r.pos}`}>{r.pos}</span></td>
+                      <td className="col-health hide-xs"><HealthBadge health={r.health} /></td>
                       <td className="hide-xs">{r.team || "—"}</td>
                       <td className="hide-xs">{r.bye || "—"}</td>
                       <td className="num col-est">{r.est != null ? money(r.est) : "—"}</td>
@@ -2886,6 +3126,7 @@ export default function AuctionWarRoom() {
                   <th className="num col-rank">#</th>
                   <th className="col-player">Player</th>
                   <th className="col-pos">Pos</th>
+                  <th className="col-health hide-xs">Health</th>
                   <th className="hide-xs">Team</th>
                   <th className="num col-est">Est</th>
                   <th>Status</th>
@@ -2904,7 +3145,7 @@ export default function AuctionWarRoom() {
                           title={onTargets ? "Remove from targets" : "Star & add to targets"}
                           aria-pressed={onTargets}
                           aria-label={onTargets ? `Remove ${r.name} from targets` : `Star ${r.name} and add to targets`}
-                          disabled={!!r.injuryNote}
+                          disabled={healthBlocksDraft(r.name) || !!r.injuryNote}
                           onClick={() => toggleTarget(r)}
                           whileTap={reduceMotion ? undefined : { scale: 0.88 }}
                         >
@@ -2914,9 +3155,10 @@ export default function AuctionWarRoom() {
                       <td className="num rank-cell col-rank">{r.overall ?? "—"}</td>
                       <td className="pname col-player">
                         <button className="linklike" onClick={() => loadTargetToRoom(r)} title="Load into Draft Assistant">{r.name}</button>
-                        {r.injuryNote ? <span className="injury-tag" title={r.injuryNote}>OUT</span> : null}
+                        {r.health && healthBlocksDraft(r.name) ? <InjuryTag note={r.health.note || r.injuryNote} /> : r.injuryNote ? <InjuryTag note={r.injuryNote} /> : null}
                       </td>
                       <td className="col-pos"><span className={`posb p-${r.pos}`}>{r.pos}</span></td>
+                      <td className="col-health hide-xs"><HealthBadge health={r.health} /></td>
                       <td className="hide-xs">{r.team || "—"}</td>
                       <td className="num col-est">{r.est != null ? money(r.est) : "—"}</td>
                       <td><span className={`target-status st-${r.status}`}>{statusLabel}</span></td>
@@ -2957,7 +3199,7 @@ export default function AuctionWarRoom() {
       <div className="set-grid">
         <div className="set-block">
           <div className="eyebrow small">Starting lineup</div>
-          {["QB", "RB", "WR", "TE", "FLEX", "K", "DEF"].map((pos) => (
+          {["QB", "RB", "WR", "TE", "FLEX", "SUPERFLEX", "K", "DEF"].map((pos) => (
             <div key={pos} className="stepper-row">
               <span className="stepper-label">{pos}</span>
               <div className="stepper">
@@ -2996,6 +3238,13 @@ export default function AuctionWarRoom() {
                 onClick={() => setSettings((st) => ({ ...st, flexEligible: { ...st.flexEligible, [pos]: !st.flexEligible[pos] } }))} {...press}>{pos}</motion.button>
             ))}
           </div>
+          <div className="eyebrow small mt">Superflex accepts</div>
+          <div className="toggle-row">
+            {POSITIONS.map((pos) => (
+              <motion.button type="button" key={pos} className={`chip ${settings.superflexEligible?.[pos] ? "on" : ""}`} aria-pressed={settings.superflexEligible?.[pos]}
+                onClick={() => setSettings((st) => ({ ...st, superflexEligible: { ...st.superflexEligible, [pos]: !st.superflexEligible[pos] } }))} {...press}>{pos}</motion.button>
+            ))}
+          </div>
         </div>
 
         <div className="set-block">
@@ -3013,7 +3262,7 @@ export default function AuctionWarRoom() {
           </div>
           <button className="btn" onClick={() => setConfirmBox({
             message: "Restore default roster settings?",
-            detail: "Back to 12 teams, $200, 1 QB / 2 RB / 3 WR / 1 TE / 1 FLEX / 1 K / 1 DEF and 6 bench. Your picks stay put.",
+            detail: "Back to 12 teams, $200, 1 QB / 2 RB / 2 WR / 1 TE / 1 FLEX / 1 SUPERFLEX / 1 K / 1 DEF and 4 bench (2QB). Your picks stay put.",
             onYes: () => { setSettings(DEFAULT_SETTINGS); setConfirmBox(null); showToast("Settings restored to defaults.", "ok"); },
           })}>Restore defaults</button>
         </div>
