@@ -1,0 +1,1756 @@
+{
+  "generatedAt": "2026-08-24T04:46:47.037Z",
+  "count": 350,
+  "players": [
+    [
+      "Jahmyr Gibbs",
+      "RB",
+      "DET"
+    ],
+    [
+      "Ja'Marr Chase",
+      "WR",
+      "CIN"
+    ],
+    [
+      "Bijan Robinson",
+      "RB",
+      "ATL"
+    ],
+    [
+      "Jaxon Smith-Njigba",
+      "WR",
+      "SEA"
+    ],
+    [
+      "Amon-Ra St. Brown",
+      "WR",
+      "DET"
+    ],
+    [
+      "CeeDee Lamb",
+      "WR",
+      "DAL"
+    ],
+    [
+      "Jonathan Taylor",
+      "RB",
+      "IND"
+    ],
+    [
+      "Justin Jefferson",
+      "WR",
+      "MIN"
+    ],
+    [
+      "James Cook III",
+      "RB",
+      "BUF"
+    ],
+    [
+      "Drake London",
+      "WR",
+      "ATL"
+    ],
+    [
+      "A.J. Brown",
+      "WR",
+      "NE"
+    ],
+    [
+      "Nico Collins",
+      "WR",
+      "HOU"
+    ],
+    [
+      "Puka Nacua",
+      "WR",
+      "LAR"
+    ],
+    [
+      "Chase Brown",
+      "RB",
+      "CIN"
+    ],
+    [
+      "Brock Bowers",
+      "TE",
+      "LV"
+    ],
+    [
+      "Saquon Barkley",
+      "RB",
+      "PHI"
+    ],
+    [
+      "Davante Adams",
+      "WR",
+      "LAR"
+    ],
+    [
+      "George Pickens",
+      "WR",
+      "DAL"
+    ],
+    [
+      "De'Von Achane",
+      "RB",
+      "MIA"
+    ],
+    [
+      "Trey McBride",
+      "TE",
+      "ARI"
+    ],
+    [
+      "Christian McCaffrey",
+      "RB",
+      "SF"
+    ],
+    [
+      "Chris Olave",
+      "WR",
+      "NO"
+    ],
+    [
+      "Omarion Hampton",
+      "RB",
+      "LAC"
+    ],
+    [
+      "Kenneth Walker III",
+      "RB",
+      "KC"
+    ],
+    [
+      "Derrick Henry",
+      "RB",
+      "BAL"
+    ],
+    [
+      "Rashee Rice",
+      "WR",
+      "KC"
+    ],
+    [
+      "Josh Allen",
+      "QB",
+      "BUF"
+    ],
+    [
+      "Zay Flowers",
+      "WR",
+      "BAL"
+    ],
+    [
+      "Tee Higgins",
+      "WR",
+      "CIN"
+    ],
+    [
+      "Tetairoa McMillan",
+      "WR",
+      "CAR"
+    ],
+    [
+      "Kyren Williams",
+      "RB",
+      "LAR"
+    ],
+    [
+      "Lamar Jackson",
+      "QB",
+      "BAL"
+    ],
+    [
+      "Javonte Williams",
+      "RB",
+      "DAL"
+    ],
+    [
+      "Malik Nabers",
+      "WR",
+      "NYG"
+    ],
+    [
+      "Garrett Wilson",
+      "WR",
+      "NYJ"
+    ],
+    [
+      "Jaylen Waddle",
+      "WR",
+      "DEN"
+    ],
+    [
+      "Ladd McConkey",
+      "WR",
+      "LAC"
+    ],
+    [
+      "DeVonta Smith",
+      "WR",
+      "PHI"
+    ],
+    [
+      "Drake Maye",
+      "QB",
+      "NE"
+    ],
+    [
+      "Colston Loveland",
+      "TE",
+      "CHI"
+    ],
+    [
+      "Terry McLaurin",
+      "WR",
+      "WAS"
+    ],
+    [
+      "Travis Etienne Jr.",
+      "RB",
+      "NO"
+    ],
+    [
+      "Joe Burrow",
+      "QB",
+      "CIN"
+    ],
+    [
+      "Breece Hall",
+      "RB",
+      "NYJ"
+    ],
+    [
+      "Josh Jacobs",
+      "RB",
+      "GB"
+    ],
+    [
+      "Jameson Williams",
+      "WR",
+      "DET"
+    ],
+    [
+      "D'Andre Swift",
+      "RB",
+      "CHI"
+    ],
+    [
+      "Emeka Egbuka",
+      "WR",
+      "TB"
+    ],
+    [
+      "Cam Skattebo",
+      "RB",
+      "NYG"
+    ],
+    [
+      "Jeremiyah Love",
+      "RB",
+      "ARI"
+    ],
+    [
+      "Ashton Jeanty",
+      "RB",
+      "LV"
+    ],
+    [
+      "Jayden Daniels",
+      "QB",
+      "WAS"
+    ],
+    [
+      "DJ Moore",
+      "WR",
+      "BUF"
+    ],
+    [
+      "Christian Watson",
+      "WR",
+      "GB"
+    ],
+    [
+      "Bucky Irving",
+      "RB",
+      "TB"
+    ],
+    [
+      "Rome Odunze",
+      "WR",
+      "CHI"
+    ],
+    [
+      "David Montgomery",
+      "RB",
+      "HOU"
+    ],
+    [
+      "Jalen Hurts",
+      "QB",
+      "PHI"
+    ],
+    [
+      "Luther Burden III",
+      "WR",
+      "CHI"
+    ],
+    [
+      "Bhayshul Tuten",
+      "RB",
+      "JAX"
+    ],
+    [
+      "TreVeyon Henderson",
+      "RB",
+      "NE"
+    ],
+    [
+      "Jadarian Price",
+      "RB",
+      "SEA"
+    ],
+    [
+      "Mike Washington Jr.",
+      "RB",
+      "LV"
+    ],
+    [
+      "Tyler Warren",
+      "TE",
+      "IND"
+    ],
+    [
+      "Caleb Williams",
+      "QB",
+      "CHI"
+    ],
+    [
+      "Quinshon Judkins",
+      "RB",
+      "CLE"
+    ],
+    [
+      "Mike Evans",
+      "WR",
+      "SF"
+    ],
+    [
+      "Carnell Tate",
+      "WR",
+      "TEN"
+    ],
+    [
+      "Marvin Harrison Jr.",
+      "WR",
+      "ARI"
+    ],
+    [
+      "Justin Herbert",
+      "QB",
+      "LAC"
+    ],
+    [
+      "Brian Thomas Jr.",
+      "WR",
+      "JAX"
+    ],
+    [
+      "Jaylen Warren",
+      "RB",
+      "PIT"
+    ],
+    [
+      "Rhamondre Stevenson",
+      "RB",
+      "NE"
+    ],
+    [
+      "Trevor Lawrence",
+      "QB",
+      "JAX"
+    ],
+    [
+      "Harold Fannin Jr.",
+      "TE",
+      "CLE"
+    ],
+    [
+      "Parker Washington",
+      "WR",
+      "JAX"
+    ],
+    [
+      "Tony Pollard",
+      "RB",
+      "TEN"
+    ],
+    [
+      "Dak Prescott",
+      "QB",
+      "DAL"
+    ],
+    [
+      "Tucker Kraft",
+      "TE",
+      "GB"
+    ],
+    [
+      "Chris Godwin Jr.",
+      "WR",
+      "TB"
+    ],
+    [
+      "Courtland Sutton",
+      "WR",
+      "DEN"
+    ],
+    [
+      "Rico Dowdle",
+      "RB",
+      "PIT"
+    ],
+    [
+      "Kyle Pitts Sr.",
+      "TE",
+      "ATL"
+    ],
+    [
+      "Jonathon Brooks",
+      "RB",
+      "CAR"
+    ],
+    [
+      "DK Metcalf",
+      "WR",
+      "PIT"
+    ],
+    [
+      "J.K. Dobbins",
+      "RB",
+      "DEN"
+    ],
+    [
+      "Michael Wilson",
+      "WR",
+      "ARI"
+    ],
+    [
+      "Sam LaPorta",
+      "TE",
+      "DET"
+    ],
+    [
+      "Blake Corum",
+      "RB",
+      "LAR"
+    ],
+    [
+      "Brock Purdy",
+      "QB",
+      "SF"
+    ],
+    [
+      "Jaxson Dart",
+      "QB",
+      "NYG"
+    ],
+    [
+      "RJ Harvey",
+      "RB",
+      "DEN"
+    ],
+    [
+      "Josh Downs",
+      "WR",
+      "IND"
+    ],
+    [
+      "Travis Kelce",
+      "TE",
+      "KC"
+    ],
+    [
+      "Quentin Johnston",
+      "WR",
+      "LAC"
+    ],
+    [
+      "Tyler Allgeier",
+      "RB",
+      "ARI"
+    ],
+    [
+      "Jordan Addison",
+      "WR",
+      "MIN"
+    ],
+    [
+      "Wan'Dale Robinson",
+      "WR",
+      "TEN"
+    ],
+    [
+      "Bo Nix",
+      "QB",
+      "DEN"
+    ],
+    [
+      "Michael Pittman Jr.",
+      "WR",
+      "PIT"
+    ],
+    [
+      "George Kittle",
+      "TE",
+      "SF"
+    ],
+    [
+      "Jayden Reed",
+      "WR",
+      "GB"
+    ],
+    [
+      "Stefon Diggs",
+      "WR",
+      "WAS"
+    ],
+    [
+      "Jordan Mason",
+      "RB",
+      "MIN"
+    ],
+    [
+      "Kenny Gainwell",
+      "RB",
+      "TB"
+    ],
+    [
+      "Chuba Hubbard",
+      "RB",
+      "CAR"
+    ],
+    [
+      "Matthew Stafford",
+      "QB",
+      "LAR"
+    ],
+    [
+      "Dalton Kincaid",
+      "TE",
+      "BUF"
+    ],
+    [
+      "Jared Goff",
+      "QB",
+      "DET"
+    ],
+    [
+      "Jacory Croskey-Merritt",
+      "RB",
+      "WAS"
+    ],
+    [
+      "Kyler Murray",
+      "QB",
+      "MIN"
+    ],
+    [
+      "Patrick Mahomes II",
+      "QB",
+      "KC"
+    ],
+    [
+      "Aaron Jones Sr.",
+      "RB",
+      "MIN"
+    ],
+    [
+      "Dallas Goedert",
+      "TE",
+      "PHI"
+    ],
+    [
+      "Isaiah Likely",
+      "TE",
+      "NYG"
+    ],
+    [
+      "Rachaad White",
+      "RB",
+      "WAS"
+    ],
+    [
+      "Mark Andrews",
+      "TE",
+      "BAL"
+    ],
+    [
+      "Jakobi Meyers",
+      "WR",
+      "JAX"
+    ],
+    [
+      "Makai Lemon",
+      "WR",
+      "PHI"
+    ],
+    [
+      "Baker Mayfield",
+      "QB",
+      "TB"
+    ],
+    [
+      "Jake Ferguson",
+      "TE",
+      "DAL"
+    ],
+    [
+      "Jordan Love",
+      "QB",
+      "GB"
+    ],
+    [
+      "KC Concepcion",
+      "WR",
+      "CLE"
+    ],
+    [
+      "Chris Rodriguez Jr.",
+      "RB",
+      "JAX"
+    ],
+    [
+      "Matthew Golden",
+      "WR",
+      "GB"
+    ],
+    [
+      "Alec Pierce",
+      "WR",
+      "IND"
+    ],
+    [
+      "Jalen Coker",
+      "WR",
+      "CAR"
+    ],
+    [
+      "Tyler Shough",
+      "QB",
+      "NO"
+    ],
+    [
+      "Kyle Monangai",
+      "RB",
+      "CHI"
+    ],
+    [
+      "Romeo Doubs",
+      "WR",
+      "NE"
+    ],
+    [
+      "Woody Marks",
+      "RB",
+      "HOU"
+    ],
+    [
+      "Braelon Allen",
+      "RB",
+      "NYJ"
+    ],
+    [
+      "Malik Willis",
+      "QB",
+      "MIA"
+    ],
+    [
+      "Juwan Johnson",
+      "TE",
+      "NO"
+    ],
+    [
+      "Xavier Worthy",
+      "WR",
+      "KC"
+    ],
+    [
+      "Deebo Samuel Sr.",
+      "WR",
+      "SF"
+    ],
+    [
+      "Tyjae Spears",
+      "RB",
+      "TEN"
+    ],
+    [
+      "Khalil Shakir",
+      "WR",
+      "BUF"
+    ],
+    [
+      "Keaton Mitchell",
+      "RB",
+      "LAC"
+    ],
+    [
+      "Tyrone Tracy Jr.",
+      "RB",
+      "NYG"
+    ],
+    [
+      "Sam Darnold",
+      "QB",
+      "SEA"
+    ],
+    [
+      "C.J. Stroud",
+      "QB",
+      "HOU"
+    ],
+    [
+      "Jalen McMillan",
+      "WR",
+      "TB"
+    ],
+    [
+      "Jonah Coleman",
+      "RB",
+      "DEN"
+    ],
+    [
+      "Rashid Shaheed",
+      "WR",
+      "SEA"
+    ],
+    [
+      "Tank Bigsby",
+      "RB",
+      "PHI"
+    ],
+    [
+      "Hunter Henry",
+      "TE",
+      "NE"
+    ],
+    [
+      "Daniel Jones",
+      "QB",
+      "IND"
+    ],
+    [
+      "Denzel Boston",
+      "WR",
+      "CLE"
+    ],
+    [
+      "Brenton Strange",
+      "TE",
+      "JAX"
+    ],
+    [
+      "Dylan Sampson",
+      "RB",
+      "CLE"
+    ],
+    [
+      "Chig Okonkwo",
+      "TE",
+      "WAS"
+    ],
+    [
+      "De'Zhaun Stribling",
+      "WR",
+      "SF"
+    ],
+    [
+      "Cam Ward",
+      "QB",
+      "TEN"
+    ],
+    [
+      "Adonai Mitchell",
+      "WR",
+      "NYJ"
+    ],
+    [
+      "Brian Robinson Jr.",
+      "RB",
+      "ATL"
+    ],
+    [
+      "Tre Tucker",
+      "WR",
+      "LV"
+    ],
+    [
+      "Jauan Jennings",
+      "WR",
+      "MIN"
+    ],
+    [
+      "Dalton Schultz",
+      "TE",
+      "HOU"
+    ],
+    [
+      "Jerry Jeudy",
+      "WR",
+      "CLE"
+    ],
+    [
+      "Bryce Young",
+      "QB",
+      "CAR"
+    ],
+    [
+      "Isiah Pacheco",
+      "RB",
+      "DET"
+    ],
+    [
+      "MarShawn Lloyd",
+      "RB",
+      "GB"
+    ],
+    [
+      "Jalen Nailor",
+      "WR",
+      "LV"
+    ],
+    [
+      "Omar Cooper Jr.",
+      "WR",
+      "NYJ"
+    ],
+    [
+      "Oronde Gadsden II",
+      "TE",
+      "LAC"
+    ],
+    [
+      "Dontayvion Wicks",
+      "WR",
+      "PHI"
+    ],
+    [
+      "Emmett Johnson",
+      "RB",
+      "KC"
+    ],
+    [
+      "Ray Davis",
+      "RB",
+      "BUF"
+    ],
+    [
+      "AJ Barner",
+      "TE",
+      "SEA"
+    ],
+    [
+      "Zach Charbonnet",
+      "RB",
+      "SEA"
+    ],
+    [
+      "Ryan Flournoy",
+      "WR",
+      "DAL"
+    ],
+    [
+      "Sean Tucker",
+      "RB",
+      "TB"
+    ],
+    [
+      "T.J. Hockenson",
+      "TE",
+      "MIN"
+    ],
+    [
+      "Jacoby Brissett",
+      "QB",
+      "ARI"
+    ],
+    [
+      "Tre' Harris",
+      "WR",
+      "LAC"
+    ],
+    [
+      "Travis Hunter",
+      "WR",
+      "JAX"
+    ],
+    [
+      "Pat Bryant",
+      "WR",
+      "DEN"
+    ],
+    [
+      "Malik Washington",
+      "WR",
+      "MIA"
+    ],
+    [
+      "Kayshon Boutte",
+      "WR",
+      "NE"
+    ],
+    [
+      "Terrance Ferguson",
+      "TE",
+      "LAR"
+    ],
+    [
+      "Kimani Vidal",
+      "RB",
+      "LAC"
+    ],
+    [
+      "James Conner",
+      "RB",
+      "ARI"
+    ],
+    [
+      "Calvin Ridley",
+      "WR",
+      "TEN"
+    ],
+    [
+      "Nicholas Singleton",
+      "RB",
+      "TEN"
+    ],
+    [
+      "Brandon Aubrey",
+      "K",
+      "DAL"
+    ],
+    [
+      "Emanuel Wilson",
+      "RB",
+      "SEA"
+    ],
+    [
+      "Keenan Allen",
+      "WR",
+      "IND"
+    ],
+    [
+      "Alvin Kamara",
+      "RB",
+      "NO"
+    ],
+    [
+      "Jaylin Noel",
+      "WR",
+      "HOU"
+    ],
+    [
+      "Cameron Dicker",
+      "K",
+      "LAC"
+    ],
+    [
+      "Ka'imi Fairbairn",
+      "K",
+      "HOU"
+    ],
+    [
+      "Gunnar Helm",
+      "TE",
+      "TEN"
+    ],
+    [
+      "Cam Little",
+      "K",
+      "JAX"
+    ],
+    [
+      "Isaac TeSlaa",
+      "WR",
+      "DET"
+    ],
+    [
+      "Kenyon Sadiq",
+      "TE",
+      "NYJ"
+    ],
+    [
+      "Jason Myers",
+      "K",
+      "SEA"
+    ],
+    [
+      "Kaytron Allen",
+      "RB",
+      "WAS"
+    ],
+    [
+      "Tank Dell",
+      "WR",
+      "HOU"
+    ],
+    [
+      "Aaron Rodgers",
+      "QB",
+      "PIT"
+    ],
+    [
+      "Geno Smith",
+      "QB",
+      "NYJ"
+    ],
+    [
+      "Rashod Bateman",
+      "WR",
+      "BAL"
+    ],
+    [
+      "Jaydon Blue",
+      "RB",
+      "DAL"
+    ],
+    [
+      "Pat Freiermuth",
+      "TE",
+      "PIT"
+    ],
+    [
+      "Tyler Loop",
+      "K",
+      "BAL"
+    ],
+    [
+      "Darnell Mooney",
+      "WR",
+      "NYG"
+    ],
+    [
+      "Eddy Pineiro",
+      "K",
+      "SF"
+    ],
+    [
+      "Troy Franklin",
+      "WR",
+      "DEN"
+    ],
+    [
+      "Jake Bates",
+      "K",
+      "DET"
+    ],
+    [
+      "Kaelon Black",
+      "RB",
+      "SF"
+    ],
+    [
+      "Cairo Santos",
+      "K",
+      "CHI"
+    ],
+    [
+      "Jaylen Wright",
+      "RB",
+      "MIA"
+    ],
+    [
+      "Cooper Kupp",
+      "WR",
+      "SEA"
+    ],
+    [
+      "Evan McPherson",
+      "K",
+      "CIN"
+    ],
+    [
+      "Jordyn Tyson",
+      "WR",
+      "NO"
+    ],
+    [
+      "Harrison Mevis",
+      "K",
+      "LAR"
+    ],
+    [
+      "Zachariah Branch",
+      "WR",
+      "ATL"
+    ],
+    [
+      "Cade Otton",
+      "TE",
+      "TB"
+    ],
+    [
+      "Andy Borregales",
+      "K",
+      "NE"
+    ],
+    [
+      "Chase McLaughlin",
+      "K",
+      "TB"
+    ],
+    [
+      "Germie Bernard",
+      "WR",
+      "PIT"
+    ],
+    [
+      "George Holani",
+      "RB",
+      "SEA"
+    ],
+    [
+      "Isaiah Davis",
+      "RB",
+      "NYJ"
+    ],
+    [
+      "David Njoku",
+      "TE",
+      "LAC"
+    ],
+    [
+      "Antonio Williams",
+      "WR",
+      "WAS"
+    ],
+    [
+      "Evan Engram",
+      "TE",
+      "DEN"
+    ],
+    [
+      "Kendre Miller",
+      "RB",
+      "NO"
+    ],
+    [
+      "Fernando Mendoza",
+      "QB",
+      "LV"
+    ],
+    [
+      "Justice Hill",
+      "RB",
+      "BAL"
+    ],
+    [
+      "Devin Neal",
+      "RB",
+      "NO"
+    ],
+    [
+      "Colby Parkinson",
+      "TE",
+      "LAR"
+    ],
+    [
+      "Harrison Butker",
+      "K",
+      "KC"
+    ],
+    [
+      "Jack Bech",
+      "WR",
+      "LV"
+    ],
+    [
+      "Malachi Fields",
+      "WR",
+      "NYG"
+    ],
+    [
+      "Demond Claiborne",
+      "RB",
+      "MIN"
+    ],
+    [
+      "Ja'Kobi Lane",
+      "WR",
+      "BAL"
+    ],
+    [
+      "Ollie Gordon II",
+      "RB",
+      "MIA"
+    ],
+    [
+      "Ted Hurst III",
+      "WR",
+      "TB"
+    ],
+    [
+      "Chimere Dike",
+      "WR",
+      "TEN"
+    ],
+    [
+      "Elic Ayomanor",
+      "WR",
+      "TEN"
+    ],
+    [
+      "Chris Boswell",
+      "K",
+      "PIT"
+    ],
+    [
+      "Devaughn Vele",
+      "WR",
+      "NO"
+    ],
+    [
+      "Greg Dulcich",
+      "TE",
+      "MIA"
+    ],
+    [
+      "Tua Tagovailoa",
+      "QB",
+      "ATL"
+    ],
+    [
+      "Chris Brooks",
+      "RB",
+      "GB"
+    ],
+    [
+      "Samaje Perine",
+      "RB",
+      "CIN"
+    ],
+    [
+      "Keon Coleman",
+      "WR",
+      "BUF"
+    ],
+    [
+      "Najee Harris",
+      "RB",
+      "NYG"
+    ],
+    [
+      "Caleb Douglas",
+      "WR",
+      "MIA"
+    ],
+    [
+      "Tory Horton",
+      "WR",
+      "SEA"
+    ],
+    [
+      "Chris Bell",
+      "WR",
+      "MIA"
+    ],
+    [
+      "Elijah Sarratt",
+      "WR",
+      "BAL"
+    ],
+    [
+      "Wil Lutz",
+      "K",
+      "DEN"
+    ],
+    [
+      "Tyquan Thornton",
+      "WR",
+      "KC"
+    ],
+    [
+      "Will Reichard",
+      "K",
+      "MIN"
+    ],
+    [
+      "Mason Taylor",
+      "TE",
+      "NYJ"
+    ],
+    [
+      "Darius Slayton",
+      "WR",
+      "NYG"
+    ],
+    [
+      "Jordan James",
+      "RB",
+      "SF"
+    ],
+    [
+      "Kirk Cousins",
+      "QB",
+      "LV"
+    ],
+    [
+      "Theo Johnson",
+      "TE",
+      "NYG"
+    ],
+    [
+      "Malik Davis",
+      "RB",
+      "DAL"
+    ],
+    [
+      "Ty Johnson",
+      "RB",
+      "BUF"
+    ],
+    [
+      "Christian Kirk",
+      "WR",
+      "SF"
+    ],
+    [
+      "Eli Stowers",
+      "TE",
+      "PHI"
+    ],
+    [
+      "Shedeur Sanders",
+      "QB",
+      "CLE"
+    ],
+    [
+      "Deshaun Watson",
+      "QB",
+      "CLE"
+    ],
+    [
+      "LeQuint Allen Jr.",
+      "RB",
+      "JAX"
+    ],
+    [
+      "Seth McGowan",
+      "RB",
+      "IND"
+    ],
+    [
+      "Cyrus Allen",
+      "WR",
+      "KC"
+    ],
+    [
+      "Michael Penix Jr.",
+      "QB",
+      "ATL"
+    ],
+    [
+      "DJ Giddens",
+      "RB",
+      "IND"
+    ],
+    [
+      "Xavier Legette",
+      "WR",
+      "CAR"
+    ],
+    [
+      "Brashard Smith",
+      "RB",
+      "KC"
+    ],
+    [
+      "Trey Benson",
+      "RB",
+      "ARI"
+    ],
+    [
+      "Marvin Mims Jr.",
+      "WR",
+      "DEN"
+    ],
+    [
+      "Devin Singletary",
+      "RB",
+      "NYG"
+    ],
+    [
+      "Kaleb Johnson",
+      "RB",
+      "PIT"
+    ],
+    [
+      "Emari Demercado",
+      "RB",
+      "KC"
+    ],
+    [
+      "Hollywood Brown",
+      "WR",
+      "PHI"
+    ],
+    [
+      "Kyle Williams",
+      "WR",
+      "NE"
+    ],
+    [
+      "Trevor Etienne",
+      "RB",
+      "CAR"
+    ],
+    [
+      "Adam Randall",
+      "RB",
+      "BAL"
+    ],
+    [
+      "Mack Hollins",
+      "WR",
+      "NE"
+    ],
+    [
+      "Mike Gesicki",
+      "TE",
+      "CIN"
+    ],
+    [
+      "Brandon Aiyuk",
+      "WR",
+      "SF"
+    ],
+    [
+      "Isaiah Bond",
+      "WR",
+      "CLE"
+    ],
+    [
+      "Charlie Smyth",
+      "K",
+      "NO"
+    ],
+    [
+      "Tahj Brooks",
+      "RB",
+      "CIN"
+    ],
+    [
+      "Isaac Guerendo",
+      "RB",
+      "SF"
+    ],
+    [
+      "Jake Tonges",
+      "TE",
+      "SF"
+    ],
+    [
+      "Jaleel McLaughlin",
+      "RB",
+      "DEN"
+    ],
+    [
+      "Jarquez Hunter",
+      "RB",
+      "LAR"
+    ],
+    [
+      "Andrei Iosivas",
+      "WR",
+      "CIN"
+    ],
+    [
+      "Oscar Delp",
+      "TE",
+      "NO"
+    ],
+    [
+      "Darren Waller",
+      "TE",
+      "CAR"
+    ],
+    [
+      "Will Shipley",
+      "RB",
+      "PHI"
+    ],
+    [
+      "Skyler Bell",
+      "WR",
+      "BUF"
+    ],
+    [
+      "Darnell Washington",
+      "TE",
+      "PIT"
+    ],
+    [
+      "Michael Mayer",
+      "TE",
+      "LV"
+    ],
+    [
+      "Tyreek Hill",
+      "WR",
+      "FA"
+    ],
+    [
+      "Jahan Dotson",
+      "WR",
+      "ATL"
+    ],
+    [
+      "Tez Johnson",
+      "WR",
+      "TB"
+    ],
+    [
+      "Kareem Hunt",
+      "RB",
+      "FA"
+    ],
+    [
+      "Elijah Arroyo",
+      "TE",
+      "SEA"
+    ],
+    [
+      "DeMario Douglas",
+      "WR",
+      "NE"
+    ],
+    [
+      "Jalen Tolbert",
+      "WR",
+      "MIA"
+    ],
+    [
+      "Audric Estime",
+      "RB",
+      "NO"
+    ],
+    [
+      "Bryce Lance",
+      "WR",
+      "NO"
+    ],
+    [
+      "Tyler Higbee",
+      "TE",
+      "LAR"
+    ],
+    [
+      "Xavier Hutchinson",
+      "WR",
+      "HOU"
+    ],
+    [
+      "Charlie Kolar",
+      "TE",
+      "LAC"
+    ],
+    [
+      "Konata Mumpfield",
+      "WR",
+      "LAR"
+    ],
+    [
+      "J.J. McCarthy",
+      "QB",
+      "MIN"
+    ],
+    [
+      "Erick All Jr.",
+      "TE",
+      "CIN"
+    ],
+    [
+      "Joe Mixon",
+      "RB",
+      "FA"
+    ],
+    [
+      "Cole Kmet",
+      "TE",
+      "CHI"
+    ],
+    [
+      "Eli Raridon",
+      "TE",
+      "NE"
+    ],
+    [
+      "Carson Beck",
+      "QB",
+      "ARI"
+    ],
+    [
+      "Calvin Austin III",
+      "WR",
+      "NYG"
+    ],
+    [
+      "Mac Jones",
+      "QB",
+      "SF"
+    ],
+    [
+      "Max Klare",
+      "TE",
+      "LAR"
+    ],
+    [
+      "Jalen Royals",
+      "WR",
+      "KC"
+    ],
+    [
+      "Noah Gray",
+      "TE",
+      "KC"
+    ],
+    [
+      "Olamide Zaccheaus",
+      "WR",
+      "ATL"
+    ],
+    [
+      "Dawson Knox",
+      "TE",
+      "BUF"
+    ],
+    [
+      "Luke McCaffrey",
+      "WR",
+      "WAS"
+    ],
+    [
+      "Cedric Tillman",
+      "WR",
+      "CLE"
+    ],
+    [
+      "Jake Elliott",
+      "K",
+      "PHI"
+    ],
+    [
+      "Eli Heidenreich",
+      "RB",
+      "PIT"
+    ],
+    [
+      "Kendrick Bourne",
+      "WR",
+      "ARI"
+    ],
+    [
+      "Bam Knight",
+      "RB",
+      "ARI"
+    ],
+    [
+      "Joshua Palmer",
+      "WR",
+      "BUF"
+    ],
+    [
+      "Justin Fields",
+      "QB",
+      "KC"
+    ],
+    [
+      "Ja'Tavion Sanders",
+      "TE",
+      "CAR"
+    ],
+    [
+      "Justin Joly",
+      "TE",
+      "DEN"
+    ],
+    [
+      "Ty Simpson",
+      "QB",
+      "LAR"
+    ],
+    [
+      "Tyler Bass",
+      "K",
+      "BUF"
+    ],
+    [
+      "Treylon Burks",
+      "WR",
+      "WAS"
+    ],
+    [
+      "Brenen Thompson",
+      "WR",
+      "LAC"
+    ],
+    [
+      "Michael Carter",
+      "RB",
+      "TEN"
+    ],
+    [
+      "Roman Wilson",
+      "WR",
+      "PIT"
+    ],
+    [
+      "Kalif Raymond",
+      "WR",
+      "CHI"
+    ],
+    [
+      "Malik Benson",
+      "WR",
+      "LV"
+    ],
+    [
+      "Jordan Whittington",
+      "WR",
+      "LAR"
+    ],
+    [
+      "Anthony Richardson Sr.",
+      "QB",
+      "IND"
+    ],
+    [
+      "KaVontae Turpin",
+      "WR",
+      "DAL"
+    ],
+    [
+      "Kevin Coleman Jr.",
+      "WR",
+      "MIA"
+    ],
+    [
+      "Savion Williams",
+      "WR",
+      "GB"
+    ],
+    [
+      "John Metchie III",
+      "WR",
+      "CAR"
+    ],
+    [
+      "Trey Smack",
+      "K",
+      "GB"
+    ]
+  ]
+}
