@@ -1,0 +1,783 @@
+{
+  "updatedAt": "2026-08-24T04:46:47.027Z",
+  "healthOldestUpdatedAt": "2026-08-18",
+  "sources": [
+    "Sleeper NFL player API",
+    "FantasyPros injury news (8/23)",
+    "Yahoo Sports training camp tracker",
+    "Fantasy Alarm weekend injury roundup (8/23)",
+    "CBS Sports camp tracker",
+    "Adam Schefter / team beat reporters"
+  ],
+  "players": {
+    "Puka Nacua": {
+      "status": "Q",
+      "note": "Groin soreness — minor per McVay, monitoring",
+      "sources": [
+        "Yahoo Sports"
+      ],
+      "updatedAt": "2026-08-22",
+      "source": "override"
+    },
+    "Christian McCaffrey": {
+      "status": "Q",
+      "note": "Undisclosed",
+      "sources": [
+        "Sleeper"
+      ],
+      "updatedAt": "2026-08-24",
+      "source": "sleeper"
+    },
+    "Malik Nabers": {
+      "status": "Q",
+      "note": "Knee - ACL — Surgery",
+      "sources": [
+        "Sleeper"
+      ],
+      "updatedAt": "2026-08-24",
+      "source": "sleeper"
+    },
+    "DeVonta Smith": {
+      "status": "Q",
+      "note": "Hamstring",
+      "sources": [
+        "Sleeper"
+      ],
+      "updatedAt": "2026-08-24",
+      "source": "sleeper"
+    },
+    "Ashton Jeanty": {
+      "status": "D",
+      "note": "Right knee — helped off practice 8/23, unable to bear weight; team paused practice; awaiting MRI",
+      "sources": [
+        "FantasyPros",
+        "Fantasy Alarm",
+        "Adam Schefter"
+      ],
+      "updatedAt": "2026-08-23",
+      "source": "override"
+    },
+    "Breece Hall": {
+      "status": "Q",
+      "note": "Groin — expected out 2–3 weeks; team hopeful for Week 1",
+      "sources": [
+        "AS USA",
+        "Fantasy Alarm"
+      ],
+      "updatedAt": "2026-08-22",
+      "source": "override"
+    },
+    "Josh Jacobs": {
+      "status": "Q",
+      "note": "Groin",
+      "sources": [
+        "Sleeper"
+      ],
+      "updatedAt": "2026-08-24",
+      "source": "sleeper"
+    },
+    "Emeka Egbuka": {
+      "status": "Q",
+      "note": "Turf toe sprain — Week 1 availability in doubt",
+      "sources": [
+        "Fantasy Alarm",
+        "Yahoo Sports"
+      ],
+      "updatedAt": "2026-08-22",
+      "source": "override"
+    },
+    "Jeremiyah Love": {
+      "status": "Q",
+      "note": "High-ankle sprain — multi-week; Week 1 in doubt",
+      "sources": [
+        "Fantasy Alarm",
+        "Yahoo Sports"
+      ],
+      "updatedAt": "2026-08-21",
+      "source": "override"
+    },
+    "Luther Burden III": {
+      "status": "Q",
+      "note": "Lower Body",
+      "sources": [
+        "Sleeper"
+      ],
+      "updatedAt": "2026-08-24",
+      "source": "sleeper"
+    },
+    "Tyler Warren": {
+      "status": "Q",
+      "note": "Groin",
+      "sources": [
+        "Sleeper"
+      ],
+      "updatedAt": "2026-08-24",
+      "source": "sleeper"
+    },
+    "Quinshon Judkins": {
+      "status": "Q",
+      "note": "Undisclosed",
+      "sources": [
+        "Sleeper"
+      ],
+      "updatedAt": "2026-08-24",
+      "source": "sleeper"
+    },
+    "Mike Evans": {
+      "status": "Q",
+      "note": "Foot",
+      "sources": [
+        "Sleeper"
+      ],
+      "updatedAt": "2026-08-24",
+      "source": "sleeper"
+    },
+    "Parker Washington": {
+      "status": "Q",
+      "note": "Undisclosed",
+      "sources": [
+        "Sleeper"
+      ],
+      "updatedAt": "2026-08-24",
+      "source": "sleeper"
+    },
+    "Tucker Kraft": {
+      "status": "Q",
+      "note": "Knee - ACL — Surgery",
+      "sources": [
+        "Sleeper"
+      ],
+      "updatedAt": "2026-08-24",
+      "source": "sleeper"
+    },
+    "DK Metcalf": {
+      "status": "Q",
+      "note": "Undisclosed",
+      "sources": [
+        "Sleeper"
+      ],
+      "updatedAt": "2026-08-24",
+      "source": "sleeper"
+    },
+    "Sam LaPorta": {
+      "status": "Q",
+      "note": "Hip/undisclosed — missed recent practice",
+      "sources": [
+        "FantasyPros",
+        "Fantasy Alarm"
+      ],
+      "updatedAt": "2026-08-21",
+      "source": "override"
+    },
+    "Quentin Johnston": {
+      "status": "Q",
+      "note": "Lower Body",
+      "sources": [
+        "Sleeper"
+      ],
+      "updatedAt": "2026-08-24",
+      "source": "sleeper"
+    },
+    "Michael Pittman Jr.": {
+      "status": "Q",
+      "note": "Hamstring — minor, expected ready Week 1",
+      "sources": [
+        "FantasyPros"
+      ],
+      "updatedAt": "2026-08-21",
+      "source": "override"
+    },
+    "George Kittle": {
+      "status": "Q",
+      "note": "Working back from Achilles; limited in camp",
+      "sources": [
+        "AS USA"
+      ],
+      "updatedAt": "2026-08-20",
+      "source": "override"
+    },
+    "Alec Pierce": {
+      "status": "PUP",
+      "note": "Ankle — Surgery",
+      "sources": [
+        "Sleeper"
+      ],
+      "updatedAt": "2026-08-24",
+      "source": "sleeper"
+    },
+    "Chuba Hubbard": {
+      "status": "Q",
+      "note": "Hamstring",
+      "sources": [
+        "Sleeper"
+      ],
+      "updatedAt": "2026-08-24",
+      "source": "sleeper"
+    },
+    "Jacory Croskey-Merritt": {
+      "status": "Q",
+      "note": "Undisclosed",
+      "sources": [
+        "Sleeper"
+      ],
+      "updatedAt": "2026-08-24",
+      "source": "sleeper"
+    },
+    "Patrick Mahomes II": {
+      "status": "Q",
+      "note": "Knee - ACL — Surgery",
+      "sources": [
+        "Sleeper"
+      ],
+      "updatedAt": "2026-08-24",
+      "source": "sleeper"
+    },
+    "Kyle Monangai": {
+      "status": "D",
+      "note": "Hyperextended knee — multiple weeks, Week 1 in doubt",
+      "sources": [
+        "Yahoo Sports",
+        "Fantasy Alarm"
+      ],
+      "updatedAt": "2026-08-21",
+      "source": "override"
+    },
+    "Rachaad White": {
+      "status": "Q",
+      "note": "Undisclosed",
+      "sources": [
+        "Sleeper"
+      ],
+      "updatedAt": "2026-08-24",
+      "source": "sleeper"
+    },
+    "Jakobi Meyers": {
+      "status": "Q",
+      "note": "Hand",
+      "sources": [
+        "Sleeper"
+      ],
+      "updatedAt": "2026-08-24",
+      "source": "sleeper"
+    },
+    "Makai Lemon": {
+      "status": "Q",
+      "note": "Undisclosed",
+      "sources": [
+        "Sleeper"
+      ],
+      "updatedAt": "2026-08-24",
+      "source": "sleeper"
+    },
+    "Xavier Worthy": {
+      "status": "Q",
+      "note": "Shoulder",
+      "sources": [
+        "Sleeper"
+      ],
+      "updatedAt": "2026-08-24",
+      "source": "sleeper"
+    },
+    "Khalil Shakir": {
+      "status": "Q",
+      "note": "Undisclosed",
+      "sources": [
+        "Sleeper"
+      ],
+      "updatedAt": "2026-08-24",
+      "source": "sleeper"
+    },
+    "Jordyn Tyson": {
+      "status": "IR",
+      "note": "Hamstring — expected ~2 months, may start on IR",
+      "sources": [
+        "Yahoo Sports",
+        "Fantasy Alarm",
+        "AS USA"
+      ],
+      "updatedAt": "2026-08-22",
+      "source": "override"
+    },
+    "De'Zhaun Stribling": {
+      "status": "Q",
+      "note": "Shoulder",
+      "sources": [
+        "Sleeper"
+      ],
+      "updatedAt": "2026-08-24",
+      "source": "sleeper"
+    },
+    "Zach Charbonnet": {
+      "status": "PUP",
+      "note": "ACL recovery — has not returned to practice (active/PUP)",
+      "sources": [
+        "Yahoo Sports",
+        "Fantasy Alarm",
+        "AS USA"
+      ],
+      "updatedAt": "2026-08-22",
+      "source": "override"
+    },
+    "Alvin Kamara": {
+      "status": "OUT",
+      "note": "MCL sprain — expected out ~1 month",
+      "sources": [
+        "Fantasy Alarm"
+      ],
+      "updatedAt": "2026-08-22",
+      "source": "override"
+    },
+    "Isiah Pacheco": {
+      "status": "Q",
+      "note": "Knee - MCL",
+      "sources": [
+        "Sleeper"
+      ],
+      "updatedAt": "2026-08-24",
+      "source": "sleeper"
+    },
+    "Jalen McMillan": {
+      "status": "Q",
+      "note": "Calf",
+      "sources": [
+        "Sleeper"
+      ],
+      "updatedAt": "2026-08-24",
+      "source": "sleeper"
+    },
+    "Tre' Harris": {
+      "status": "Q",
+      "note": "Undisclosed",
+      "sources": [
+        "Sleeper"
+      ],
+      "updatedAt": "2026-08-24",
+      "source": "sleeper"
+    },
+    "Jaylin Noel": {
+      "status": "Q",
+      "note": "Hamstring",
+      "sources": [
+        "Sleeper"
+      ],
+      "updatedAt": "2026-08-24",
+      "source": "sleeper"
+    },
+    "Kenyon Sadiq": {
+      "status": "Q",
+      "note": "Abdomen — Surgery",
+      "sources": [
+        "Sleeper"
+      ],
+      "updatedAt": "2026-08-24",
+      "source": "sleeper"
+    },
+    "Tank Dell": {
+      "status": "Q",
+      "note": "Knee - ACL + MCL — Surgery",
+      "sources": [
+        "Sleeper"
+      ],
+      "updatedAt": "2026-08-24",
+      "source": "sleeper"
+    },
+    "James Conner": {
+      "status": "Q",
+      "note": "Foot",
+      "sources": [
+        "Sleeper"
+      ],
+      "updatedAt": "2026-08-24",
+      "source": "sleeper"
+    },
+    "Emanuel Wilson": {
+      "status": "Q",
+      "note": "Hamstring",
+      "sources": [
+        "Sleeper"
+      ],
+      "updatedAt": "2026-08-24",
+      "source": "sleeper"
+    },
+    "Cade Otton": {
+      "status": "Q",
+      "note": "Undisclosed",
+      "sources": [
+        "Sleeper"
+      ],
+      "updatedAt": "2026-08-24",
+      "source": "sleeper"
+    },
+    "Ollie Gordon II": {
+      "status": "Q",
+      "note": "Undisclosed",
+      "sources": [
+        "Sleeper"
+      ],
+      "updatedAt": "2026-08-24",
+      "source": "sleeper"
+    },
+    "Keon Coleman": {
+      "status": "Q",
+      "note": "Foot — Sprain",
+      "sources": [
+        "Sleeper"
+      ],
+      "updatedAt": "2026-08-24",
+      "source": "sleeper"
+    },
+    "Isaiah Davis": {
+      "status": "Q",
+      "note": "Knee",
+      "sources": [
+        "Sleeper"
+      ],
+      "updatedAt": "2026-08-24",
+      "source": "sleeper"
+    },
+    "Tory Horton": {
+      "status": "Q",
+      "note": "Undisclosed",
+      "sources": [
+        "Sleeper"
+      ],
+      "updatedAt": "2026-08-24",
+      "source": "sleeper"
+    },
+    "Chris Bell": {
+      "status": "Q",
+      "note": "Knee - ACL — Surgery",
+      "sources": [
+        "Sleeper"
+      ],
+      "updatedAt": "2026-08-24",
+      "source": "sleeper"
+    },
+    "Jordan James": {
+      "status": "Q",
+      "note": "Ribs — Fracture",
+      "sources": [
+        "Sleeper"
+      ],
+      "updatedAt": "2026-08-24",
+      "source": "sleeper"
+    },
+    "Ty Johnson": {
+      "status": "Q",
+      "note": "Knee",
+      "sources": [
+        "Sleeper"
+      ],
+      "updatedAt": "2026-08-24",
+      "source": "sleeper"
+    },
+    "Christian Kirk": {
+      "status": "Q",
+      "note": "Undisclosed",
+      "sources": [
+        "Sleeper"
+      ],
+      "updatedAt": "2026-08-24",
+      "source": "sleeper"
+    },
+    "LeQuint Allen Jr.": {
+      "status": "Q",
+      "note": "Undisclosed",
+      "sources": [
+        "Sleeper"
+      ],
+      "updatedAt": "2026-08-24",
+      "source": "sleeper"
+    },
+    "Michael Penix Jr.": {
+      "status": "Q",
+      "note": "Knee - ACL — Surgery",
+      "sources": [
+        "Sleeper"
+      ],
+      "updatedAt": "2026-08-24",
+      "source": "sleeper"
+    },
+    "Xavier Legette": {
+      "status": "Q",
+      "note": "Lower Body",
+      "sources": [
+        "Sleeper"
+      ],
+      "updatedAt": "2026-08-24",
+      "source": "sleeper"
+    },
+    "DJ Giddens": {
+      "status": "Q",
+      "note": "Hamstring",
+      "sources": [
+        "Sleeper"
+      ],
+      "updatedAt": "2026-08-24",
+      "source": "sleeper"
+    },
+    "Trey Benson": {
+      "status": "Q",
+      "note": "Knee",
+      "sources": [
+        "Sleeper"
+      ],
+      "updatedAt": "2026-08-24",
+      "source": "sleeper"
+    },
+    "Marvin Mims Jr.": {
+      "status": "Q",
+      "note": "Undisclosed",
+      "sources": [
+        "Sleeper"
+      ],
+      "updatedAt": "2026-08-24",
+      "source": "sleeper"
+    },
+    "Devin Neal": {
+      "status": "Q",
+      "note": "Undisclosed",
+      "sources": [
+        "Sleeper"
+      ],
+      "updatedAt": "2026-08-24",
+      "source": "sleeper"
+    },
+    "Adam Randall": {
+      "status": "Q",
+      "note": "Undisclosed",
+      "sources": [
+        "Sleeper"
+      ],
+      "updatedAt": "2026-08-24",
+      "source": "sleeper"
+    },
+    "Jerome Ford": {
+      "status": "IR",
+      "note": "Undisclosed",
+      "sources": [
+        "Sleeper"
+      ],
+      "updatedAt": "2026-08-24",
+      "source": "sleeper"
+    },
+    "Skyler Bell": {
+      "status": "Q",
+      "note": "Lower Body",
+      "sources": [
+        "Sleeper"
+      ],
+      "updatedAt": "2026-08-24",
+      "source": "sleeper"
+    },
+    "Isaac Guerendo": {
+      "status": "PUP",
+      "note": "Pectoral — Surgery",
+      "sources": [
+        "Sleeper"
+      ],
+      "updatedAt": "2026-08-24",
+      "source": "sleeper"
+    },
+    "Tyreek Hill": {
+      "status": "Q",
+      "note": "Knee - ACL — Surgery",
+      "sources": [
+        "Sleeper"
+      ],
+      "updatedAt": "2026-08-24",
+      "source": "sleeper"
+    },
+    "Audric Estime": {
+      "status": "Q",
+      "note": "Leg",
+      "sources": [
+        "Sleeper"
+      ],
+      "updatedAt": "2026-08-24",
+      "source": "sleeper"
+    },
+    "J.J. McCarthy": {
+      "status": "Q",
+      "note": "Undisclosed",
+      "sources": [
+        "Sleeper"
+      ],
+      "updatedAt": "2026-08-24",
+      "source": "sleeper"
+    },
+    "Joe Mixon": {
+      "status": "Q",
+      "note": "Foot",
+      "sources": [
+        "Sleeper"
+      ],
+      "updatedAt": "2026-08-24",
+      "source": "sleeper"
+    },
+    "Carson Beck": {
+      "status": "Q",
+      "note": "Ribs",
+      "sources": [
+        "Sleeper"
+      ],
+      "updatedAt": "2026-08-24",
+      "source": "sleeper"
+    },
+    "Cedric Tillman": {
+      "status": "Q",
+      "note": "Undisclosed",
+      "sources": [
+        "Sleeper"
+      ],
+      "updatedAt": "2026-08-24",
+      "source": "sleeper"
+    },
+    "Tez Johnson": {
+      "status": "Q",
+      "note": "Groin — Strain",
+      "sources": [
+        "Sleeper"
+      ],
+      "updatedAt": "2026-08-24",
+      "source": "sleeper"
+    },
+    "Chris Brazzell II": {
+      "status": "OFS",
+      "note": "LCL tear — out for 2026",
+      "sources": [
+        "Yahoo Sports"
+      ],
+      "updatedAt": "2026-08-18",
+      "source": "override"
+    },
+    "Brenen Thompson": {
+      "status": "Q",
+      "note": "Undisclosed",
+      "sources": [
+        "Sleeper"
+      ],
+      "updatedAt": "2026-08-24",
+      "source": "sleeper"
+    },
+    "Jawhar Jordan": {
+      "status": "Q",
+      "note": "Hip — Strain",
+      "sources": [
+        "Sleeper"
+      ],
+      "updatedAt": "2026-08-24",
+      "source": "sleeper"
+    },
+    "Phil Mafah": {
+      "status": "Q",
+      "note": "Chest",
+      "sources": [
+        "Sleeper"
+      ],
+      "updatedAt": "2026-08-24",
+      "source": "sleeper"
+    },
+    "Dont'e Thornton Jr.": {
+      "status": "Q",
+      "note": "Undisclosed",
+      "sources": [
+        "Sleeper"
+      ],
+      "updatedAt": "2026-08-24",
+      "source": "sleeper"
+    },
+    "Zane Gonzalez": {
+      "status": "Q",
+      "note": "Undisclosed",
+      "sources": [
+        "Sleeper"
+      ],
+      "updatedAt": "2026-08-24",
+      "source": "sleeper"
+    },
+    "Luke Musgrave": {
+      "status": "PUP",
+      "note": "Undisclosed",
+      "sources": [
+        "Sleeper"
+      ],
+      "updatedAt": "2026-08-24",
+      "source": "sleeper"
+    },
+    "Marcus Mariota": {
+      "status": "Q",
+      "note": "Knee",
+      "sources": [
+        "Sleeper"
+      ],
+      "updatedAt": "2026-08-24",
+      "source": "sleeper"
+    },
+    "Rasheen Ali": {
+      "status": "Q",
+      "note": "Undisclosed",
+      "sources": [
+        "Sleeper"
+      ],
+      "updatedAt": "2026-08-24",
+      "source": "sleeper"
+    },
+    "John Bates": {
+      "status": "Q",
+      "note": "Hamstring",
+      "sources": [
+        "Sleeper"
+      ],
+      "updatedAt": "2026-08-24",
+      "source": "sleeper"
+    },
+    "Sione Vaki": {
+      "status": "Q",
+      "note": "Back — Spasms",
+      "sources": [
+        "Sleeper"
+      ],
+      "updatedAt": "2026-08-24",
+      "source": "sleeper"
+    },
+    "Dameon Pierce": {
+      "status": "Q",
+      "note": "Hamstring",
+      "sources": [
+        "Sleeper"
+      ],
+      "updatedAt": "2026-08-24",
+      "source": "sleeper"
+    },
+    "Jeremy McNichols": {
+      "status": "Q",
+      "note": "Quadriceps",
+      "sources": [
+        "Sleeper"
+      ],
+      "updatedAt": "2026-08-24",
+      "source": "sleeper"
+    },
+    "Ricky Pearsall": {
+      "status": "OFS",
+      "note": "PCL surgery — out for 2026",
+      "sources": [
+        "Yahoo Sports",
+        "CBS Sports"
+      ],
+      "updatedAt": "2026-08-20",
+      "source": "override"
+    },
+    "Jayden Higgins": {
+      "status": "OFS",
+      "note": "Torn ACL — out for 2026 (Ian Rapoport)",
+      "sources": [
+        "FantasyPros",
+        "Yahoo Sports"
+      ],
+      "updatedAt": "2026-08-20",
+      "source": "override"
+    }
+  }
+}

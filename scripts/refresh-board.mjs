@@ -1,26 +1,35 @@
 #!/usr/bin/env node
 /**
- * Refresh top-350 board from multi-source FantasyPros consensus + injury/handcuff adjustments.
+ * Refresh top-350 board from FantasyPros consensus + Sleeper health + handcuff adjustments.
  *
- * Sources: FantasyPros PPR, Half-PPR, Standard draft rankings
- * Injury: scripts/player-health.json (update daily)
- * Handcuffs: scripts/handcuffs.json
+ * Writes:
+ *   src/data/raw-db.json          — board order for the app
+ *   src/data/player-health.json   — merged Sleeper + overrides (overrides win)
+ *   scripts/top350-players.json   — full ranked payload
+ *   scripts/top350-meta.json      — run metadata
+ *
+ * Manual nuance: edit scripts/player-health-overrides.json (beat-reporter notes, OFS, etc.)
  *
  * Usage: node scripts/refresh-board.mjs
  */
-import { readFileSync, writeFileSync } from 'fs';
+import { readFileSync, writeFileSync, existsSync } from 'fs';
 import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(__dirname, '..');
-const JSX = join(ROOT, 'src/AuctionWarRoom.jsx');
+const DATA = join(ROOT, 'src/data');
 
 const FP_URLS = {
   PPR: 'https://www.fantasypros.com/nfl/rankings/ppr-cheatsheets.php',
   HALF: 'https://www.fantasypros.com/nfl/rankings/half-point-ppr-cheatsheets.php',
   STD: 'https://www.fantasypros.com/nfl/rankings/consensus-cheatsheets.php',
 };
+const SLEEPER_URL = 'https://api.sleeper.app/v1/players/nfl';
+
+const MIN_MERGED = 300;
+const MIN_PER_SOURCE = 200;
+const MAX_TOP50_CHURN = 35; // of 50 — fail if scrape looks scrambled
 
 const STATUS_ADJ = {
   active: { starter: 0, handcuff: 0 },
@@ -32,10 +41,25 @@ const STATUS_ADJ = {
   OFS: { starter: 800, handcuff: -15 },
 };
 
+const SLEEPER_STATUS = {
+  Questionable: 'Q',
+  Doubtful: 'D',
+  Out: 'OUT',
+  IR: 'IR',
+  PUP: 'PUP',
+  'COVID-19': 'OUT',
+  Suspended: 'OUT',
+};
+
+const TEAM_ALIASES = { JAC: 'JAX', WSH: 'WAS', ARZ: 'ARI', LA: 'LAR', OAK: 'LV', SD: 'LAC', STL: 'LAR' };
+
 const norm = (s) => (s || '').toLowerCase().replace(/['']/g, "'").replace(/[.\-]/g, '').trim();
+const stripSuffix = (s) => norm(s).replace(/\s+(jr|sr|ii|iii|iv|v)$/i, '').trim();
+const canonTeam = (t) => TEAM_ALIASES[t] || t;
 
 async function fetchPlayers(url) {
   const res = await fetch(url, { headers: { 'User-Agent': 'Mozilla/5.0 (compatible; AuctionWarRoom/1.0)' } });
+  if (!res.ok) throw new Error(`FantasyPros ${url} → HTTP ${res.status}`);
   const html = await res.text();
   const patterns = [
     /"players"\s*:\s*(\[.*?\])\s*,\s*"filters"/s,
@@ -59,7 +83,7 @@ async function fetchPlayers(url) {
     let pos = p.player_position_id || p.position;
     if (pos === 'DST') pos = 'DEF';
     if (pos === 'DEF') continue;
-    const team = p.player_team_id || p.team;
+    const team = canonTeam(p.player_team_id || p.team);
     const rank = Number(p.rank_ecr || p.ecr_rank || 9999);
     out[name] = { name, pos, team, rank };
   }
@@ -122,79 +146,119 @@ function applyInjuryAdjustments(players, health, handcuffs) {
     }
   }
 
-  for (const p of players) {
-    p.sortAvg = p.avg + (p.adj || 0);
-  }
+  for (const p of players) p.sortAvg = p.avg + (p.adj || 0);
   players.sort((a, b) => a.sortAvg - b.sortAvg || a.avg - b.avg || a.name.localeCompare(b.name));
   return players.slice(0, 350);
 }
 
-function esc(s) {
-  return s.replace(/\\/g, '\\\\').replace(/"/g, '\\"');
-}
-
-function genRawDb(players, generatedAt) {
-  const lines = [
-    '// Built-in player list — Top 350 overall (FantasyPros multi-format avg + injury/handcuff adj)',
-    '// Average of FantasyPros expert consensus rank_ave across PPR, Half-PPR, and Standard draft rankings',
-    `// Generated ${generatedAt} · 350 players · ordered by adjusted consensus rank`,
-    'const RAW_DB = [',
-  ];
-  players.forEach((p, i) => {
-    const tag = p.adj ? ` · adj ${p.adj > 0 ? '+' : ''}${p.adj.toFixed(0)}` : '';
-    lines.push(`  ["${esc(p.name)}","${p.pos}","${p.team}"], // ${i + 1} · avg ${p.avg.toFixed(2)}${tag}`);
-  });
-  lines.push('];');
-  lines.push('');
-  return lines.join('\n');
-}
-
-function genPlayerHealth(health, generatedAt) {
-  const lines = [
-    `// Player health — updated ${health.updatedAt || generatedAt}`,
-    '// Sources: ' + (health.sources || []).join('; '),
-    '// Regenerate via: npm run refresh-board',
-    'const PLAYER_HEALTH = {',
-  ];
-  for (const [name, h] of Object.entries(health.players || {})) {
-    const src = JSON.stringify(h.sources || []);
-    lines.push(`  [norm("${esc(name)}")]: { status: "${h.status}", note: "${esc(h.note)}", sources: ${src}, updatedAt: "${h.updatedAt}" },`);
+async function fetchSleeperHealth(boardNames) {
+  console.log('Fetching Sleeper NFL player map...');
+  const res = await fetch(SLEEPER_URL, { headers: { 'User-Agent': 'Mozilla/5.0 (compatible; AuctionWarRoom/1.0)' } });
+  if (!res.ok) throw new Error(`Sleeper → HTTP ${res.status}`);
+  const all = await res.json();
+  const byKey = new Map(); // stripSuffix|pos|team → player
+  const byNamePos = new Map();
+  for (const p of Object.values(all)) {
+    if (!p?.full_name || !p.position) continue;
+    if (!['QB', 'RB', 'WR', 'TE', 'K'].includes(p.position)) continue;
+    const team = canonTeam(p.team || '');
+    const entry = {
+      name: p.full_name,
+      pos: p.position,
+      team,
+      injury_status: p.injury_status || null,
+      injury_body_part: p.injury_body_part || null,
+      injury_notes: p.injury_notes || null,
+      practice_participation: p.practice_participation || null,
+      depth_chart_order: p.depth_chart_order ?? null,
+    };
+    const keyName = stripSuffix(p.full_name);
+    byKey.set(`${keyName}|${p.position}|${team}`, entry);
+    const np = `${keyName}|${p.position}`;
+    if (!byNamePos.has(np)) byNamePos.set(np, []);
+    byNamePos.get(np).push(entry);
   }
-  lines.push('};');
-  lines.push('');
-  return lines.join('\n');
+
+  const today = new Date().toISOString().slice(0, 10);
+  const players = {};
+  let matched = 0;
+  const unmatched = [];
+
+  for (const { name, pos, team } of boardNames) {
+    const t = canonTeam(team);
+    const keyName = stripSuffix(name);
+    let hit = byKey.get(`${keyName}|${pos}|${t}`);
+    if (!hit) {
+      const alts = byNamePos.get(`${keyName}|${pos}`) || [];
+      hit = alts.length === 1 ? alts[0] : alts.find((a) => a.team === t) || null;
+    }
+    if (!hit) {
+      unmatched.push(`${name} (${pos}/${team})`);
+      continue;
+    }
+    matched += 1;
+    const status = SLEEPER_STATUS[hit.injury_status];
+    if (!status) continue; // healthy / no designation
+    const part = hit.injury_body_part || 'injury';
+    const detail = hit.injury_notes ? ` — ${hit.injury_notes}` : '';
+    players[name] = {
+      status,
+      note: `${part}${detail}`,
+      sources: ['Sleeper'],
+      updatedAt: today,
+      source: 'sleeper',
+    };
+  }
+
+  return { players, matched, unmatched, total: boardNames.length };
 }
 
-function patchJsx(rawBlock, healthBlock) {
-  let jsx = readFileSync(JSX, 'utf8');
-  jsx = jsx.replace(
-    /\/\/ Built-in player list — Top 350 overall[\s\S]*?^const RAW_DB = \[[\s\S]*?\n\];/m,
-    rawBlock.trim(),
-  );
-  if (/const PLAYER_HEALTH = \{/.test(jsx)) {
-    jsx = jsx.replace(
-      /\/\/ Player health[\s\S]*?^const PLAYER_HEALTH = \{[\s\S]*?\n\};/m,
-      healthBlock.trim(),
-    );
-  } else {
-    jsx = jsx.replace(
-      /\/\/ Confirmed out for 2026[\s\S]*?^const OUT_FOR_SEASON = \{[\s\S]*?\};/m,
-      healthBlock.trim(),
-    );
-    jsx = jsx.replace(
-      /const injuryNoteFor = \(name\) => OUT_FOR_SEASON\[norm\(name\)\] \|\| null;/,
-      'const healthFor = (name) => PLAYER_HEALTH[norm(name)] || null;',
-    );
-    jsx = jsx.replace(
-      /const isOutForSeason = \(name\) => !!injuryNoteFor\(name\);/,
-      'const injuryNoteFor = (name) => {\n  const h = healthFor(name);\n  if (!h) return null;\n  if (h.status === "OFS" || h.status === "IR" || h.status === "OUT") return h.note;\n  return null;\n};\nconst healthBlocksDraft = (name) => {\n  const s = healthFor(name)?.status;\n  return s === "OFS" || s === "IR" || s === "OUT";\n};\nconst isOutForSeason = (name) => healthFor(name)?.status === "OFS";',
-    );
-    jsx = jsx.replace(
-      /Object\.entries\(OUT_FOR_SEASON\)/,
-      'Object.entries(PLAYER_HEALTH).filter(([, h]) => h.status === "OFS" || h.status === "IR" || h.status === "OUT")',
-    );
+function mergeHealth(sleeperPlayers, overridesDoc) {
+  const out = {};
+  for (const [name, h] of Object.entries(sleeperPlayers || {})) {
+    out[name] = { ...h };
   }
-  writeFileSync(JSX, jsx);
+  for (const [name, h] of Object.entries(overridesDoc.players || {})) {
+    out[name] = {
+      status: h.status,
+      note: h.note,
+      sources: h.sources || ['Manual override'],
+      updatedAt: h.updatedAt || new Date().toISOString().slice(0, 10),
+      source: 'override',
+    };
+  }
+  const dates = Object.values(out).map((h) => h.updatedAt).filter(Boolean).sort();
+  return {
+    updatedAt: new Date().toISOString(),
+    healthOldestUpdatedAt: dates[0] || null,
+    sources: [
+      'Sleeper NFL player API',
+      ...(overridesDoc.sources || ['Manual overrides']),
+    ],
+    players: out,
+  };
+}
+
+function sanityCheck(sources, merged, top350) {
+  const errors = [];
+  for (const [label, d] of Object.entries(sources)) {
+    const n = Object.keys(d).length;
+    if (n < MIN_PER_SOURCE) errors.push(`${label} only returned ${n} players (need ≥${MIN_PER_SOURCE})`);
+  }
+  if (merged.length < MIN_MERGED) errors.push(`Merged list only ${merged.length} (need ≥${MIN_MERGED})`);
+  if (top350.length < 300) errors.push(`Top board only ${top350.length} players`);
+
+  const prevPath = join(__dirname, 'top350-players.json');
+  if (existsSync(prevPath)) {
+    const prev = JSON.parse(readFileSync(prevPath, 'utf8'));
+    const prevTop = new Set(prev.slice(0, 50).map((p) => norm(p.name)));
+    const nextTop = top350.slice(0, 50).map((p) => norm(p.name));
+    const churn = nextTop.filter((n) => !prevTop.has(n)).length;
+    if (churn > MAX_TOP50_CHURN) {
+      errors.push(`Top-50 churn ${churn}/${50} looks like a bad scrape (max ${MAX_TOP50_CHURN})`);
+    }
+  }
+  return errors;
 }
 
 async function main() {
@@ -205,42 +269,72 @@ async function main() {
     console.log(`  ${label}: ${Object.keys(sources[label]).length} players`);
   }
 
-  const health = JSON.parse(readFileSync(join(__dirname, 'player-health.json'), 'utf8'));
+  const overridesPath = existsSync(join(__dirname, 'player-health-overrides.json'))
+    ? join(__dirname, 'player-health-overrides.json')
+    : join(__dirname, 'player-health.json');
+  const overrides = JSON.parse(readFileSync(overridesPath, 'utf8'));
   const handcuffs = JSON.parse(readFileSync(join(__dirname, 'handcuffs.json'), 'utf8'));
 
-  let merged = mergeSources(sources);
+  const merged = mergeSources(sources);
   console.log(`Merged ${merged.length} players from ${Object.keys(sources).length} sources`);
+
+  // Provisional board (no injury adj) for Sleeper matching against likely top names
+  const provisional = [...merged].sort((a, b) => a.avg - b.avg).slice(0, 400);
+  const sleeper = await fetchSleeperHealth(provisional.map((p) => ({ name: p.name, pos: p.pos, team: p.team })));
+  console.log(`  Sleeper matched ${sleeper.matched}/${sleeper.total} on provisional board`);
+  if (sleeper.unmatched.length) {
+    const topMiss = sleeper.unmatched.slice(0, 12);
+    console.warn(`  Unmatched sample (${sleeper.unmatched.length}): ${topMiss.join('; ')}`);
+  }
+
+  const health = mergeHealth(sleeper.players, overrides);
+  console.log(`  Health entries: ${Object.keys(health.players).length} (overrides win)`);
 
   const top350 = applyInjuryAdjustments(merged, health, handcuffs);
   console.log(`Top 350 after injury/handcuff adjustments`);
 
   const jeanty = top350.find((p) => p.name === 'Ashton Jeanty');
   const mike = top350.find((p) => p.name === 'Mike Washington Jr.');
-  if (jeanty && mike) {
-    console.log(`  Ashton Jeanty: rank #${top350.indexOf(jeanty) + 1} (avg ${jeanty.avg}, adj ${jeanty.adj})`);
-    console.log(`  Mike Washington Jr.: rank #${top350.indexOf(mike) + 1} (avg ${mike.avg}, adj ${mike.adj})`);
+  if (jeanty) console.log(`  Ashton Jeanty: #${top350.indexOf(jeanty) + 1} avg=${jeanty.avg} adj=${jeanty.adj} ${jeanty.healthStatus || ''}`);
+  if (mike) console.log(`  Mike Washington Jr.: #${top350.indexOf(mike) + 1} avg=${mike.avg} adj=${mike.adj}`);
+
+  const errors = sanityCheck(sources, merged, top350);
+  if (errors.length) {
+    console.error('\nSANITY GATE FAILED:');
+    errors.forEach((e) => console.error(' -', e));
+    process.exit(2);
   }
 
   const generatedAt = new Date().toISOString();
-  health.updatedAt = generatedAt;
-
   const meta = {
     generatedAt,
-    method: 'Average of FantasyPros PPR + Half-PPR + Standard; injury/handcuff rank adjustments from player-health.json',
+    method: 'FantasyPros PPR+Half+Std avg; Sleeper health + overrides; handcuff adj',
     rankingSources: Object.keys(FP_URLS).map((label) => ({ label, url: FP_URLS[label] })),
     healthSources: health.sources,
     healthUpdatedAt: health.updatedAt,
+    healthOldestUpdatedAt: health.healthOldestUpdatedAt,
+    sleeperMatched: sleeper.matched,
+    sleeperUnmatched: sleeper.unmatched.length,
     injuryAdjustments: top350.filter((p) => p.adj).length,
     count: 350,
+    sanity: 'passed',
+  };
+
+  const rawDb = {
+    generatedAt,
+    count: 350,
+    players: top350.map((p) => [p.name, p.pos, p.team]),
   };
 
   writeFileSync(join(__dirname, 'top350-players.json'), JSON.stringify(top350, null, 2) + '\n');
   writeFileSync(join(__dirname, 'top350-meta.json'), JSON.stringify(meta, null, 2) + '\n');
-  writeFileSync(join(__dirname, 'raw-db-generated.js'), genRawDb(top350, generatedAt) + '\n');
-  writeFileSync(join(__dirname, 'player-health-generated.js'), genPlayerHealth(health, generatedAt) + '\n');
+  writeFileSync(join(DATA, 'raw-db.json'), JSON.stringify(rawDb, null, 2) + '\n');
+  writeFileSync(join(DATA, 'player-health.json'), JSON.stringify(health, null, 2) + '\n');
 
-  patchJsx(genRawDb(top350, generatedAt), genPlayerHealth(health, generatedAt));
-  console.log('Patched src/AuctionWarRoom.jsx');
+  // Keep legacy generated JS as optional debug dumps (not imported by app)
+  writeFileSync(join(__dirname, 'raw-db-generated.js'), `// Generated ${generatedAt} — see src/data/raw-db.json\nexport default ${JSON.stringify(rawDb.players)};\n`);
+
+  console.log('Wrote src/data/raw-db.json + src/data/player-health.json');
   console.log('Done.');
 }
 

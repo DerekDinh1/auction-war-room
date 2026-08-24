@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-08-24T04:28:21.448Z",
-  "method": "Average of FantasyPros PPR + Half-PPR + Standard; injury/handcuff rank adjustments from player-health.json",
+  "generatedAt": "2026-08-24T04:46:47.037Z",
+  "method": "FantasyPros PPR+Half+Std avg; Sleeper health + overrides; handcuff adj",
   "rankingSources": [
     {
       "label": "PPR",
@@ -16,13 +16,18 @@
     }
   ],
   "healthSources": [
+    "Sleeper NFL player API",
     "FantasyPros injury news (8/23)",
     "Yahoo Sports training camp tracker",
     "Fantasy Alarm weekend injury roundup (8/23)",
     "CBS Sports camp tracker",
     "Adam Schefter / team beat reporters"
   ],
-  "healthUpdatedAt": "2026-08-24T04:28:21.448Z",
-  "injuryAdjustments": 23,
-  "count": 350
+  "healthUpdatedAt": "2026-08-24T04:46:47.027Z",
+  "healthOldestUpdatedAt": "2026-08-18",
+  "sleeperMatched": 396,
+  "sleeperUnmatched": 4,
+  "injuryAdjustments": 76,
+  "count": 350,
+  "sanity": "passed"
 }

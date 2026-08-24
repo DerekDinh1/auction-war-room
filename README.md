@@ -43,7 +43,7 @@ Refresh rankings anytime (optional, for local development):
 npm run refresh-board
 ```
 
-That pulls FantasyPros multi-format consensus, applies injury / handcuff adjustments from `scripts/player-health.json`, and updates the baked-in board.
+That pulls FantasyPros multi-format consensus, merges **Sleeper** injury status with your notes in `scripts/player-health-overrides.json`, re-ranks handcuffs, and writes `src/data/*.json` (the app imports those — no giant JSX patch).
 
 ## ⬇️ Installation
 
