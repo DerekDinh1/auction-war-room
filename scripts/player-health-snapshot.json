@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-08-26T21:10:28.542Z",
+  "updatedAt": "2026-08-26T21:14:52.841Z",
   "players": {
     "Ashton Jeanty": {
       "status": "D",
@@ -76,12 +76,13 @@
     },
     "Jeremiyah Love": {
       "status": "Q",
-      "note": "High-ankle sprain — multi-week; Week 1 in doubt",
+      "note": "High-ankle sprain — light agility work 8/26; multi-week, Week 1 in doubt",
       "sources": [
+        "ESPN",
         "Fantasy Alarm",
-        "Yahoo Sports"
+        "Arizona Republic"
       ],
-      "updatedAt": "2026-08-21"
+      "updatedAt": "2026-08-26"
     },
     "Emeka Egbuka": {
       "status": "Q",
@@ -141,6 +142,78 @@
         "ESPN",
         "Cincy Jungle",
         "WCPO"
+      ],
+      "updatedAt": "2026-08-26"
+    },
+    "Zay Flowers": {
+      "status": "Q",
+      "note": "Undisclosed — held out of 8/26 practice precaution; expected ready for Week 1",
+      "sources": [
+        "ESPN",
+        "Baltimore Sun"
+      ],
+      "updatedAt": "2026-08-26"
+    },
+    "Tyler Warren": {
+      "status": "Q",
+      "note": "Groin — expected out through this week; load-managed for Week 1",
+      "sources": [
+        "CBS Sports",
+        "Colts beat"
+      ],
+      "updatedAt": "2026-08-26"
+    },
+    "James Conner": {
+      "status": "Q",
+      "note": "Foot — coach says too early to tell on Week 1 availability (8/26)",
+      "sources": [
+        "ESPN",
+        "Arizona Republic"
+      ],
+      "updatedAt": "2026-08-26"
+    },
+    "Keon Coleman": {
+      "status": "Q",
+      "note": "Sprained foot/toe — injured in Bills preseason opener",
+      "sources": [
+        "NFL Network",
+        "CBS Sports"
+      ],
+      "updatedAt": "2026-08-26"
+    },
+    "Michael Penix Jr.": {
+      "status": "Q",
+      "note": "Knee — won't play preseason finale; hopeful for Week 1 at Pittsburgh",
+      "sources": [
+        "ESPN",
+        "Falcons beat"
+      ],
+      "updatedAt": "2026-08-26"
+    },
+    "Trey Benson": {
+      "status": "IR",
+      "note": "Knee — reverted to IR 8/25",
+      "sources": [
+        "CBS Sports",
+        "ESPN"
+      ],
+      "updatedAt": "2026-08-25"
+    },
+    "Josh Downs": {
+      "status": "Q",
+      "note": "Calf — minor; believes he'll resume practicing soon (8/26)",
+      "sources": [
+        "ESPN",
+        "Colts beat"
+      ],
+      "updatedAt": "2026-08-26"
+    },
+    "Tucker Kraft": {
+      "status": "Q",
+      "note": "Knee — returned to team drills 8/26; still monitoring",
+      "sources": [
+        "NFL.com",
+        "ESPN"
       ],
       "updatedAt": "2026-08-26"
     }

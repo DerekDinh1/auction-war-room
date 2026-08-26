@@ -411,20 +411,6 @@
     "sortAvg": 27.33
   },
   {
-    "name": "Zay Flowers",
-    "pos": "WR",
-    "team": "BAL",
-    "avg": 30.33,
-    "ranks": {
-      "PPR": 30,
-      "HALF": 30,
-      "STD": 31
-    },
-    "nSources": 3,
-    "adj": 0,
-    "sortAvg": 30.33
-  },
-  {
     "name": "Lamar Jackson",
     "pos": "QB",
     "team": "BAL",
@@ -577,6 +563,22 @@
     "nSources": 3,
     "adj": 0,
     "sortAvg": 40
+  },
+  {
+    "name": "Zay Flowers",
+    "pos": "WR",
+    "team": "BAL",
+    "avg": 30.33,
+    "ranks": {
+      "PPR": 30,
+      "HALF": 30,
+      "STD": 31
+    },
+    "nSources": 3,
+    "adj": 12,
+    "healthStatus": "Q",
+    "healthNote": "Undisclosed — held out of 8/26 practice precaution; expected ready for Week 1",
+    "sortAvg": 42.33
   },
   {
     "name": "Joe Burrow",
@@ -751,22 +753,8 @@
     "nSources": 3,
     "adj": 12,
     "healthStatus": "Q",
-    "healthNote": "High-ankle sprain — multi-week; Week 1 in doubt",
+    "healthNote": "High-ankle sprain — light agility work 8/26; multi-week, Week 1 in doubt",
     "sortAvg": 55
-  },
-  {
-    "name": "Tyler Warren",
-    "pos": "TE",
-    "team": "IND",
-    "avg": 55.33,
-    "ranks": {
-      "PPR": 52,
-      "HALF": 52,
-      "STD": 62
-    },
-    "nSources": 3,
-    "adj": 0,
-    "sortAvg": 55.33
   },
   {
     "name": "Christian Watson",
@@ -951,6 +939,22 @@
     "sortAvg": 66.67
   },
   {
+    "name": "Tyler Warren",
+    "pos": "TE",
+    "team": "IND",
+    "avg": 55.33,
+    "ranks": {
+      "PPR": 52,
+      "HALF": 52,
+      "STD": 62
+    },
+    "nSources": 3,
+    "adj": 12,
+    "healthStatus": "Q",
+    "healthNote": "Groin — expected out through this week; load-managed for Week 1",
+    "sortAvg": 67.33
+  },
+  {
     "name": "Marvin Harrison Jr.",
     "pos": "WR",
     "team": "ARI",
@@ -977,20 +981,6 @@
     "nSources": 3,
     "adj": 0,
     "sortAvg": 69.33
-  },
-  {
-    "name": "Tucker Kraft",
-    "pos": "TE",
-    "team": "GB",
-    "avg": 69.67,
-    "ranks": {
-      "PPR": 77,
-      "HALF": 68,
-      "STD": 64
-    },
-    "nSources": 3,
-    "adj": 0,
-    "sortAvg": 69.67
   },
   {
     "name": "Carnell Tate",
@@ -1131,6 +1121,22 @@
     "nSources": 3,
     "adj": 0,
     "sortAvg": 81.33
+  },
+  {
+    "name": "Tucker Kraft",
+    "pos": "TE",
+    "team": "GB",
+    "avg": 69.67,
+    "ranks": {
+      "PPR": 77,
+      "HALF": 68,
+      "STD": 64
+    },
+    "nSources": 3,
+    "adj": 12,
+    "healthStatus": "Q",
+    "healthNote": "Knee — returned to team drills 8/26; still monitoring",
+    "sortAvg": 81.67
   },
   {
     "name": "Courtland Sutton",
@@ -1311,20 +1317,6 @@
       "PPR": 110,
       "HALF": 93,
       "STD": 85
-    },
-    "nSources": 3,
-    "adj": 0,
-    "sortAvg": 96
-  },
-  {
-    "name": "Josh Downs",
-    "pos": "WR",
-    "team": "IND",
-    "avg": 96,
-    "ranks": {
-      "PPR": 86,
-      "HALF": 92,
-      "STD": 110
     },
     "nSources": 3,
     "adj": 0,
@@ -1558,6 +1550,22 @@
     "nSources": 3,
     "adj": 0,
     "sortAvg": 107.33
+  },
+  {
+    "name": "Josh Downs",
+    "pos": "WR",
+    "team": "IND",
+    "avg": 96,
+    "ranks": {
+      "PPR": 86,
+      "HALF": 92,
+      "STD": 110
+    },
+    "nSources": 3,
+    "adj": 12,
+    "healthStatus": "Q",
+    "healthNote": "Calf — minor; believes he'll resume practicing soon (8/26)",
+    "sortAvg": 108
   },
   {
     "name": "Dalton Kincaid",
@@ -2519,21 +2527,6 @@
     "sortAvg": 184.67
   },
   {
-    "name": "James Conner",
-    "pos": "RB",
-    "team": "ARI",
-    "avg": 213.33,
-    "ranks": {
-      "PPR": 211,
-      "HALF": 213,
-      "STD": 216
-    },
-    "nSources": 3,
-    "adj": -28,
-    "handcuffBoost": "Handcuff for Jeremiyah Love (Q)",
-    "sortAvg": 185.33
-  },
-  {
     "name": "Calvin Ridley",
     "pos": "WR",
     "team": "TEN",
@@ -2644,6 +2637,23 @@
     "nSources": 3,
     "adj": 0,
     "sortAvg": 194.33
+  },
+  {
+    "name": "James Conner",
+    "pos": "RB",
+    "team": "ARI",
+    "avg": 213.33,
+    "ranks": {
+      "PPR": 211,
+      "HALF": 213,
+      "STD": 216
+    },
+    "nSources": 3,
+    "adj": -16,
+    "handcuffBoost": "Handcuff for Jeremiyah Love (Q)",
+    "healthStatus": "Q",
+    "healthNote": "Foot — coach says too early to tell on Week 1 availability (8/26)",
+    "sortAvg": 197.33
   },
   {
     "name": "Cameron Dicker",
@@ -3255,20 +3265,6 @@
     "sortAvg": 244.33
   },
   {
-    "name": "Keon Coleman",
-    "pos": "WR",
-    "team": "BUF",
-    "avg": 244.33,
-    "ranks": {
-      "PPR": 245,
-      "HALF": 245,
-      "STD": 243
-    },
-    "nSources": 3,
-    "adj": 0,
-    "sortAvg": 244.33
-  },
-  {
     "name": "Malachi Fields",
     "pos": "WR",
     "team": "NYG",
@@ -3435,6 +3431,22 @@
     "nSources": 3,
     "adj": 0,
     "sortAvg": 256.33
+  },
+  {
+    "name": "Keon Coleman",
+    "pos": "WR",
+    "team": "BUF",
+    "avg": 244.33,
+    "ranks": {
+      "PPR": 245,
+      "HALF": 245,
+      "STD": 243
+    },
+    "nSources": 3,
+    "adj": 12,
+    "healthStatus": "Q",
+    "healthNote": "Sprained foot/toe — injured in Bills preseason opener",
+    "sortAvg": 256.33000000000004
   },
   {
     "name": "Najee Harris",
@@ -3689,20 +3701,6 @@
     "sortAvg": 275.33
   },
   {
-    "name": "Michael Penix Jr.",
-    "pos": "QB",
-    "team": "ATL",
-    "avg": 277.33,
-    "ranks": {
-      "PPR": 279,
-      "HALF": 266,
-      "STD": 287
-    },
-    "nSources": 3,
-    "adj": 0,
-    "sortAvg": 277.33
-  },
-  {
     "name": "Mason Taylor",
     "pos": "TE",
     "team": "NYJ",
@@ -3857,6 +3855,22 @@
     "sortAvg": 287
   },
   {
+    "name": "Michael Penix Jr.",
+    "pos": "QB",
+    "team": "ATL",
+    "avg": 277.33,
+    "ranks": {
+      "PPR": 279,
+      "HALF": 266,
+      "STD": 287
+    },
+    "nSources": 3,
+    "adj": 12,
+    "healthStatus": "Q",
+    "healthNote": "Knee — won't play preseason finale; hopeful for Week 1 at Pittsburgh",
+    "sortAvg": 289.33
+  },
+  {
     "name": "Adam Randall",
     "pos": "RB",
     "team": "BAL",
@@ -3939,20 +3953,6 @@
     "nSources": 3,
     "adj": 0,
     "sortAvg": 297
-  },
-  {
-    "name": "Trey Benson",
-    "pos": "RB",
-    "team": "ARI",
-    "avg": 297.67,
-    "ranks": {
-      "PPR": 297,
-      "HALF": 297,
-      "STD": 299
-    },
-    "nSources": 3,
-    "adj": 0,
-    "sortAvg": 297.67
   },
   {
     "name": "Hollywood Brown",
@@ -4935,5 +4935,19 @@
     "nSources": 3,
     "adj": 0,
     "sortAvg": 376.33
+  },
+  {
+    "name": "John Metchie III",
+    "pos": "WR",
+    "team": "CAR",
+    "avg": 379,
+    "ranks": {
+      "PPR": 381,
+      "HALF": 375,
+      "STD": 381
+    },
+    "nSources": 3,
+    "adj": 0,
+    "sortAvg": 379
   }
 ]

@@ -1,6 +1,6 @@
 // Built-in player list — Top 350 overall (FantasyPros multi-format avg + injury/handcuff adj)
 // Average of FantasyPros expert consensus rank_ave across PPR, Half-PPR, and Standard draft rankings
-// Generated 2026-08-26T21:10:28.542Z · 350 players · ordered by adjusted consensus rank
+// Generated 2026-08-26T21:14:52.841Z · 350 players · ordered by adjusted consensus rank
 const RAW_DB = [
   ["Jahmyr Gibbs","RB","DET"], // 1 · avg 1.33
   ["Bijan Robinson","RB","ATL"], // 2 · avg 3.00
@@ -31,18 +31,18 @@ const RAW_DB = [
   ["Malik Nabers","WR","NYG"], // 27 · avg 25.67
   ["Rashee Rice","WR","KC"], // 28 · avg 26.33
   ["DeVonta Smith","WR","PHI"], // 29 · avg 27.33
-  ["Zay Flowers","WR","BAL"], // 30 · avg 30.33
-  ["Lamar Jackson","QB","BAL"], // 31 · avg 31.67
-  ["Tee Higgins","WR","CIN"], // 32 · avg 33.33
-  ["Kyren Williams","RB","LAR"], // 33 · avg 34.33
-  ["Tetairoa McMillan","WR","CAR"], // 34 · avg 36.00
-  ["Javonte Williams","RB","DAL"], // 35 · avg 37.00
-  ["Ladd McConkey","WR","LAC"], // 36 · avg 37.33
-  ["Jaylen Waddle","WR","DEN"], // 37 · avg 37.67
-  ["Garrett Wilson","WR","NYJ"], // 38 · avg 38.00
-  ["Colston Loveland","TE","CHI"], // 39 · avg 38.67
-  ["Drake Maye","QB","NE"], // 40 · avg 38.67
-  ["Josh Jacobs","RB","GB"], // 41 · avg 40.00
+  ["Lamar Jackson","QB","BAL"], // 30 · avg 31.67
+  ["Tee Higgins","WR","CIN"], // 31 · avg 33.33
+  ["Kyren Williams","RB","LAR"], // 32 · avg 34.33
+  ["Tetairoa McMillan","WR","CAR"], // 33 · avg 36.00
+  ["Javonte Williams","RB","DAL"], // 34 · avg 37.00
+  ["Ladd McConkey","WR","LAC"], // 35 · avg 37.33
+  ["Jaylen Waddle","WR","DEN"], // 36 · avg 37.67
+  ["Garrett Wilson","WR","NYJ"], // 37 · avg 38.00
+  ["Colston Loveland","TE","CHI"], // 38 · avg 38.67
+  ["Drake Maye","QB","NE"], // 39 · avg 38.67
+  ["Josh Jacobs","RB","GB"], // 40 · avg 40.00
+  ["Zay Flowers","WR","BAL"], // 41 · avg 30.33 · adj +12
   ["Joe Burrow","QB","CIN"], // 42 · avg 45.67
   ["Travis Etienne Jr.","RB","NO"], // 43 · avg 46.67
   ["Terry McLaurin","WR","WAS"], // 44 · avg 47.00
@@ -55,33 +55,33 @@ const RAW_DB = [
   ["Jayden Daniels","QB","WAS"], // 51 · avg 53.67
   ["Cam Skattebo","RB","NYG"], // 52 · avg 54.33
   ["Jeremiyah Love","RB","ARI"], // 53 · avg 43.00 · adj +12
-  ["Tyler Warren","TE","IND"], // 54 · avg 55.33
-  ["Christian Watson","WR","GB"], // 55 · avg 56.00
-  ["DJ Moore","WR","BUF"], // 56 · avg 56.00
-  ["Quinshon Judkins","RB","CLE"], // 57 · avg 56.67
-  ["Bucky Irving","RB","TB"], // 58 · avg 57.33
-  ["Jalen Hurts","QB","PHI"], // 59 · avg 57.33
-  ["David Montgomery","RB","HOU"], // 60 · avg 58.00
-  ["Mike Evans","WR","SF"], // 61 · avg 58.33
-  ["Rome Odunze","WR","CHI"], // 62 · avg 58.67
-  ["Bhayshul Tuten","RB","JAC"], // 63 · avg 63.33
-  ["Parker Washington","WR","JAC"], // 64 · avg 66.00
-  ["Caleb Williams","QB","CHI"], // 65 · avg 66.33
-  ["Jadarian Price","RB","SEA"], // 66 · avg 66.33
-  ["TreVeyon Henderson","RB","NE"], // 67 · avg 66.67
+  ["Christian Watson","WR","GB"], // 54 · avg 56.00
+  ["DJ Moore","WR","BUF"], // 55 · avg 56.00
+  ["Quinshon Judkins","RB","CLE"], // 56 · avg 56.67
+  ["Bucky Irving","RB","TB"], // 57 · avg 57.33
+  ["Jalen Hurts","QB","PHI"], // 58 · avg 57.33
+  ["David Montgomery","RB","HOU"], // 59 · avg 58.00
+  ["Mike Evans","WR","SF"], // 60 · avg 58.33
+  ["Rome Odunze","WR","CHI"], // 61 · avg 58.67
+  ["Bhayshul Tuten","RB","JAC"], // 62 · avg 63.33
+  ["Parker Washington","WR","JAC"], // 63 · avg 66.00
+  ["Caleb Williams","QB","CHI"], // 64 · avg 66.33
+  ["Jadarian Price","RB","SEA"], // 65 · avg 66.33
+  ["TreVeyon Henderson","RB","NE"], // 66 · avg 66.67
+  ["Tyler Warren","TE","IND"], // 67 · avg 55.33 · adj +12
   ["Marvin Harrison Jr.","WR","ARI"], // 68 · avg 68.67
   ["Justin Herbert","QB","LAC"], // 69 · avg 69.33
-  ["Tucker Kraft","TE","GB"], // 70 · avg 69.67
-  ["Carnell Tate","WR","TEN"], // 71 · avg 70.67
-  ["Rhamondre Stevenson","RB","NE"], // 72 · avg 71.67
-  ["Trevor Lawrence","QB","JAC"], // 73 · avg 73.67
-  ["Jaylen Warren","RB","PIT"], // 74 · avg 74.00
-  ["Dak Prescott","QB","DAL"], // 75 · avg 75.67
-  ["Brian Thomas Jr.","WR","JAC"], // 76 · avg 76.33
-  ["DK Metcalf","WR","PIT"], // 77 · avg 77.33
-  ["Harold Fannin Jr.","TE","CLE"], // 78 · avg 78.67
-  ["Tony Pollard","RB","TEN"], // 79 · avg 78.67
-  ["Chris Godwin Jr.","WR","TB"], // 80 · avg 81.33
+  ["Carnell Tate","WR","TEN"], // 70 · avg 70.67
+  ["Rhamondre Stevenson","RB","NE"], // 71 · avg 71.67
+  ["Trevor Lawrence","QB","JAC"], // 72 · avg 73.67
+  ["Jaylen Warren","RB","PIT"], // 73 · avg 74.00
+  ["Dak Prescott","QB","DAL"], // 74 · avg 75.67
+  ["Brian Thomas Jr.","WR","JAC"], // 75 · avg 76.33
+  ["DK Metcalf","WR","PIT"], // 76 · avg 77.33
+  ["Harold Fannin Jr.","TE","CLE"], // 77 · avg 78.67
+  ["Tony Pollard","RB","TEN"], // 78 · avg 78.67
+  ["Chris Godwin Jr.","WR","TB"], // 79 · avg 81.33
+  ["Tucker Kraft","TE","GB"], // 80 · avg 69.67 · adj +12
   ["Courtland Sutton","WR","DEN"], // 81 · avg 83.00
   ["Rico Dowdle","RB","PIT"], // 82 · avg 83.00
   ["Kyle Pitts Sr.","TE","ATL"], // 83 · avg 83.67
@@ -95,23 +95,23 @@ const RAW_DB = [
   ["Jaxson Dart","QB","NYG"], // 91 · avg 94.00
   ["Alec Pierce","WR","IND"], // 92 · avg 94.67
   ["Blake Corum","RB","LAR"], // 93 · avg 96.00
-  ["Josh Downs","WR","IND"], // 94 · avg 96.00
-  ["Bo Nix","QB","DEN"], // 95 · avg 98.00
-  ["Jacory Croskey-Merritt","RB","WAS"], // 96 · avg 100.00
-  ["RJ Harvey","RB","DEN"], // 97 · avg 100.00
-  ["Travis Kelce","TE","KC"], // 98 · avg 100.33
-  ["Patrick Mahomes II","QB","KC"], // 99 · avg 100.67
-  ["Wan'Dale Robinson","WR","TEN"], // 100 · avg 102.00
-  ["Tyler Allgeier","RB","ARI"], // 101 · avg 130.33 · adj -28
-  ["Michael Pittman Jr.","WR","PIT"], // 102 · avg 90.67 · adj +12
-  ["Jordan Addison","WR","MIN"], // 103 · avg 102.67
-  ["Matthew Stafford","QB","LAR"], // 104 · avg 104.67
-  ["Jayden Reed","WR","GB"], // 105 · avg 105.00
-  ["Jordan Mason","RB","MIN"], // 106 · avg 105.00
-  ["Stefon Diggs","WR","WAS"], // 107 · avg 105.33
-  ["George Kittle","TE","SF"], // 108 · avg 93.67 · adj +12
-  ["Kenny Gainwell","RB","TB"], // 109 · avg 106.33
-  ["Jared Goff","QB","DET"], // 110 · avg 107.33
+  ["Bo Nix","QB","DEN"], // 94 · avg 98.00
+  ["Jacory Croskey-Merritt","RB","WAS"], // 95 · avg 100.00
+  ["RJ Harvey","RB","DEN"], // 96 · avg 100.00
+  ["Travis Kelce","TE","KC"], // 97 · avg 100.33
+  ["Patrick Mahomes II","QB","KC"], // 98 · avg 100.67
+  ["Wan'Dale Robinson","WR","TEN"], // 99 · avg 102.00
+  ["Tyler Allgeier","RB","ARI"], // 100 · avg 130.33 · adj -28
+  ["Michael Pittman Jr.","WR","PIT"], // 101 · avg 90.67 · adj +12
+  ["Jordan Addison","WR","MIN"], // 102 · avg 102.67
+  ["Matthew Stafford","QB","LAR"], // 103 · avg 104.67
+  ["Jayden Reed","WR","GB"], // 104 · avg 105.00
+  ["Jordan Mason","RB","MIN"], // 105 · avg 105.00
+  ["Stefon Diggs","WR","WAS"], // 106 · avg 105.33
+  ["George Kittle","TE","SF"], // 107 · avg 93.67 · adj +12
+  ["Kenny Gainwell","RB","TB"], // 108 · avg 106.33
+  ["Jared Goff","QB","DET"], // 109 · avg 107.33
+  ["Josh Downs","WR","IND"], // 110 · avg 96.00 · adj +12
   ["Dalton Kincaid","TE","BUF"], // 111 · avg 108.33
   ["Jakobi Meyers","WR","JAC"], // 112 · avg 109.33
   ["Makai Lemon","WR","PHI"], // 113 · avg 109.67
@@ -180,15 +180,15 @@ const RAW_DB = [
   ["Pat Bryant","WR","DEN"], // 176 · avg 184.33
   ["Jacoby Brissett","QB","ARI"], // 177 · avg 184.67
   ["Oronde Gadsden II","TE","LAC"], // 178 · avg 184.67
-  ["James Conner","RB","ARI"], // 179 · avg 213.33 · adj -28
-  ["Calvin Ridley","WR","TEN"], // 180 · avg 185.67
-  ["Kimani Vidal","RB","LAC"], // 181 · avg 186.00
-  ["Malik Washington","WR","MIA"], // 182 · avg 186.67
-  ["Travis Hunter","WR","JAC"], // 183 · avg 189.33
-  ["Brandon Aubrey","K","DAL"], // 184 · avg 191.00
-  ["Sean Tucker","RB","TB"], // 185 · avg 191.00
-  ["Keenan Allen","WR","IND"], // 186 · avg 193.33
-  ["Nicholas Singleton","RB","TEN"], // 187 · avg 194.33
+  ["Calvin Ridley","WR","TEN"], // 179 · avg 185.67
+  ["Kimani Vidal","RB","LAC"], // 180 · avg 186.00
+  ["Malik Washington","WR","MIA"], // 181 · avg 186.67
+  ["Travis Hunter","WR","JAC"], // 182 · avg 189.33
+  ["Brandon Aubrey","K","DAL"], // 183 · avg 191.00
+  ["Sean Tucker","RB","TB"], // 184 · avg 191.00
+  ["Keenan Allen","WR","IND"], // 185 · avg 193.33
+  ["Nicholas Singleton","RB","TEN"], // 186 · avg 194.33
+  ["James Conner","RB","ARI"], // 187 · avg 213.33 · adj -16
   ["Cameron Dicker","K","LAC"], // 188 · avg 197.67
   ["Tank Dell","WR","HOU"], // 189 · avg 198.33
   ["Jaylin Noel","WR","HOU"], // 190 · avg 199.00
@@ -232,19 +232,19 @@ const RAW_DB = [
   ["Ja'Kobi Lane","WR","BAL"], // 228 · avg 242.00
   ["Justice Hill","RB","BAL"], // 229 · avg 242.67
   ["Antonio Williams","WR","WAS"], // 230 · avg 244.33
-  ["Keon Coleman","WR","BUF"], // 231 · avg 244.33
-  ["Malachi Fields","WR","NYG"], // 232 · avg 246.67
-  ["Ollie Gordon II","RB","MIA"], // 233 · avg 247.00
-  ["Devaughn Vele","WR","NO"], // 234 · avg 247.67
-  ["Fernando Mendoza","QB","LV"], // 235 · avg 248.67
-  ["Jack Bech","WR","LV"], // 236 · avg 249.33
-  ["Demond Claiborne","RB","MIN"], // 237 · avg 250.33
-  ["Colby Parkinson","TE","LAR"], // 238 · avg 251.00
-  ["Greg Dulcich","TE","MIA"], // 239 · avg 251.33
-  ["Harrison Butker","K","KC"], // 240 · avg 252.67
-  ["Chris Boswell","K","PIT"], // 241 · avg 254.00
-  ["Ted Hurst III","WR","TB"], // 242 · avg 256.00
-  ["Chimere Dike","WR","TEN"], // 243 · avg 256.33
+  ["Malachi Fields","WR","NYG"], // 231 · avg 246.67
+  ["Ollie Gordon II","RB","MIA"], // 232 · avg 247.00
+  ["Devaughn Vele","WR","NO"], // 233 · avg 247.67
+  ["Fernando Mendoza","QB","LV"], // 234 · avg 248.67
+  ["Jack Bech","WR","LV"], // 235 · avg 249.33
+  ["Demond Claiborne","RB","MIN"], // 236 · avg 250.33
+  ["Colby Parkinson","TE","LAR"], // 237 · avg 251.00
+  ["Greg Dulcich","TE","MIA"], // 238 · avg 251.33
+  ["Harrison Butker","K","KC"], // 239 · avg 252.67
+  ["Chris Boswell","K","PIT"], // 240 · avg 254.00
+  ["Ted Hurst III","WR","TB"], // 241 · avg 256.00
+  ["Chimere Dike","WR","TEN"], // 242 · avg 256.33
+  ["Keon Coleman","WR","BUF"], // 243 · avg 244.33 · adj +12
   ["Najee Harris","RB","NYG"], // 244 · avg 257.00
   ["Jordan James","RB","SF"], // 245 · avg 257.33
   ["Elic Ayomanor","WR","TEN"], // 246 · avg 257.67
@@ -263,94 +263,94 @@ const RAW_DB = [
   ["Will Reichard","K","MIN"], // 259 · avg 273.67
   ["Darius Slayton","WR","NYG"], // 260 · avg 274.33
   ["Elijah Sarratt","WR","BAL"], // 261 · avg 275.33
-  ["Michael Penix Jr.","QB","ATL"], // 262 · avg 277.33
-  ["Mason Taylor","TE","NYJ"], // 263 · avg 278.00
-  ["DJ Giddens","RB","IND"], // 264 · avg 278.33
-  ["Seth McGowan","RB","IND"], // 265 · avg 279.00
-  ["Theo Johnson","TE","NYG"], // 266 · avg 279.00
-  ["Xavier Legette","WR","CAR"], // 267 · avg 279.67
-  ["Cyrus Allen","WR","KC"], // 268 · avg 280.67
-  ["Kirk Cousins","QB","LV"], // 269 · avg 280.67
-  ["Marvin Mims Jr.","WR","DEN"], // 270 · avg 282.67
-  ["Deshaun Watson","QB","CLE"], // 271 · avg 286.00
-  ["Eli Stowers","TE","PHI"], // 272 · avg 286.33
-  ["Shedeur Sanders","QB","CLE"], // 273 · avg 287.00
+  ["Mason Taylor","TE","NYJ"], // 262 · avg 278.00
+  ["DJ Giddens","RB","IND"], // 263 · avg 278.33
+  ["Seth McGowan","RB","IND"], // 264 · avg 279.00
+  ["Theo Johnson","TE","NYG"], // 265 · avg 279.00
+  ["Xavier Legette","WR","CAR"], // 266 · avg 279.67
+  ["Cyrus Allen","WR","KC"], // 267 · avg 280.67
+  ["Kirk Cousins","QB","LV"], // 268 · avg 280.67
+  ["Marvin Mims Jr.","WR","DEN"], // 269 · avg 282.67
+  ["Deshaun Watson","QB","CLE"], // 270 · avg 286.00
+  ["Eli Stowers","TE","PHI"], // 271 · avg 286.33
+  ["Shedeur Sanders","QB","CLE"], // 272 · avg 287.00
+  ["Michael Penix Jr.","QB","ATL"], // 273 · avg 277.33 · adj +12
   ["Adam Randall","RB","BAL"], // 274 · avg 292.33
   ["Emari Demercado","RB","KC"], // 275 · avg 292.33
   ["Brashard Smith","RB","KC"], // 276 · avg 294.33
   ["Kyle Williams","WR","NE"], // 277 · avg 296.67
   ["Devin Singletary","RB","NYG"], // 278 · avg 297.00
   ["Mike Gesicki","TE","CIN"], // 279 · avg 297.00
-  ["Trey Benson","RB","ARI"], // 280 · avg 297.67
-  ["Hollywood Brown","WR","PHI"], // 281 · avg 298.00
-  ["Mack Hollins","WR","NE"], // 282 · avg 302.00
-  ["Kaleb Johnson","RB","PIT"], // 283 · avg 302.67
-  ["Trevor Etienne","RB","CAR"], // 284 · avg 302.67
-  ["Isaiah Bond","WR","CLE"], // 285 · avg 304.33
-  ["Skyler Bell","WR","BUF"], // 286 · avg 306.33
-  ["Jerome Ford","RB","WAS"], // 287 · avg 308.33
-  ["Brandon Aiyuk","WR","SF"], // 288 · avg 308.67
-  ["Isaac Guerendo","RB","SF"], // 289 · avg 310.33
-  ["Charlie Smyth","K","NO"], // 290 · avg 310.67
-  ["Darren Waller","TE","CAR"], // 291 · avg 312.00
-  ["Tahj Brooks","RB","CIN"], // 292 · avg 312.00
-  ["Andrei Iosivas","WR","CIN"], // 293 · avg 313.00
-  ["Jake Tonges","TE","SF"], // 294 · avg 313.33
-  ["Jarquez Hunter","RB","LAR"], // 295 · avg 314.33
-  ["Tez Johnson","WR","TB"], // 296 · avg 344.00 · adj -28
-  ["Audric Estime","RB","NO"], // 297 · avg 316.33
-  ["Jaleel McLaughlin","RB","DEN"], // 298 · avg 316.33
-  ["Tyreek Hill","WR","FA"], // 299 · avg 318.00
-  ["Oscar Delp","TE","NO"], // 300 · avg 318.33
-  ["Darnell Washington","TE","PIT"], // 301 · avg 318.67
-  ["Will Shipley","RB","PHI"], // 302 · avg 320.00
-  ["Michael Mayer","TE","LV"], // 303 · avg 322.33
-  ["Jahan Dotson","WR","ATL"], // 304 · avg 324.67
-  ["DeMario Douglas","WR","NE"], // 305 · avg 325.00
-  ["Elijah Arroyo","TE","SEA"], // 306 · avg 327.00
-  ["Charlie Kolar","TE","LAC"], // 307 · avg 328.67
-  ["Bryce Lance","WR","NO"], // 308 · avg 329.00
-  ["Jalen Tolbert","WR","MIA"], // 309 · avg 330.00
-  ["Kareem Hunt","RB","FA"], // 310 · avg 331.33
-  ["Xavier Hutchinson","WR","HOU"], // 311 · avg 331.67
-  ["Carson Beck","QB","ARI"], // 312 · avg 332.67
-  ["J.J. McCarthy","QB","MIN"], // 313 · avg 334.33
-  ["Cole Kmet","TE","CHI"], // 314 · avg 334.67
-  ["Erick All Jr.","TE","CIN"], // 315 · avg 335.67
-  ["Tyler Higbee","TE","LAR"], // 316 · avg 337.33
-  ["Konata Mumpfield","WR","LAR"], // 317 · avg 337.67
-  ["Cedric Tillman","WR","CLE"], // 318 · avg 339.67
-  ["Eli Raridon","TE","NE"], // 319 · avg 341.00
-  ["Joe Mixon","RB","FA"], // 320 · avg 343.33
-  ["Luke McCaffrey","WR","WAS"], // 321 · avg 344.00
-  ["Dawson Knox","TE","BUF"], // 322 · avg 344.67
-  ["Jalen Royals","WR","KC"], // 323 · avg 344.67
-  ["Olamide Zaccheaus","WR","ATL"], // 324 · avg 346.33
-  ["Max Klare","TE","LAR"], // 325 · avg 348.33
-  ["Kendrick Bourne","WR","ARI"], // 326 · avg 349.00
-  ["Brenen Thompson","WR","LAC"], // 327 · avg 349.67
-  ["Noah Gray","TE","KC"], // 328 · avg 349.67
-  ["Bam Knight","RB","ARI"], // 329 · avg 350.33
-  ["Mac Jones","QB","SF"], // 330 · avg 351.67
-  ["Joshua Palmer","WR","BUF"], // 331 · avg 353.33
-  ["Jake Elliott","K","PHI"], // 332 · avg 354.67
-  ["Ja'Tavion Sanders","TE","CAR"], // 333 · avg 357.33
-  ["Eli Heidenreich","RB","PIT"], // 334 · avg 358.00
-  ["Treylon Burks","WR","WAS"], // 335 · avg 358.67
-  ["Justin Fields","QB","KC"], // 336 · avg 363.00
-  ["Tyler Bass","K","BUF"], // 337 · avg 364.67
-  ["Justin Joly","TE","DEN"], // 338 · avg 365.67
-  ["Ty Simpson","QB","LAR"], // 339 · avg 365.67
-  ["Malik Benson","WR","LV"], // 340 · avg 367.67
-  ["Jawhar Jordan","RB","HOU"], // 341 · avg 368.33
-  ["Michael Carter","RB","TEN"], // 342 · avg 368.33
-  ["Trey Smack","K","GB"], // 343 · avg 371.00
-  ["KaVontae Turpin","WR","DAL"], // 344 · avg 372.00
-  ["Kevin Coleman Jr.","WR","MIA"], // 345 · avg 372.00
-  ["Jordan Whittington","WR","LAR"], // 346 · avg 400.67 · adj -28
-  ["Kalif Raymond","WR","CHI"], // 347 · avg 373.00
-  ["Savion Williams","WR","GB"], // 348 · avg 373.33
-  ["Roman Wilson","WR","PIT"], // 349 · avg 374.67
-  ["Dont'e Thornton Jr.","WR","LV"], // 350 · avg 376.33
+  ["Hollywood Brown","WR","PHI"], // 280 · avg 298.00
+  ["Mack Hollins","WR","NE"], // 281 · avg 302.00
+  ["Kaleb Johnson","RB","PIT"], // 282 · avg 302.67
+  ["Trevor Etienne","RB","CAR"], // 283 · avg 302.67
+  ["Isaiah Bond","WR","CLE"], // 284 · avg 304.33
+  ["Skyler Bell","WR","BUF"], // 285 · avg 306.33
+  ["Jerome Ford","RB","WAS"], // 286 · avg 308.33
+  ["Brandon Aiyuk","WR","SF"], // 287 · avg 308.67
+  ["Isaac Guerendo","RB","SF"], // 288 · avg 310.33
+  ["Charlie Smyth","K","NO"], // 289 · avg 310.67
+  ["Darren Waller","TE","CAR"], // 290 · avg 312.00
+  ["Tahj Brooks","RB","CIN"], // 291 · avg 312.00
+  ["Andrei Iosivas","WR","CIN"], // 292 · avg 313.00
+  ["Jake Tonges","TE","SF"], // 293 · avg 313.33
+  ["Jarquez Hunter","RB","LAR"], // 294 · avg 314.33
+  ["Tez Johnson","WR","TB"], // 295 · avg 344.00 · adj -28
+  ["Audric Estime","RB","NO"], // 296 · avg 316.33
+  ["Jaleel McLaughlin","RB","DEN"], // 297 · avg 316.33
+  ["Tyreek Hill","WR","FA"], // 298 · avg 318.00
+  ["Oscar Delp","TE","NO"], // 299 · avg 318.33
+  ["Darnell Washington","TE","PIT"], // 300 · avg 318.67
+  ["Will Shipley","RB","PHI"], // 301 · avg 320.00
+  ["Michael Mayer","TE","LV"], // 302 · avg 322.33
+  ["Jahan Dotson","WR","ATL"], // 303 · avg 324.67
+  ["DeMario Douglas","WR","NE"], // 304 · avg 325.00
+  ["Elijah Arroyo","TE","SEA"], // 305 · avg 327.00
+  ["Charlie Kolar","TE","LAC"], // 306 · avg 328.67
+  ["Bryce Lance","WR","NO"], // 307 · avg 329.00
+  ["Jalen Tolbert","WR","MIA"], // 308 · avg 330.00
+  ["Kareem Hunt","RB","FA"], // 309 · avg 331.33
+  ["Xavier Hutchinson","WR","HOU"], // 310 · avg 331.67
+  ["Carson Beck","QB","ARI"], // 311 · avg 332.67
+  ["J.J. McCarthy","QB","MIN"], // 312 · avg 334.33
+  ["Cole Kmet","TE","CHI"], // 313 · avg 334.67
+  ["Erick All Jr.","TE","CIN"], // 314 · avg 335.67
+  ["Tyler Higbee","TE","LAR"], // 315 · avg 337.33
+  ["Konata Mumpfield","WR","LAR"], // 316 · avg 337.67
+  ["Cedric Tillman","WR","CLE"], // 317 · avg 339.67
+  ["Eli Raridon","TE","NE"], // 318 · avg 341.00
+  ["Joe Mixon","RB","FA"], // 319 · avg 343.33
+  ["Luke McCaffrey","WR","WAS"], // 320 · avg 344.00
+  ["Dawson Knox","TE","BUF"], // 321 · avg 344.67
+  ["Jalen Royals","WR","KC"], // 322 · avg 344.67
+  ["Olamide Zaccheaus","WR","ATL"], // 323 · avg 346.33
+  ["Max Klare","TE","LAR"], // 324 · avg 348.33
+  ["Kendrick Bourne","WR","ARI"], // 325 · avg 349.00
+  ["Brenen Thompson","WR","LAC"], // 326 · avg 349.67
+  ["Noah Gray","TE","KC"], // 327 · avg 349.67
+  ["Bam Knight","RB","ARI"], // 328 · avg 350.33
+  ["Mac Jones","QB","SF"], // 329 · avg 351.67
+  ["Joshua Palmer","WR","BUF"], // 330 · avg 353.33
+  ["Jake Elliott","K","PHI"], // 331 · avg 354.67
+  ["Ja'Tavion Sanders","TE","CAR"], // 332 · avg 357.33
+  ["Eli Heidenreich","RB","PIT"], // 333 · avg 358.00
+  ["Treylon Burks","WR","WAS"], // 334 · avg 358.67
+  ["Justin Fields","QB","KC"], // 335 · avg 363.00
+  ["Tyler Bass","K","BUF"], // 336 · avg 364.67
+  ["Justin Joly","TE","DEN"], // 337 · avg 365.67
+  ["Ty Simpson","QB","LAR"], // 338 · avg 365.67
+  ["Malik Benson","WR","LV"], // 339 · avg 367.67
+  ["Jawhar Jordan","RB","HOU"], // 340 · avg 368.33
+  ["Michael Carter","RB","TEN"], // 341 · avg 368.33
+  ["Trey Smack","K","GB"], // 342 · avg 371.00
+  ["KaVontae Turpin","WR","DAL"], // 343 · avg 372.00
+  ["Kevin Coleman Jr.","WR","MIA"], // 344 · avg 372.00
+  ["Jordan Whittington","WR","LAR"], // 345 · avg 400.67 · adj -28
+  ["Kalif Raymond","WR","CHI"], // 346 · avg 373.00
+  ["Savion Williams","WR","GB"], // 347 · avg 373.33
+  ["Roman Wilson","WR","PIT"], // 348 · avg 374.67
+  ["Dont'e Thornton Jr.","WR","LV"], // 349 · avg 376.33
+  ["John Metchie III","WR","CAR"], // 350 · avg 379.00
 ];
 
