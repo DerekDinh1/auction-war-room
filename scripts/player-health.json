@@ -1,11 +1,12 @@
 {
-  "updatedAt": "2026-08-24T03:30:00.000Z",
+  "updatedAt": "2026-08-26T21:10:27.000Z",
   "sources": [
     "FantasyPros injury news (8/23)",
     "Yahoo Sports training camp tracker",
     "Fantasy Alarm weekend injury roundup (8/23)",
     "CBS Sports camp tracker",
-    "Adam Schefter / team beat reporters"
+    "Adam Schefter / team beat reporters",
+    "ESPN (8/25\u201326)"
   ],
   "players": {
     "Ashton Jeanty": {
@@ -140,6 +141,16 @@
         "AS USA"
       ],
       "updatedAt": "2026-08-20"
+    },
+    "Ja'Marr Chase": {
+      "status": "Q",
+      "note": "Left knee hyperextension \u2014 limped off 8/25 practice; held out 8/26 precaution; says he's fine, unlikely for preseason finale",
+      "sources": [
+        "ESPN",
+        "Cincy Jungle",
+        "WCPO"
+      ],
+      "updatedAt": "2026-08-26"
     }
   }
 }

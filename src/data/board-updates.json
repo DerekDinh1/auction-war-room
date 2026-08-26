@@ -1,13 +1,21 @@
 {
-  "generatedAt": "2026-08-26T21:02:50.681Z",
+  "generatedAt": "2026-08-26T21:10:28.542Z",
   "previousGeneratedAt": "2026-08-26T17:59:07.060Z",
-  "summary": "Top-350 re-ranked from FantasyPros \u00b7 136 rank moves \u00b7 1 in \u00b7 1 out",
-  "rankChanges": 136,
+  "summary": "Top-350 re-ranked from FantasyPros · 147 rank moves · 1 in · 1 out · 1 injury update",
+  "rankChanges": 147,
   "enteredCount": 1,
   "exitedCount": 1,
-  "injuryAdjustments": 23,
+  "injuryAdjustments": 24,
   "count": 350,
   "highlights": [
+    {
+      "type": "drop",
+      "name": "Ja'Marr Chase",
+      "pos": "WR",
+      "team": "CIN",
+      "from": 2,
+      "to": 12
+    },
     {
       "type": "drop",
       "name": "Oronde Gadsden II",
@@ -65,14 +73,6 @@
       "to": 230
     },
     {
-      "type": "drop",
-      "name": "Colby Parkinson",
-      "pos": "TE",
-      "team": "LAR",
-      "from": 235,
-      "to": 238
-    },
-    {
       "type": "entered",
       "name": "Dont'e Thornton Jr.",
       "pos": "WR",
@@ -87,103 +87,112 @@
       "rank": 325
     }
   ],
-  "injuryHighlights": [],
+  "injuryHighlights": [
+    {
+      "type": "new",
+      "name": "Ja'Marr Chase",
+      "status": "Q",
+      "note": "Left knee hyperextension — limped off 8/25 practice; held out 8/26 prec…",
+      "pos": "WR",
+      "team": "CIN"
+    }
+  ],
   "injuryWatch": [
     {
       "name": "Ricky Pearsall",
       "status": "OFS",
-      "note": "PCL surgery \u2014 out for 2026",
+      "note": "PCL surgery — out for 2026",
       "pos": null,
       "team": null
     },
     {
       "name": "Chris Brazzell II",
       "status": "OFS",
-      "note": "LCL tear \u2014 out for 2026",
+      "note": "LCL tear — out for 2026",
       "pos": null,
       "team": null
     },
     {
       "name": "Jayden Higgins",
       "status": "OFS",
-      "note": "Torn ACL \u2014 out for 2026 (Ian Rapoport)",
+      "note": "Torn ACL — out for 2026 (Ian Rapoport)",
       "pos": null,
       "team": null
     },
     {
       "name": "Jordyn Tyson",
       "status": "IR",
-      "note": "Hamstring \u2014 expected ~2 months, may start on IR",
+      "note": "Hamstring — expected ~2 months, may start on IR",
       "pos": "WR",
       "team": "NO"
     },
     {
       "name": "Alvin Kamara",
       "status": "OUT",
-      "note": "MCL sprain \u2014 expected out ~1 month",
+      "note": "MCL sprain — expected out ~1 month",
       "pos": "RB",
       "team": "NO"
     },
     {
       "name": "Zach Charbonnet",
       "status": "PUP",
-      "note": "ACL recovery \u2014 has not returned to practice (active/PUP)",
+      "note": "ACL recovery — has not returned to practice (active/PUP)",
       "pos": "RB",
       "team": "SEA"
     },
     {
       "name": "Ashton Jeanty",
       "status": "D",
-      "note": "Right knee \u2014 helped off practice 8/23, unable to bear weight; team paus\u2026",
+      "note": "Right knee — helped off practice 8/23, unable to bear weight; team paus…",
       "pos": "RB",
       "team": "LV"
     },
     {
       "name": "Kyle Monangai",
       "status": "D",
-      "note": "Hyperextended knee \u2014 multiple weeks, Week 1 in doubt",
+      "note": "Hyperextended knee — multiple weeks, Week 1 in doubt",
       "pos": "RB",
       "team": "CHI"
     },
     {
       "name": "Breece Hall",
       "status": "Q",
-      "note": "Groin \u2014 expected out 2\u20133 weeks; team hopeful for Week 1",
+      "note": "Groin — expected out 2–3 weeks; team hopeful for Week 1",
       "pos": "RB",
       "team": "NYJ"
     },
     {
       "name": "Jeremiyah Love",
       "status": "Q",
-      "note": "High-ankle sprain \u2014 multi-week; Week 1 in doubt",
+      "note": "High-ankle sprain — multi-week; Week 1 in doubt",
       "pos": "RB",
       "team": "ARI"
     },
     {
       "name": "Emeka Egbuka",
       "status": "Q",
-      "note": "Turf toe sprain \u2014 Week 1 availability in doubt",
+      "note": "Turf toe sprain — Week 1 availability in doubt",
       "pos": "WR",
       "team": "TB"
     },
     {
       "name": "Sam LaPorta",
       "status": "Q",
-      "note": "Hip/undisclosed \u2014 missed recent practice",
+      "note": "Hip/undisclosed — missed recent practice",
       "pos": "TE",
       "team": "DET"
     },
     {
       "name": "Puka Nacua",
       "status": "Q",
-      "note": "Groin soreness \u2014 minor per McVay, monitoring",
+      "note": "Groin soreness — minor per McVay, monitoring",
       "pos": "WR",
       "team": "LAR"
     },
     {
       "name": "Michael Pittman Jr.",
       "status": "Q",
-      "note": "Hamstring \u2014 minor, expected ready Week 1",
+      "note": "Hamstring — minor, expected ready Week 1",
       "pos": "WR",
       "team": "PIT"
     },
@@ -193,6 +202,13 @@
       "note": "Working back from Achilles; limited in camp",
       "pos": "TE",
       "team": "SF"
+    },
+    {
+      "name": "Ja'Marr Chase",
+      "status": "Q",
+      "note": "Left knee hyperextension — limped off 8/25 practice; held out 8/26 prec…",
+      "pos": "WR",
+      "team": "CIN"
     }
   ]
 }

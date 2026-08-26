@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-08-26T21:02:50.681Z",
+  "updatedAt": "2026-08-26T21:10:28.542Z",
   "players": {
     "Ashton Jeanty": {
       "status": "D",
@@ -133,6 +133,16 @@
         "AS USA"
       ],
       "updatedAt": "2026-08-20"
+    },
+    "Ja'Marr Chase": {
+      "status": "Q",
+      "note": "Left knee hyperextension — limped off 8/25 practice; held out 8/26 precaution; says he's fine, unlikely for preseason finale",
+      "sources": [
+        "ESPN",
+        "Cincy Jungle",
+        "WCPO"
+      ],
+      "updatedAt": "2026-08-26"
     }
   }
 }
