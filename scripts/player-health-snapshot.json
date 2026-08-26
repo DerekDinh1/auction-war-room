@@ -1,0 +1,138 @@
+{
+  "updatedAt": "2026-08-26T21:02:50.681Z",
+  "players": {
+    "Ashton Jeanty": {
+      "status": "D",
+      "note": "Right knee — helped off practice 8/23, unable to bear weight; team paused practice; awaiting MRI",
+      "sources": [
+        "FantasyPros",
+        "Fantasy Alarm",
+        "Adam Schefter"
+      ],
+      "updatedAt": "2026-08-23"
+    },
+    "Ricky Pearsall": {
+      "status": "OFS",
+      "note": "PCL surgery — out for 2026",
+      "sources": [
+        "Yahoo Sports",
+        "CBS Sports"
+      ],
+      "updatedAt": "2026-08-20"
+    },
+    "Chris Brazzell II": {
+      "status": "OFS",
+      "note": "LCL tear — out for 2026",
+      "sources": [
+        "Yahoo Sports"
+      ],
+      "updatedAt": "2026-08-18"
+    },
+    "Jayden Higgins": {
+      "status": "OFS",
+      "note": "Torn ACL — out for 2026 (Ian Rapoport)",
+      "sources": [
+        "FantasyPros",
+        "Yahoo Sports"
+      ],
+      "updatedAt": "2026-08-20"
+    },
+    "Jordyn Tyson": {
+      "status": "IR",
+      "note": "Hamstring — expected ~2 months, may start on IR",
+      "sources": [
+        "Yahoo Sports",
+        "Fantasy Alarm",
+        "AS USA"
+      ],
+      "updatedAt": "2026-08-22"
+    },
+    "Alvin Kamara": {
+      "status": "OUT",
+      "note": "MCL sprain — expected out ~1 month",
+      "sources": [
+        "Fantasy Alarm"
+      ],
+      "updatedAt": "2026-08-22"
+    },
+    "Zach Charbonnet": {
+      "status": "PUP",
+      "note": "ACL recovery — has not returned to practice (active/PUP)",
+      "sources": [
+        "Yahoo Sports",
+        "Fantasy Alarm",
+        "AS USA"
+      ],
+      "updatedAt": "2026-08-22"
+    },
+    "Breece Hall": {
+      "status": "Q",
+      "note": "Groin — expected out 2–3 weeks; team hopeful for Week 1",
+      "sources": [
+        "AS USA",
+        "Fantasy Alarm"
+      ],
+      "updatedAt": "2026-08-22"
+    },
+    "Jeremiyah Love": {
+      "status": "Q",
+      "note": "High-ankle sprain — multi-week; Week 1 in doubt",
+      "sources": [
+        "Fantasy Alarm",
+        "Yahoo Sports"
+      ],
+      "updatedAt": "2026-08-21"
+    },
+    "Emeka Egbuka": {
+      "status": "Q",
+      "note": "Turf toe sprain — Week 1 availability in doubt",
+      "sources": [
+        "Fantasy Alarm",
+        "Yahoo Sports"
+      ],
+      "updatedAt": "2026-08-22"
+    },
+    "Sam LaPorta": {
+      "status": "Q",
+      "note": "Hip/undisclosed — missed recent practice",
+      "sources": [
+        "FantasyPros",
+        "Fantasy Alarm"
+      ],
+      "updatedAt": "2026-08-21"
+    },
+    "Puka Nacua": {
+      "status": "Q",
+      "note": "Groin soreness — minor per McVay, monitoring",
+      "sources": [
+        "Yahoo Sports"
+      ],
+      "updatedAt": "2026-08-22"
+    },
+    "Kyle Monangai": {
+      "status": "D",
+      "note": "Hyperextended knee — multiple weeks, Week 1 in doubt",
+      "sources": [
+        "Yahoo Sports",
+        "Fantasy Alarm"
+      ],
+      "updatedAt": "2026-08-21"
+    },
+    "Michael Pittman Jr.": {
+      "status": "Q",
+      "note": "Hamstring — minor, expected ready Week 1",
+      "sources": [
+        "FantasyPros"
+      ],
+      "updatedAt": "2026-08-21"
+    },
+    "George Kittle": {
+      "status": "Q",
+      "note": "Working back from Achilles; limited in camp",
+      "sources": [
+        "AS USA"
+      ],
+      "updatedAt": "2026-08-20"
+    }
+  }
+}

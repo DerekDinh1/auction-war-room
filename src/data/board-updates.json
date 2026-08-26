@@ -1,118 +1,198 @@
 {
-  "generatedAt": "2026-08-26T17:59:07.060Z",
-  "previousGeneratedAt": "2026-08-24T04:28:21.448Z",
-  "summary": "Top-350 re-ranked from FantasyPros \u00b7 279 rank moves \u00b7 3 in \u00b7 3 out",
-  "rankChanges": 279,
-  "enteredCount": 3,
-  "exitedCount": 3,
+  "generatedAt": "2026-08-26T21:02:50.681Z",
+  "previousGeneratedAt": "2026-08-26T17:59:07.060Z",
+  "summary": "Top-350 re-ranked from FantasyPros \u00b7 136 rank moves \u00b7 1 in \u00b7 1 out",
+  "rankChanges": 136,
+  "enteredCount": 1,
+  "exitedCount": 1,
   "injuryAdjustments": 23,
   "count": 350,
   "highlights": [
     {
       "type": "drop",
-      "name": "Mike Washington Jr.",
+      "name": "Oronde Gadsden II",
+      "pos": "TE",
+      "team": "LAC",
+      "from": 174,
+      "to": 178
+    },
+    {
+      "type": "drop",
+      "name": "Kimani Vidal",
       "pos": "RB",
-      "team": "LV",
-      "from": 67,
-      "to": 123
+      "team": "LAC",
+      "from": 177,
+      "to": 181
     },
     {
       "type": "rise",
-      "name": "Kaelon Black",
-      "pos": "RB",
-      "team": "SF",
-      "from": 242,
-      "to": 219
-    },
-    {
-      "type": "rise",
-      "name": "Kayshon Boutte",
-      "pos": "WR",
-      "team": "HOU",
-      "from": 181,
-      "to": 165
-    },
-    {
-      "type": "drop",
-      "name": "Sean Tucker",
-      "pos": "RB",
-      "team": "TB",
-      "from": 175,
-      "to": 185
-    },
-    {
-      "type": "drop",
-      "name": "Tyrone Tracy Jr.",
-      "pos": "RB",
-      "team": "NYG",
-      "from": 142,
-      "to": 152
-    },
-    {
-      "type": "drop",
-      "name": "Trey Benson",
-      "pos": "RB",
-      "team": "ARI",
-      "from": 268,
-      "to": 278
-    },
-    {
-      "type": "drop",
-      "name": "James Conner",
-      "pos": "RB",
-      "team": "ARI",
-      "from": 171,
-      "to": 180
-    },
-    {
-      "type": "rise",
-      "name": "Devaughn Vele",
-      "pos": "WR",
-      "team": "NO",
-      "from": 243,
-      "to": 234
-    },
-    {
-      "type": "entered",
-      "name": "Trey Smack",
-      "pos": "K",
-      "team": "GB",
-      "rank": 344
-    },
-    {
-      "type": "entered",
-      "name": "Kevin Coleman Jr.",
-      "pos": "WR",
-      "team": "MIA",
-      "rank": 346
-    },
-    {
-      "type": "entered",
-      "name": "Savion Williams",
-      "pos": "WR",
-      "team": "GB",
-      "rank": 350
-    },
-    {
-      "type": "exited",
-      "name": "Anthony Richardson Sr.",
+      "name": "Jacoby Brissett",
       "pos": "QB",
-      "team": "IND",
-      "rank": 347
+      "team": "ARI",
+      "from": 181,
+      "to": 177
     },
     {
-      "type": "exited",
-      "name": "Phil Mafah",
-      "pos": "RB",
-      "team": "DAL",
-      "rank": 349
+      "type": "rise",
+      "name": "Kyle Williams",
+      "pos": "WR",
+      "team": "NE",
+      "from": 281,
+      "to": 277
     },
     {
-      "type": "exited",
+      "type": "rise",
+      "name": "Darren Waller",
+      "pos": "TE",
+      "team": "CAR",
+      "from": 295,
+      "to": 291
+    },
+    {
+      "type": "drop",
+      "name": "Stefon Diggs",
+      "pos": "WR",
+      "team": "WAS",
+      "from": 104,
+      "to": 107
+    },
+    {
+      "type": "drop",
+      "name": "Antonio Williams",
+      "pos": "WR",
+      "team": "WAS",
+      "from": 227,
+      "to": 230
+    },
+    {
+      "type": "drop",
+      "name": "Colby Parkinson",
+      "pos": "TE",
+      "team": "LAR",
+      "from": 235,
+      "to": 238
+    },
+    {
+      "type": "entered",
       "name": "Dont'e Thornton Jr.",
       "pos": "WR",
       "team": "LV",
       "rank": 350
+    },
+    {
+      "type": "exited",
+      "name": "Calvin Austin III",
+      "pos": "WR",
+      "team": "NYG",
+      "rank": 325
+    }
+  ],
+  "injuryHighlights": [],
+  "injuryWatch": [
+    {
+      "name": "Ricky Pearsall",
+      "status": "OFS",
+      "note": "PCL surgery \u2014 out for 2026",
+      "pos": null,
+      "team": null
+    },
+    {
+      "name": "Chris Brazzell II",
+      "status": "OFS",
+      "note": "LCL tear \u2014 out for 2026",
+      "pos": null,
+      "team": null
+    },
+    {
+      "name": "Jayden Higgins",
+      "status": "OFS",
+      "note": "Torn ACL \u2014 out for 2026 (Ian Rapoport)",
+      "pos": null,
+      "team": null
+    },
+    {
+      "name": "Jordyn Tyson",
+      "status": "IR",
+      "note": "Hamstring \u2014 expected ~2 months, may start on IR",
+      "pos": "WR",
+      "team": "NO"
+    },
+    {
+      "name": "Alvin Kamara",
+      "status": "OUT",
+      "note": "MCL sprain \u2014 expected out ~1 month",
+      "pos": "RB",
+      "team": "NO"
+    },
+    {
+      "name": "Zach Charbonnet",
+      "status": "PUP",
+      "note": "ACL recovery \u2014 has not returned to practice (active/PUP)",
+      "pos": "RB",
+      "team": "SEA"
+    },
+    {
+      "name": "Ashton Jeanty",
+      "status": "D",
+      "note": "Right knee \u2014 helped off practice 8/23, unable to bear weight; team paus\u2026",
+      "pos": "RB",
+      "team": "LV"
+    },
+    {
+      "name": "Kyle Monangai",
+      "status": "D",
+      "note": "Hyperextended knee \u2014 multiple weeks, Week 1 in doubt",
+      "pos": "RB",
+      "team": "CHI"
+    },
+    {
+      "name": "Breece Hall",
+      "status": "Q",
+      "note": "Groin \u2014 expected out 2\u20133 weeks; team hopeful for Week 1",
+      "pos": "RB",
+      "team": "NYJ"
+    },
+    {
+      "name": "Jeremiyah Love",
+      "status": "Q",
+      "note": "High-ankle sprain \u2014 multi-week; Week 1 in doubt",
+      "pos": "RB",
+      "team": "ARI"
+    },
+    {
+      "name": "Emeka Egbuka",
+      "status": "Q",
+      "note": "Turf toe sprain \u2014 Week 1 availability in doubt",
+      "pos": "WR",
+      "team": "TB"
+    },
+    {
+      "name": "Sam LaPorta",
+      "status": "Q",
+      "note": "Hip/undisclosed \u2014 missed recent practice",
+      "pos": "TE",
+      "team": "DET"
+    },
+    {
+      "name": "Puka Nacua",
+      "status": "Q",
+      "note": "Groin soreness \u2014 minor per McVay, monitoring",
+      "pos": "WR",
+      "team": "LAR"
+    },
+    {
+      "name": "Michael Pittman Jr.",
+      "status": "Q",
+      "note": "Hamstring \u2014 minor, expected ready Week 1",
+      "pos": "WR",
+      "team": "PIT"
+    },
+    {
+      "name": "George Kittle",
+      "status": "Q",
+      "note": "Working back from Achilles; limited in camp",
+      "pos": "TE",
+      "team": "SF"
     }
   ]
 }

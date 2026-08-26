@@ -51,6 +51,95 @@ function loadPreviousMeta() {
   }
 }
 
+
+const HEALTH_SNAPSHOT = join(__dirname, 'player-health-snapshot.json');
+const STATUS_ORDER = { OFS: 0, IR: 1, OUT: 2, PUP: 3, D: 4, Q: 5, active: 9 };
+
+function loadHealthSnapshot() {
+  try {
+    return JSON.parse(readFileSync(HEALTH_SNAPSHOT, 'utf8'));
+  } catch {
+    return null;
+  }
+}
+
+function saveHealthSnapshot(health) {
+  writeFileSync(
+    HEALTH_SNAPSHOT,
+    JSON.stringify({ updatedAt: health.updatedAt, players: health.players || {} }, null, 2) + '\n',
+  );
+}
+
+function noteSnippet(note, max = 72) {
+  const s = String(note || '').replace(/\s+/g, ' ').trim();
+  if (s.length <= max) return s;
+  return `${s.slice(0, max - 1)}…`;
+}
+
+function buildInjuryUpdates(prevHealth, nextHealth, top350) {
+  const boardLookup = new Map((top350 || []).map((p) => [p.name, p]));
+  const prev = prevHealth?.players || {};
+  const next = nextHealth?.players || {};
+  const names = new Set([...Object.keys(prev), ...Object.keys(next)]);
+  const highlights = [];
+
+  for (const name of names) {
+    const o = prev[name];
+    const c = next[name];
+    if (!o && c) {
+      highlights.push({
+        type: 'new',
+        name,
+        status: c.status,
+        note: noteSnippet(c.note),
+        pos: boardLookup.get(name)?.pos || null,
+        team: boardLookup.get(name)?.team || null,
+      });
+      continue;
+    }
+    if (o && !c) {
+      highlights.push({ type: 'removed', name, status: o.status, note: noteSnippet(o.note) });
+      continue;
+    }
+    if (!o || !c) continue;
+    if (o.status !== c.status) {
+      highlights.push({
+        type: 'status',
+        name,
+        from: o.status,
+        to: c.status,
+        note: noteSnippet(c.note),
+        pos: boardLookup.get(name)?.pos || null,
+        team: boardLookup.get(name)?.team || null,
+      });
+    } else if (o.note !== c.note) {
+      highlights.push({
+        type: 'note',
+        name,
+        status: c.status,
+        note: noteSnippet(c.note),
+        pos: boardLookup.get(name)?.pos || null,
+        team: boardLookup.get(name)?.team || null,
+      });
+    }
+  }
+
+  highlights.sort((a, b) => (STATUS_ORDER[a.to || a.status] ?? 9) - (STATUS_ORDER[b.to || b.status] ?? 9));
+
+  const watch = Object.entries(next)
+    .filter(([, h]) => h?.status && h.status !== 'active')
+    .map(([name, h]) => ({
+      name,
+      status: h.status,
+      note: noteSnippet(h.note),
+      pos: boardLookup.get(name)?.pos || null,
+      team: boardLookup.get(name)?.team || null,
+    }))
+    .sort((a, b) => (STATUS_ORDER[a.status] ?? 9) - (STATUS_ORDER[b.status] ?? 9));
+
+  return { injuryHighlights: highlights, injuryWatch: watch };
+}
+
 function buildBoardUpdates(prevPlayers, nextPlayers, prevMeta, nextMeta) {
   const indexed = (players) => {
     const m = new Map();
@@ -316,7 +405,15 @@ async function main() {
     count: 350,
   };
 
-  const updates = buildBoardUpdates(prevPlayers, top350, prevMeta, meta);
+  const prevHealthSnapshot = loadHealthSnapshot();
+  const injury = buildInjuryUpdates(prevHealthSnapshot, health, top350);
+  const updates = {
+    ...buildBoardUpdates(prevPlayers, top350, prevMeta, meta),
+    ...injury,
+  };
+  if (injury.injuryHighlights.length) {
+    updates.summary += ` · ${injury.injuryHighlights.length} injury update${injury.injuryHighlights.length === 1 ? '' : 's'}`;
+  }
   const updatesPath = join(ROOT, 'src/data/board-updates.json');
 
   writeFileSync(join(__dirname, 'top350-players.json'), JSON.stringify(top350, null, 2) + '\n');
@@ -327,7 +424,8 @@ async function main() {
 
   patchJsx(genRawDb(top350, generatedAt), genPlayerHealth(health, generatedAt));
   console.log('Patched src/AuctionWarRoom.jsx');
-  console.log(`Wrote board updates (${updates.rankChanges} rank moves, ${updates.highlights.length} highlights)`);
+  console.log(`Wrote board updates (${updates.rankChanges} rank moves, ${updates.highlights.length} rank highlights, ${updates.injuryWatch.length} on injury watch)`);
+  saveHealthSnapshot(health);
   console.log('Done.');
 }
 
