@@ -2190,6 +2190,8 @@ export default function AuctionWarRoom() {
   const settingsLabel = `${activeSeason?.label || "2026–27"} · ${settings.teams}-team · $${settings.budget} · 1.5 PPR`;
 
   /* ------- composable panels ------- */
+  const hasAsstData = Boolean(assistant.name || assistant.pos || assistant.team || assistant.bye || assistant.proj || assistant.presetMax || assistant.bid);
+
   const assistantPanel = (
         <section className="panel wide asst-panel">
           <div className="panel-head">
@@ -2208,7 +2210,19 @@ export default function AuctionWarRoom() {
           <div className="asst-grid">
             <div className="asst-inputs">
               <label className="field-label">
-                <span>Player</span>
+                <div className="field-label-row">
+                  <span>Player</span>
+                  <button
+                    type="button"
+                    className="field-clear-btn"
+                    onClick={clearAssistant}
+                    disabled={!hasAsstData}
+                    style={{ visibility: hasAsstData ? "visible" : "hidden" }}
+                    aria-label="Clear player block"
+                  >
+                    Clear
+                  </button>
+                </div>
                 <NameAutocomplete
                   value={assistant.name}
                   onChange={(v) => setAssistant((a) => ({ ...a, name: v }))}
@@ -2264,6 +2278,17 @@ export default function AuctionWarRoom() {
               <div className="asst-actions">
                 <motion.button type="button" className="btn primary big" onClick={assistantDraft} {...press}>Draft player</motion.button>
                 <motion.button type="button" className="btn" onClick={assistantGone} {...press}>Went elsewhere</motion.button>
+                <motion.button
+                  type="button"
+                  className="btn ghost asst-clear-btn"
+                  onClick={clearAssistant}
+                  disabled={!hasAsstData}
+                  title="Clear player block"
+                  aria-label="Clear player block"
+                  {...press}
+                >
+                  Clear
+                </motion.button>
               </div>
             </div>
 
@@ -2313,7 +2338,23 @@ export default function AuctionWarRoom() {
                     <PriceMeter bid={analysis.hasBid ? analysis.bid : null} V={analysis.V} recMax={analysis.recMax} absMax={analysis.absMax} tier={analysis.tier} />
                   </>
                 ) : (
-                  <div className="verdict-empty">Search a player to see the bid call and value meter.</div>
+                  <>
+                    <div className="call-head">
+                      <div className="verdict idle" role="status">READY</div>
+                      <div className="call-hero">
+                        <span className="call-hero-label">Recommended max</span>
+                        <span className="call-hero-num">—</span>
+                      </div>
+                    </div>
+                    <p className="verdict-why verdict-placeholder">Search a player on the block to see live bid recommendations and value analysis.</p>
+                    <dl className="verdict-nums" aria-label="Bid context">
+                      <div><dt>Bid</dt><dd className="vn">—</dd></div>
+                      <div><dt>Proj</dt><dd className="vn">—</dd></div>
+                      <div><dt>Abs max</dt><dd className="vn">{spotsLeft > 0 ? money(maxBid) : "—"}</dd></div>
+                      <div><dt>Fills</dt><dd className="vn">—</dd></div>
+                    </dl>
+                    <PriceMeter bid={null} V={null} recMax={null} absMax={maxBid} tier="idle" />
+                  </>
                 )}
 
                 <div className="asst-alt">
@@ -2322,19 +2363,19 @@ export default function AuctionWarRoom() {
                     {alternatives.length > 0 && <span className="asst-alt-count">{alternatives.length}</span>}
                   </div>
                   {alternatives.length === 0 ? (
-                    <div className="empty-note compact">Load a player to compare next-best options.</div>
+                    <div className="empty-note compact alt-empty-box">Load a player to compare next-best options.</div>
                   ) : (
                     <div className="alt-table">
                       <table className="alt-table-el">
                         <caption className="sr-only">Still available{assistant.pos ? ` at ${assistant.pos}` : ""}</caption>
                         <thead>
                           <tr>
-                            <th scope="col">Tier</th>
-                            <th scope="col">Player name</th>
-                            <th scope="col">Team</th>
-                            <th scope="col">Bye</th>
-                            <th scope="col" className="num">Max price</th>
-                            <th scope="col" className="sr-only">Actions</th>
+                            <th scope="col" className="alt-tier col-tier">Tier</th>
+                            <th scope="col" className="alt-name col-pname">Player name</th>
+                            <th scope="col" className="alt-team col-team">Team</th>
+                            <th scope="col" className="alt-bye col-bye">Bye</th>
+                            <th scope="col" className="alt-est col-est num">Max price</th>
+                            <th scope="col" className="col-action"><span className="sr-only">Actions</span></th>
                           </tr>
                         </thead>
                         <tbody>
@@ -2342,19 +2383,19 @@ export default function AuctionWarRoom() {
                             const altBye = assessByeConflict(players, p, SLOT_BY_ID);
                             return (
                             <tr key={p.id} className={altBye ? `bye-row-hit lv-${altBye.level}` : ""}>
-                              <td className="alt-tier">T{p.tier}</td>
-                              <td className="alt-name">
+                              <td className="alt-tier col-tier">T{p.tier}</td>
+                              <td className="alt-name col-pname">
                                 <button type="button" className="linklike" onClick={() => pickAssistantPlayer(p)} aria-label={`Load ${p.name} into assistant`}>
                                   {p.name}
                                 </button>
                               </td>
-                              <td className="alt-team">{p.team || "—"}</td>
-                              <td className={`alt-bye${altBye ? ` hit lv-${altBye.level}` : ""}`} title={altBye?.message || undefined}>
+                              <td className="alt-team col-team">{p.team || "—"}</td>
+                              <td className={`alt-bye col-bye${altBye ? ` hit lv-${altBye.level}` : ""}`} title={altBye?.message || undefined}>
                                 {p.bye ?? "—"}
                                 {altBye ? <span className="bye-dot" aria-hidden="true" /> : null}
                               </td>
-                              <td className="alt-est num">{p.est != null ? money(p.est) : "—"}</td>
-                              <td>
+                              <td className="alt-est col-est num">{p.est != null ? money(p.est) : "—"}</td>
+                              <td className="col-action">
                                 <button className="icon-btn alt-gone" title="Mark off the board" aria-label={`Mark ${p.name} off the board`} onClick={() => setPriceAsk({ mode: "gone", player: p })}><Ic name="cross-small" fb="✕" /></button>
                               </td>
                             </tr>
@@ -3938,17 +3979,20 @@ function meterEdge(p) {
 function PriceMeter({ bid, V, recMax, absMax, tier }) {
   const reduce = useReducedMotion();
   const hasBid = bid != null;
+  const safeRec = recMax != null ? recMax : 0;
+  const safeAbs = absMax != null ? absMax : 0;
   // Scale to the decision range — leftover abs budget must not crush Proj/Rec/Bid into a left pile
-  const focusMax = Math.max(V || 0, recMax, bid || 0, 1);
-  const includeAbsOnBar = absMax <= focusMax * 2.25;
-  const scale = Math.max(focusMax * 1.5, includeAbsOnBar ? absMax : 0, 12);
-  const pct = (x) => Math.min(100, Math.max(0, (x / scale) * 100));
-  const greatEnd = V != null ? V * 0.82 : recMax * 0.6;
-  const fairEnd = V != null ? Math.max(V, recMax * 0.8) : recMax * 0.85;
+  const focusMax = Math.max(V || 0, safeRec, bid || 0, 1);
+  const includeAbsOnBar = safeAbs > 0 && safeAbs <= focusMax * 2.25;
+  const scale = Math.max(focusMax * 1.5, includeAbsOnBar ? safeAbs : 0, 12);
+  const pct = (x) => Math.min(100, Math.max(0, ((x != null ? x : 0) / scale) * 100));
+  const greatEnd = V != null ? V * 0.82 : safeRec > 0 ? safeRec * 0.6 : scale * 0.35;
+  const fairEnd = V != null ? Math.max(V, safeRec * 0.8) : safeRec > 0 ? safeRec * 0.85 : scale * 0.65;
+  const recEnd = safeRec > 0 ? safeRec : scale * 0.85;
 
   const projPct = V != null ? pct(V) : null;
-  const recPct = pct(recMax);
-  const absPct = pct(absMax);
+  const recPct = safeRec > 0 ? pct(safeRec) : null;
+  const absPct = safeAbs > 0 ? pct(safeAbs) : null;
   const bidPct = hasBid ? pct(bid) : null;
 
   return (
@@ -3956,11 +4000,11 @@ function PriceMeter({ bid, V, recMax, absMax, tier }) {
       <div className="meter" role="img" aria-label={`Value meter. Recommended max ${money(recMax)}${V != null ? `, projection ${money(V)}` : ""}, absolute max ${money(absMax)}${hasBid ? `, current bid ${money(bid)}` : ""}.`}>
         <div className="zone great" style={{ width: `${pct(greatEnd)}%` }} />
         <div className="zone fair" style={{ width: `${Math.max(0, pct(fairEnd) - pct(greatEnd))}%` }} />
-        <div className="zone caution" style={{ width: `${Math.max(0, pct(recMax) - pct(fairEnd))}%` }} />
-        <div className="zone over" style={{ width: `${Math.max(0, 100 - pct(recMax))}%` }} />
+        <div className="zone caution" style={{ width: `${Math.max(0, pct(recEnd) - pct(fairEnd))}%` }} />
+        <div className="zone over" style={{ width: `${Math.max(0, 100 - pct(recEnd))}%` }} />
         {projPct != null && <div className={`marker m-proj ${meterEdge(projPct)}`} style={{ left: `${projPct}%` }} title={`Proj ${money(V)}`} />}
-        <div className={`marker m-rec ${meterEdge(recPct)}`} style={{ left: `${recPct}%` }} title={`Rec ${money(recMax)}`} />
-        {includeAbsOnBar && <div className={`marker m-abs ${meterEdge(absPct)}`} style={{ left: `${absPct}%` }} title={`Abs ${money(absMax)}`} />}
+        {recPct != null && <div className={`marker m-rec ${meterEdge(recPct)}`} style={{ left: `${recPct}%` }} title={`Rec ${money(recMax)}`} />}
+        {includeAbsOnBar && absPct != null && <div className={`marker m-abs ${meterEdge(absPct)}`} style={{ left: `${absPct}%` }} title={`Abs ${money(absMax)}`} />}
         <AnimatePresence>
           {hasBid ? (
             <motion.div

@@ -689,10 +689,13 @@ tr.row-taken .pname .linklike { text-decoration: line-through; }
 .asst-sub { color: var(--muted); font-size: 13px; line-height: 1.35; }
 .health-line { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; justify-content: flex-end; }
 .health-avg { color: var(--muted); font-size: 12.5px; font-family: ui-monospace, Menlo, monospace; }
-.asst-grid { display: grid; grid-template-columns: minmax(280px, 0.95fr) minmax(340px, 1.25fr); gap: 28px; align-items: start; }
+.asst-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 28px; align-items: stretch; }
 .asst-inputs { display: grid; gap: 14px; }
 .field-label { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
-.field-label > span { font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); font-weight: 700; }
+.field-label > span, .field-label-row > span { font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); font-weight: 700; }
+.field-label-row { display: flex; align-items: center; justify-content: space-between; }
+.field-clear-btn { background: none; border: none; color: var(--muted); font-size: 11px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; cursor: pointer; padding: 0 2px; line-height: 1; transition: color .14s ease; }
+.field-clear-btn:hover { color: var(--red); }
 .asst-row { display: grid; gap: 12px; }
 .asst-row.meta-row { grid-template-columns: 1fr 1fr 1fr; }
 .asst-row.value-row { grid-template-columns: 1fr 1fr; }
@@ -704,11 +707,13 @@ tr.row-taken .pname .linklike { text-decoration: line-through; }
   font-family: ui-monospace, Menlo, monospace; font-size: 28px; font-weight: 700; font-variant-numeric: tabular-nums; }
 .bid-input:focus { outline: none; }
 .bid-box:focus-within { outline: 2px solid var(--accent); }
-.asst-actions { display: flex; flex-direction: column; gap: 10px; margin-top: 4px; }
+.asst-actions { display: grid; grid-template-columns: 1.35fr 1.05fr 0.8fr; gap: 8px; margin-top: 4px; }
 .asst-actions .btn { width: 100%; }
+.btn.asst-clear-btn { color: var(--muted); border-color: var(--line); }
+.btn.asst-clear-btn:not(:disabled):hover { color: var(--red); border-color: rgba(241,101,95,.45); background: rgba(241,101,95,.08); }
 .asst-decision { min-width: 0; }
 .asst-verdict { display: flex; flex-direction: column; gap: 14px; padding: 16px 18px 16px;
-  background: var(--chip-bg); border: 1px solid var(--chip-line); border-radius: 12px; }
+  background: var(--chip-bg); border: 1px solid var(--chip-line); border-radius: 12px; min-height: 450px; height: 100%; box-sizing: border-box; }
 .call-head { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
 .verdict { font-family: var(--font-disp); font-style: italic; font-size: 22px; font-weight: 800;
   letter-spacing: .06em; padding: 6px 14px 7px; border-radius: 8px; text-transform: uppercase; line-height: 1; }
@@ -722,8 +727,10 @@ tr.row-taken .pname .linklike { text-decoration: line-through; }
 .call-hero-label { font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); font-weight: 700; }
 .call-hero-num { font-family: var(--font-disp); font-style: italic; font-size: 36px; font-weight: 800;
   color: var(--accent); line-height: 1; font-variant-numeric: tabular-nums; }
-.verdict-why { margin: 0; font-size: 14.5px; line-height: 1.45; color: var(--ink); max-width: none; }
+.verdict-why { margin: 0; font-size: 14.5px; line-height: 1.45; color: var(--ink); max-width: none; min-height: 2.9em; display: flex; align-items: center; }
 .verdict-empty { color: var(--muted); font-size: 14px; padding: 18px 4px; text-align: left; }
+.verdict-why.verdict-placeholder { color: var(--muted); }
+.alt-empty-box { display: flex; align-items: center; justify-content: center; min-height: 160px; text-align: center; box-sizing: border-box; }
 .verdict-nums {
   display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; padding: 10px 0 2px;
   border-top: 1px solid var(--line-soft); margin: 0;
@@ -767,35 +774,43 @@ tr.row-taken .pname .linklike { text-decoration: line-through; }
 .asst-alt-count { font-size: 12px; color: var(--muted); font-variant-numeric: tabular-nums; }
 .alt-table { display: grid; gap: 2px; min-width: 0; }
 .alt-table-el { width: 100%; border-collapse: collapse; table-layout: fixed; }
+.alt-table-el th,
+.alt-table-el td {
+  text-align: center; vertical-align: middle;
+}
 .alt-table-el th {
-  text-align: center; font-size: 10px; letter-spacing: .08em; text-transform: uppercase;
+  font-size: 10px; letter-spacing: .08em; text-transform: uppercase;
   color: var(--muted); font-weight: 700; padding: 0 4px 6px; border-bottom: none;
 }
-.alt-table-el th:nth-child(2),
-.alt-table-el td:nth-child(2) { text-align: left; }
-.alt-table-el th:nth-child(5),
-.alt-table-el td.alt-est { text-align: center; }
 .alt-table-el td {
-  padding: 5px 4px; border-bottom: none; vertical-align: middle;
+  padding: 5px 4px; border-bottom: none;
   overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
 }
 .alt-table-el tbody tr { border-radius: 6px; }
 .alt-table-el tbody tr:hover { background: var(--accent-tint); }
+.alt-table-el .col-tier,
 .alt-table-el .alt-tier {
   font-family: var(--font-disp); font-weight: 700; font-size: 12px; letter-spacing: .04em;
   color: var(--accent); text-align: center; width: 12%;
 }
-.alt-table-el .alt-name { font-weight: 650; font-size: 13px; }
-.alt-table-el .alt-name .linklike { display: inline; max-width: 100%; }
+.alt-table-el .col-pname,
+.alt-table-el .alt-name {
+  font-weight: 650; font-size: 13px; text-align: center; width: auto;
+}
+.alt-table-el .alt-name .linklike { display: inline-block; max-width: 100%; text-align: center; }
+.alt-table-el .col-team,
 .alt-table-el .alt-team,
+.alt-table-el .col-bye,
 .alt-table-el .alt-bye {
   color: var(--muted); font-size: 12px; text-align: center; width: 12%;
 }
 .alt-table-el .alt-bye { font-variant-numeric: tabular-nums; }
+.alt-table-el .col-est,
 .alt-table-el .alt-est {
   font-family: ui-monospace, Menlo, monospace; font-weight: 700; font-size: 13px;
-  font-variant-numeric: tabular-nums; color: var(--green); width: 16%;
+  font-variant-numeric: tabular-nums; color: var(--green); text-align: center; width: 16%;
 }
+.alt-table-el .col-action,
 .alt-table-el td:last-child { width: 36px; text-align: center; }
 .alt-gone { width: 28px; height: 28px; margin: 0; }
 .alt-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; }
@@ -1113,15 +1128,19 @@ button, select { touch-action: manipulation; }
 .root.view-room .bid-box label { font-size: 10px; margin-bottom: 0; }
 .root.view-room .bid-input { font-size: 22px; }
 .root.view-room .asst-actions {
-  display: grid; grid-template-columns: 1.25fr 1fr; gap: 8px; margin-top: 2px;
+  display: grid; grid-template-columns: 1.3fr 1fr 0.75fr; gap: 8px; margin-top: 2px;
 }
 .root.view-room .asst-actions .btn { padding: 8px 12px; font-size: 13px; border-radius: 7px; width: 100%; }
 .root.view-room .asst-actions .btn.primary.big {
   padding: 9px 14px; font-size: 14.5px;
 }
+.root.view-room .asst-grid { gap: 14px 18px; align-items: stretch; }
+.root.view-room .asst-decision { height: 100%; }
 .root.view-room .asst-verdict {
-  gap: 8px; padding: 10px 12px; border-radius: 10px;
+  gap: 8px; padding: 10px 12px; border-radius: 10px; min-height: 366px; height: 100%; box-sizing: border-box;
 }
+.root.view-room .verdict-why { min-height: 2.7em; }
+.root.view-room .alt-empty-box { min-height: 154px; }
 .root.view-room .verdict { font-size: 17px; padding: 4px 10px 5px; }
 .root.view-room .call-hero-label { font-size: 10px; }
 .root.view-room .call-hero-num { font-size: 28px; }
@@ -1293,7 +1312,8 @@ button, select { touch-action: manipulation; }
 }
 @media (max-width: 760px) {
   .asst-grid { grid-template-columns: 1fr; gap: 18px; }
-  .asst-actions .btn.primary { min-height: 50px; }
+  .asst-actions { grid-template-columns: 1fr 1fr; }
+  .asst-actions .btn.primary { grid-column: 1 / -1; min-height: 50px; }
   .verdict-why { font-size: 14px; }
   .verdict-nums { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
   .call-hero-num { font-size: 30px; }
