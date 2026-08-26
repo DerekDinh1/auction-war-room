@@ -12,7 +12,7 @@
 - **2QB / superflex aware** — roster defaults and pricing boost QBs the way a Q/W/R/T league actually drafts
 - **Health + handcuffs** — injury tags with hover notes; backups climb when starters get dinged
 - **Plan tab targets** — nomination list synced with board stars, saved per season
-- **Runs in the browser** — no account, no server; seasons persist in local storage
+- **Cross-device sync** — optional Supabase sync code for the active season; local archive when a season ends
 
 ## ℹ️ Overview
 
@@ -64,6 +64,27 @@ Then open the URL Vite prints (usually `http://localhost:5173`).
 | `npm run build` | Production build to `dist/` |
 | `npm run preview` | Serve the production build locally |
 | `npm run refresh-board` | Re-fetch rankings + health adjustments |
+
+
+## 🔄 Cross-device sync (optional)
+
+Draft state still saves in the browser by default. To keep the **active season** in sync across phone and laptop:
+
+1. Create a free [Supabase](https://supabase.com) project
+2. In the SQL editor, run [`supabase/schema.sql`](supabase/schema.sql)
+3. Copy the project URL and anon key into `.env.local` (see [`.env.example`](.env.example)):
+
+```bash
+cp .env.example .env.local
+# edit VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY
+```
+
+4. Restart `npm run dev` (Vite bakes env at build time)
+5. In **Settings → Cross-device sync**, tap **Enable sync**, then enter the same code on your other device
+
+Only the active season is synced (last write wins). Starting the next season downloads a finished-season JSON backup for reference; you can also download/restore a backup anytime from Settings.
+
+For GitHub Pages, add repository secrets `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` so the deploy workflow can inject them at build time.
 
 ## 💭 Feedback and Contributing
 

@@ -966,8 +966,35 @@ button, select { touch-action: manipulation; }
 .navbtn:not(.on) .navbadge { background: var(--panel-2); color: var(--muted); }
 .navbadge { color: var(--accent-ink); background: var(--accent); }
 .star-glyph { display: inline-flex; line-height: 1; }
+
 .data-actions { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 10px; }
 .data-actions .btn { flex: 1 1 140px; }
+.sync-code-row {
+  display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+  margin-bottom: 12px;
+}
+.sync-code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 15px; letter-spacing: 0.04em;
+  padding: 10px 12px; border-radius: 8px;
+  background: var(--bg); border: 1px solid var(--line);
+  color: var(--text); user-select: all;
+}
+.sync-join {
+  display: flex; gap: 10px; align-items: flex-end; flex-wrap: wrap;
+  margin-top: 12px;
+}
+.sync-join .field-label { flex: 1 1 220px; margin: 0; }
+.sync-join .btn { flex: 0 0 auto; }
+.sync-msg {
+  margin-top: 10px; font-size: 13px; padding: 8px 10px; border-radius: 8px;
+  border: 1px solid var(--line);
+}
+.sync-msg.ok { color: var(--good, #3d9a6a); border-color: color-mix(in srgb, var(--good, #3d9a6a) 35%, var(--line)); }
+.sync-msg.err { color: var(--danger, #c44); border-color: color-mix(in srgb, var(--danger, #c44) 35%, var(--line)); }
+.sync-msg.info { color: var(--muted); }
+.sync-archive-head { margin-top: 22px; }
+
 
 /* ---- draft room density: keep nomination + needs above the fold ---- */
 /* Header chrome is compact on every view; only Draft Room content densifies further */
