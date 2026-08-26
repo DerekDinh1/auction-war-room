@@ -1,4 +1,4 @@
-// Player health — updated 2026-08-24T04:28:21.448Z
+// Player health — updated 2026-08-26T17:59:07.060Z
 // Sources: FantasyPros injury news (8/23); Yahoo Sports training camp tracker; Fantasy Alarm weekend injury roundup (8/23); CBS Sports camp tracker; Adam Schefter / team beat reporters
 // Regenerate via: npm run refresh-board
 const PLAYER_HEALTH = {
