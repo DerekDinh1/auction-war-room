@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useLayoutEffect, useRef, useMemo, useCallback } from "react";
 import { motion, AnimatePresence, MotionConfig, useReducedMotion } from "motion/react";
-import { CommandHeader, ViewNav, Modal, Icon, SeasonsPanel } from "./components/index.js";
+import { CommandHeader, ViewNav, Modal, Icon, SeasonsPanel, BoardUpdatesBanner } from "./components/index.js";
 import { money } from "./lib/format.js";
 import { storageGet, storageSet } from "./lib/storage.js";
 import { motionTokens, viewTransition, pressable } from "./lib/motion.js";
@@ -2805,7 +2805,7 @@ export default function AuctionWarRoom() {
                     <th className="num col-posrank hide-xs" title="Rank within position">Pos#</th>
                     <th className="col-player">Player</th>
                     <th className="col-pos">Pos</th>
-                    <th className="col-health hide-xs" title="Injury designation — updated via refresh-board">Health</th>
+                    <th className="col-health" title="Injury designation — updated via refresh-board"><span className="col-health-full">Health</span><span className="col-health-short">Hz</span></th>
                     <th className="hide-xs">Team</th>
                     <th className="hide-xs">Bye</th>
                     <th className="num col-est">Est</th>
@@ -2841,10 +2841,14 @@ export default function AuctionWarRoom() {
                         <td className="num rank-cell col-posrank hide-xs">{r.rank < 999 ? r.rank : "—"}</td>
                         <td className="pname col-player">
                           <button className="linklike" onClick={() => loadSuggestion(r)} title="Load into Draft Assistant">{r.name}</button>
-                          {r.health && healthBlocksDraft(r.name) ? <InjuryTag note={r.health.note || r.injuryNote} /> : r.injuryNote ? <InjuryTag note={r.injuryNote} /> : null}
+                          {r.health && r.health.status && r.health.status !== "active" ? (
+                            <span className="pname-health"><HealthBadge health={r.health} /></span>
+                          ) : r.injuryNote ? (
+                            <span className="pname-health"><InjuryTag note={r.injuryNote} /></span>
+                          ) : null}
                         </td>
                         <td className="col-pos"><span className={`posb p-${r.pos}`}>{r.pos}</span></td>
-                        <td className="col-health hide-xs"><HealthBadge health={r.health} /></td>
+                        <td className="col-health"><HealthBadge health={r.health} /></td>
                         <td className="hide-xs">{r.team || "—"}</td>
                         <td className="hide-xs">{r.bye || "—"}</td>
                         <td className="num col-est">{r.est != null ? money(r.est) : "—"}</td>
@@ -3014,7 +3018,7 @@ export default function AuctionWarRoom() {
                 <th className="col-pos">
                   <button type="button" className={`th-sort${targetSort === "pos" ? " on" : ""}`} onClick={() => setTargetSort("pos")}>Pos</button>
                 </th>
-                <th className="col-health hide-xs">Health</th>
+                <th className="col-health"><span className="col-health-full">Health</span><span className="col-health-short">Hz</span></th>
                 <th className="hide-xs">Team</th>
                 <th className="hide-xs">Bye</th>
                 <th className="num col-est">Est</th>
@@ -3048,10 +3052,14 @@ export default function AuctionWarRoom() {
                         >
                           {r.name}
                         </button>
-                        {r.health && healthBlocksDraft(r.name) ? <InjuryTag note={r.health.note || r.injuryNote} /> : r.injuryNote ? <InjuryTag note={r.injuryNote} /> : null}
+                        {r.health && r.health.status && r.health.status !== "active" ? (
+                            <span className="pname-health"><HealthBadge health={r.health} /></span>
+                          ) : r.injuryNote ? (
+                            <span className="pname-health"><InjuryTag note={r.injuryNote} /></span>
+                          ) : null}
                       </td>
                       <td className="col-pos"><span className={`posb p-${r.pos}`}>{r.pos}</span></td>
-                      <td className="col-health hide-xs"><HealthBadge health={r.health} /></td>
+                      <td className="col-health"><HealthBadge health={r.health} /></td>
                       <td className="hide-xs">{r.team || "—"}</td>
                       <td className="hide-xs">{r.bye || "—"}</td>
                       <td className="num col-est">{r.est != null ? money(r.est) : "—"}</td>
@@ -3126,7 +3134,7 @@ export default function AuctionWarRoom() {
                   <th className="num col-rank">#</th>
                   <th className="col-player">Player</th>
                   <th className="col-pos">Pos</th>
-                  <th className="col-health hide-xs">Health</th>
+                  <th className="col-health"><span className="col-health-full">Health</span><span className="col-health-short">Hz</span></th>
                   <th className="hide-xs">Team</th>
                   <th className="num col-est">Est</th>
                   <th>Status</th>
@@ -3155,10 +3163,14 @@ export default function AuctionWarRoom() {
                       <td className="num rank-cell col-rank">{r.overall ?? "—"}</td>
                       <td className="pname col-player">
                         <button className="linklike" onClick={() => loadTargetToRoom(r)} title="Load into Draft Assistant">{r.name}</button>
-                        {r.health && healthBlocksDraft(r.name) ? <InjuryTag note={r.health.note || r.injuryNote} /> : r.injuryNote ? <InjuryTag note={r.injuryNote} /> : null}
+                        {r.health && r.health.status && r.health.status !== "active" ? (
+                            <span className="pname-health"><HealthBadge health={r.health} /></span>
+                          ) : r.injuryNote ? (
+                            <span className="pname-health"><InjuryTag note={r.injuryNote} /></span>
+                          ) : null}
                       </td>
                       <td className="col-pos"><span className={`posb p-${r.pos}`}>{r.pos}</span></td>
-                      <td className="col-health hide-xs"><HealthBadge health={r.health} /></td>
+                      <td className="col-health"><HealthBadge health={r.health} /></td>
                       <td className="hide-xs">{r.team || "—"}</td>
                       <td className="num col-est">{r.est != null ? money(r.est) : "—"}</td>
                       <td><span className={`target-status st-${r.status}`}>{statusLabel}</span></td>
@@ -3349,6 +3361,7 @@ export default function AuctionWarRoom() {
           view={view}
           onChange={changeView}
         />
+        <BoardUpdatesBanner />
       </div>
 
       <motion.main

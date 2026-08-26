@@ -1,0 +1,118 @@
+{
+  "generatedAt": "2026-08-26T17:59:07.060Z",
+  "previousGeneratedAt": "2026-08-24T04:28:21.448Z",
+  "summary": "Top-350 re-ranked from FantasyPros \u00b7 279 rank moves \u00b7 3 in \u00b7 3 out",
+  "rankChanges": 279,
+  "enteredCount": 3,
+  "exitedCount": 3,
+  "injuryAdjustments": 23,
+  "count": 350,
+  "highlights": [
+    {
+      "type": "drop",
+      "name": "Mike Washington Jr.",
+      "pos": "RB",
+      "team": "LV",
+      "from": 67,
+      "to": 123
+    },
+    {
+      "type": "rise",
+      "name": "Kaelon Black",
+      "pos": "RB",
+      "team": "SF",
+      "from": 242,
+      "to": 219
+    },
+    {
+      "type": "rise",
+      "name": "Kayshon Boutte",
+      "pos": "WR",
+      "team": "HOU",
+      "from": 181,
+      "to": 165
+    },
+    {
+      "type": "drop",
+      "name": "Sean Tucker",
+      "pos": "RB",
+      "team": "TB",
+      "from": 175,
+      "to": 185
+    },
+    {
+      "type": "drop",
+      "name": "Tyrone Tracy Jr.",
+      "pos": "RB",
+      "team": "NYG",
+      "from": 142,
+      "to": 152
+    },
+    {
+      "type": "drop",
+      "name": "Trey Benson",
+      "pos": "RB",
+      "team": "ARI",
+      "from": 268,
+      "to": 278
+    },
+    {
+      "type": "drop",
+      "name": "James Conner",
+      "pos": "RB",
+      "team": "ARI",
+      "from": 171,
+      "to": 180
+    },
+    {
+      "type": "rise",
+      "name": "Devaughn Vele",
+      "pos": "WR",
+      "team": "NO",
+      "from": 243,
+      "to": 234
+    },
+    {
+      "type": "entered",
+      "name": "Trey Smack",
+      "pos": "K",
+      "team": "GB",
+      "rank": 344
+    },
+    {
+      "type": "entered",
+      "name": "Kevin Coleman Jr.",
+      "pos": "WR",
+      "team": "MIA",
+      "rank": 346
+    },
+    {
+      "type": "entered",
+      "name": "Savion Williams",
+      "pos": "WR",
+      "team": "GB",
+      "rank": 350
+    },
+    {
+      "type": "exited",
+      "name": "Anthony Richardson Sr.",
+      "pos": "QB",
+      "team": "IND",
+      "rank": 347
+    },
+    {
+      "type": "exited",
+      "name": "Phil Mafah",
+      "pos": "RB",
+      "team": "DAL",
+      "rank": 349
+    },
+    {
+      "type": "exited",
+      "name": "Dont'e Thornton Jr.",
+      "pos": "WR",
+      "team": "LV",
+      "rank": 350
+    }
+  ]
+}

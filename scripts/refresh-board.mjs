@@ -34,6 +34,85 @@ const STATUS_ADJ = {
 
 const norm = (s) => (s || '').toLowerCase().replace(/['']/g, "'").replace(/[.\-]/g, '').trim();
 
+
+function loadPreviousPlayers() {
+  try {
+    return JSON.parse(readFileSync(join(__dirname, 'top350-players.json'), 'utf8'));
+  } catch {
+    return null;
+  }
+}
+
+function loadPreviousMeta() {
+  try {
+    return JSON.parse(readFileSync(join(__dirname, 'top350-meta.json'), 'utf8'));
+  } catch {
+    return null;
+  }
+}
+
+function buildBoardUpdates(prevPlayers, nextPlayers, prevMeta, nextMeta) {
+  const indexed = (players) => {
+    const m = new Map();
+    (players || []).forEach((p, i) => m.set(p.name, { rank: i + 1, pos: p.pos, team: p.team }));
+    return m;
+  };
+  const om = indexed(prevPlayers);
+  const nm = indexed(nextPlayers);
+  const oldNames = new Set(om.keys());
+  const newNames = new Set(nm.keys());
+  const entered = [...newNames].filter((n) => !oldNames.has(n)).sort((a, b) => nm.get(a).rank - nm.get(b).rank);
+  const exited = [...oldNames].filter((n) => !newNames.has(n)).sort((a, b) => om.get(a).rank - om.get(b).rank);
+  const moves = [];
+  for (const name of oldNames) {
+    if (!newNames.has(name)) continue;
+    const from = om.get(name).rank;
+    const to = nm.get(name).rank;
+    if (from === to) continue;
+    const cur = nm.get(name);
+    moves.push({ name, pos: cur.pos, team: cur.team, from, to, delta: from - to, abs: Math.abs(from - to) });
+  }
+  moves.sort((a, b) => b.abs - a.abs);
+
+  const highlights = [];
+  for (const m of moves.slice(0, 8)) {
+    highlights.push({
+      type: m.delta > 0 ? 'rise' : 'drop',
+      name: m.name,
+      pos: m.pos,
+      team: m.team,
+      from: m.from,
+      to: m.to,
+    });
+  }
+  for (const name of entered.slice(0, 5)) {
+    const cur = nm.get(name);
+    highlights.push({ type: 'entered', name, pos: cur.pos, team: cur.team, rank: cur.rank });
+  }
+  for (const name of exited.slice(0, 5)) {
+    const cur = om.get(name);
+    highlights.push({ type: 'exited', name, pos: cur.pos, team: cur.team, rank: cur.rank });
+  }
+
+  const rankChanges = moves.length;
+  const summary = prevPlayers
+    ? `Top-350 re-ranked from FantasyPros · ${rankChanges} rank moves · ${entered.length} in · ${exited.length} out`
+    : `Top-350 board refreshed from FantasyPros (${nextMeta.count || 350} players)`;
+
+  return {
+    generatedAt: nextMeta.generatedAt,
+    previousGeneratedAt: prevMeta?.generatedAt || null,
+    summary,
+    rankChanges,
+    enteredCount: entered.length,
+    exitedCount: exited.length,
+    injuryAdjustments: nextMeta.injuryAdjustments || 0,
+    count: nextMeta.count || 350,
+    highlights,
+  };
+}
+
+
 async function fetchPlayers(url) {
   const res = await fetch(url, { headers: { 'User-Agent': 'Mozilla/5.0 (compatible; AuctionWarRoom/1.0)' } });
   const html = await res.text();
@@ -221,6 +300,9 @@ async function main() {
     console.log(`  Mike Washington Jr.: rank #${top350.indexOf(mike) + 1} (avg ${mike.avg}, adj ${mike.adj})`);
   }
 
+  const prevPlayers = loadPreviousPlayers();
+  const prevMeta = loadPreviousMeta();
+
   const generatedAt = new Date().toISOString();
   health.updatedAt = generatedAt;
 
@@ -234,13 +316,18 @@ async function main() {
     count: 350,
   };
 
+  const updates = buildBoardUpdates(prevPlayers, top350, prevMeta, meta);
+  const updatesPath = join(ROOT, 'src/data/board-updates.json');
+
   writeFileSync(join(__dirname, 'top350-players.json'), JSON.stringify(top350, null, 2) + '\n');
   writeFileSync(join(__dirname, 'top350-meta.json'), JSON.stringify(meta, null, 2) + '\n');
+  writeFileSync(updatesPath, JSON.stringify(updates, null, 2) + '\n');
   writeFileSync(join(__dirname, 'raw-db-generated.js'), genRawDb(top350, generatedAt) + '\n');
   writeFileSync(join(__dirname, 'player-health-generated.js'), genPlayerHealth(health, generatedAt) + '\n');
 
   patchJsx(genRawDb(top350, generatedAt), genPlayerHealth(health, generatedAt));
   console.log('Patched src/AuctionWarRoom.jsx');
+  console.log(`Wrote board updates (${updates.rankChanges} rank moves, ${updates.highlights.length} highlights)`);
   console.log('Done.');
 }
 
