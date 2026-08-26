@@ -5,6 +5,19 @@ import { money } from "./lib/format.js";
 import { storageGet, storageSet } from "./lib/storage.js";
 import { motionTokens, viewTransition, pressable } from "./lib/motion.js";
 import {
+  isSupabaseConfigured,
+  loadStoredSyncCode,
+  saveStoredSyncCode,
+  clearStoredSyncCode,
+  loadSyncMeta,
+  generateSyncCode,
+  formatSyncCode,
+  normalizeSyncCode,
+  pushActiveSeason,
+  pullActiveSeason,
+  downloadSeasonArchive,
+} from "./lib/sync.js";
+import {
   CATALOG_KEY,
   LEGACY_STORAGE_KEY,
   createCatalog,
@@ -1042,6 +1055,12 @@ export default function AuctionWarRoom() {
   const [quick, setQuick] = useState("");
   const quickRef = useRef(null);
   const fileRef = useRef(null);
+  const [syncCode, setSyncCode] = useState(null);
+  const [syncJoinInput, setSyncJoinInput] = useState("");
+  const [syncBusy, setSyncBusy] = useState(false);
+  const [syncMeta, setSyncMeta] = useState({});
+  const [syncMsg, setSyncMsg] = useState(null); // { type, text }
+  const syncSkipPushRef = useRef(false);
 
   const showToast = useCallback((msg, type = "info") => {
     setToast({ msg, type, id: Date.now() });
@@ -1102,6 +1121,25 @@ export default function AuctionWarRoom() {
     setActiveSeasonIdState(season.id);
   }, []);
 
+  const applyRemoteDraft = useCallback((payload) => {
+    const d = payload?.draft || payload;
+    if (!d || !Array.isArray(d.players)) return false;
+    syncSkipPushRef.current = true;
+    setPlayers(d.players);
+    setBoard(d.board && typeof d.board === "object" ? d.board : {});
+    setNextPick(typeof d.nextPick === "number" ? d.nextPick : 1);
+    setAssistant(d.assistant && typeof d.assistant === "object" ? { ...EMPTY_ASST, ...d.assistant } : EMPTY_ASST);
+    setPlan(d.plan && typeof d.plan === "object" ? { ...DEFAULT_PLAN, ...d.plan } : DEFAULT_PLAN);
+    setTargets(normalizePlanTargets(d.targets));
+    if (d.settings) setSettings(normalizeSettings(d.settings));
+    if (typeof d.view === "string" && d.view !== "board") setView(d.view);
+    return true;
+  }, []);
+
+  const currentDraftSlice = useCallback(() => ({
+    players, board, nextPick, assistant, plan, view, settings, targets,
+  }), [players, board, nextPick, assistant, plan, view, settings, targets]);
+
   useEffect(() => {
     (async () => {
       try {
@@ -1130,9 +1168,27 @@ export default function AuctionWarRoom() {
         setCatalog(cat);
         applySeasonDraft(getActiveSeason(cat));
       }
+      // Cross-device sync: pull active season if a sync code is stored
+      try {
+        const code = await loadStoredSyncCode();
+        const meta = await loadSyncMeta();
+        setSyncMeta(meta);
+        if (code && isSupabaseConfigured()) {
+          setSyncCode(code);
+          const remote = await pullActiveSeason(code);
+          if (remote?.payload && applyRemoteDraft(remote.payload)) {
+            setSyncMeta(await loadSyncMeta());
+            setSyncMsg({ type: "ok", text: "Synced from cloud." });
+          }
+        } else if (code) {
+          setSyncCode(code);
+        }
+      } catch (syncErr) {
+        setSyncMsg({ type: "err", text: syncErr?.message || "Could not sync from cloud." });
+      }
       setLoaded(true);
     })();
-  }, [applySeasonDraft]);
+  }, [applySeasonDraft, applyRemoteDraft]);
 
   useEffect(() => {
     if (!loaded || !activeSeasonId) return;
@@ -1153,6 +1209,31 @@ export default function AuctionWarRoom() {
     }, 500);
     return () => clearTimeout(t);
   }, [players, board, nextPick, assistant, plan, view, settings, targets, loaded, activeSeasonId]);
+
+  // Push active season to Supabase after local edits settle
+  useEffect(() => {
+    if (!loaded || !activeSeasonId || !syncCode || !isSupabaseConfigured()) return;
+    if (syncSkipPushRef.current) {
+      syncSkipPushRef.current = false;
+      return;
+    }
+    const t = setTimeout(() => {
+      const season = catalog?.seasons?.[activeSeasonId] || { id: activeSeasonId };
+      pushActiveSeason({
+        code: syncCode,
+        season: {
+          id: season.id,
+          label: season.label,
+          name: season.name,
+          startYear: season.startYear,
+        },
+        draft: { players, board, nextPick, assistant, plan, settings, targets, view },
+      })
+        .then(async () => setSyncMeta(await loadSyncMeta()))
+        .catch((err) => setSyncMsg({ type: "err", text: err?.message || "Cloud sync failed." }));
+    }, 1400);
+    return () => clearTimeout(t);
+  }, [players, board, nextPick, assistant, plan, view, settings, targets, loaded, activeSeasonId, syncCode, catalog]);
 
   const seasonList = useMemo(() => (catalog ? listSeasons(catalog) : []), [catalog]);
   const activeSeason = catalog && activeSeasonId ? catalog.seasons[activeSeasonId] : null;
@@ -1192,9 +1273,20 @@ export default function AuctionWarRoom() {
     }
     setConfirmBox({
       message: `Start ${next.label}?`,
-      detail: "League settings copy from the current season. Roster, board, and budget history start empty. You can switch back anytime.",
+      detail: "Downloads a backup JSON of the finished season for your records, then opens an empty board with league settings copied. You can switch back anytime.",
       onYes: () => {
         const flushed = applyDraftToSeason(from, { players, board, nextPick, assistant, plan, view, settings, targets });
+        try {
+          downloadSeasonArchive(flushed, {
+            players: flushed.players,
+            board: flushed.board,
+            nextPick: flushed.nextPick,
+            assistant: flushed.assistant,
+            plan: flushed.plan,
+            settings: flushed.settings,
+            targets: flushed.targets,
+          });
+        } catch { /* archive is best-effort */ }
         let nextCat = upsertSeason(catalog, flushed);
         nextCat = upsertSeason(nextCat, next);
         nextCat = setActiveSeasonId(nextCat, next.id);
@@ -1202,7 +1294,7 @@ export default function AuctionWarRoom() {
         applySeasonDraft(next);
         storageSet(CATALOG_KEY, JSON.stringify(nextCat));
         setConfirmBox(null);
-        showToast(`${next.label} ready — empty board, settings copied.`, "ok");
+        showToast(`${next.label} ready — season archive downloaded.`, "ok");
       },
     });
   }, [catalog, activeSeasonId, players, board, nextPick, assistant, plan, view, settings, targets, applySeasonDraft, switchSeason, showToast]);
@@ -1975,22 +2067,121 @@ export default function AuctionWarRoom() {
     [targets],
   );
 
-  /* ------- export / import / reset ------- */
-  const exportDraft = () => {
-    const label = (activeSeason?.label || "draft").replace(/[–—]/g, "-");
-    const blob = new Blob([JSON.stringify({
-      version: 4,
-      seasonId: activeSeasonId,
-      seasonLabel: activeSeason?.label,
-      exported: new Date().toISOString(),
-      players, board, nextPick, plan, settings, targets,
-    }, null, 2)], { type: "application/json" });
-    const a = document.createElement("a");
-    a.href = URL.createObjectURL(blob);
-    a.download = `auction-draft-${label}.json`;
-    a.click();
-    URL.revokeObjectURL(a.href);
-  };
+  /* ------- sync / archive / reset ------- */
+  const archiveActiveSeason = useCallback(() => {
+    if (!activeSeason) return;
+    downloadSeasonArchive(activeSeason, currentDraftSlice());
+    showToast("Season archive downloaded.", "ok");
+  }, [activeSeason, currentDraftSlice, showToast]);
+
+  const enableSync = useCallback(async () => {
+    if (!isSupabaseConfigured()) {
+      setSyncMsg({ type: "err", text: "Supabase env vars are not set on this deploy." });
+      return;
+    }
+    setSyncBusy(true);
+    setSyncMsg(null);
+    try {
+      const code = generateSyncCode();
+      await saveStoredSyncCode(code);
+      setSyncCode(code);
+      await pushActiveSeason({
+        code,
+        season: activeSeason || { id: activeSeasonId },
+        draft: currentDraftSlice(),
+      });
+      setSyncMeta(await loadSyncMeta());
+      setSyncMsg({ type: "ok", text: "Sync enabled. Enter this code on your other devices." });
+      showToast("Cross-device sync on.", "ok");
+    } catch (err) {
+      setSyncMsg({ type: "err", text: err?.message || "Could not enable sync." });
+    } finally {
+      setSyncBusy(false);
+    }
+  }, [activeSeason, activeSeasonId, currentDraftSlice, showToast]);
+
+  const joinSync = useCallback(async () => {
+    if (!isSupabaseConfigured()) {
+      setSyncMsg({ type: "err", text: "Supabase env vars are not set on this deploy." });
+      return;
+    }
+    const cleaned = normalizeSyncCode(syncJoinInput);
+    if (cleaned.length !== 16) {
+      setSyncMsg({ type: "err", text: "Enter a full AWR sync code (16 characters)." });
+      return;
+    }
+    setSyncBusy(true);
+    setSyncMsg(null);
+    try {
+      const code = formatSyncCode(cleaned);
+      const remote = await pullActiveSeason(code);
+      await saveStoredSyncCode(code);
+      setSyncCode(code);
+      setSyncJoinInput("");
+      if (remote?.payload && applyRemoteDraft(remote.payload)) {
+        setSyncMsg({ type: "ok", text: "Joined sync — active season loaded from cloud." });
+        showToast("Synced from cloud.", "ok");
+      } else {
+        await pushActiveSeason({
+          code,
+          season: activeSeason || { id: activeSeasonId },
+          draft: currentDraftSlice(),
+        });
+        setSyncMsg({ type: "ok", text: "Joined sync — nothing in cloud yet, pushed this device." });
+        showToast("Sync joined.", "ok");
+      }
+      setSyncMeta(await loadSyncMeta());
+    } catch (err) {
+      setSyncMsg({ type: "err", text: err?.message || "Could not join sync." });
+    } finally {
+      setSyncBusy(false);
+    }
+  }, [syncJoinInput, applyRemoteDraft, activeSeason, activeSeasonId, currentDraftSlice, showToast]);
+
+  const pullSyncNow = useCallback(async () => {
+    if (!syncCode || !isSupabaseConfigured()) return;
+    setSyncBusy(true);
+    try {
+      const remote = await pullActiveSeason(syncCode);
+      if (remote?.payload && applyRemoteDraft(remote.payload)) {
+        setSyncMeta(await loadSyncMeta());
+        setSyncMsg({ type: "ok", text: "Pulled latest from cloud." });
+        showToast("Pulled from cloud.", "ok");
+      } else {
+        setSyncMsg({ type: "info", text: "No cloud data for this code yet." });
+      }
+    } catch (err) {
+      setSyncMsg({ type: "err", text: err?.message || "Pull failed." });
+    } finally {
+      setSyncBusy(false);
+    }
+  }, [syncCode, applyRemoteDraft, showToast]);
+
+  const disableSync = useCallback(() => {
+    setConfirmBox({
+      message: "Turn off cross-device sync?",
+      detail: "This device stops syncing. Cloud data stays until you overwrite it with a new code. Other devices keep working until you disable them too.",
+      onYes: async () => {
+        await clearStoredSyncCode();
+        setSyncCode(null);
+        setSyncMeta({});
+        setSyncMsg(null);
+        setConfirmBox(null);
+        showToast("Sync disabled on this device.", "info");
+      },
+    });
+  }, [showToast]);
+
+  const copySyncCode = useCallback(async () => {
+    if (!syncCode) return;
+    try {
+      await navigator.clipboard.writeText(syncCode);
+      showToast("Sync code copied.", "ok");
+    } catch {
+      showToast("Could not copy — select the code manually.", "warn");
+    }
+  }, [syncCode, showToast]);
+
   const importDraft = (file) => {
     const reader = new FileReader();
     reader.onload = () => {
@@ -1998,8 +2189,8 @@ export default function AuctionWarRoom() {
         const d = JSON.parse(reader.result);
         if (!Array.isArray(d.players)) throw new Error("bad file");
         setConfirmBox({
-          message: "Import this draft file?",
-          detail: `It contains ${d.players.length} drafted players and ${Object.keys(d.board || {}).length} tracked board entries. This replaces everything currently on screen.`,
+          message: "Restore from archive file?",
+          detail: `It contains ${d.players.length} drafted players and ${Object.keys(d.board || {}).length} tracked board entries. This replaces the active season on screen.`,
           onYes: () => {
             setPlayers(d.players); setBoard(d.board || {});
             setNextPick(d.nextPick || d.players.length + 1);
@@ -2007,10 +2198,10 @@ export default function AuctionWarRoom() {
             if (d.settings) setSettings(normalizeSettings(d.settings));
             setTargets(normalizePlanTargets(d.targets));
             setAssistant(EMPTY_ASST);
-            setConfirmBox(null); showToast("Draft imported.", "ok");
+            setConfirmBox(null); showToast("Archive restored.", "ok");
           },
         });
-      } catch { showToast("That file isn't a valid draft export.", "err"); }
+      } catch { showToast("That file isn't a valid season archive.", "err"); }
     };
     reader.readAsText(file);
   };
@@ -3316,19 +3507,89 @@ export default function AuctionWarRoom() {
     </section>
   );
 
+  const syncConfigured = isSupabaseConfigured();
+  const lastSyncLabel = syncMeta.lastPushedAt || syncMeta.lastPulledAt
+    ? new Date(syncMeta.lastPushedAt || syncMeta.lastPulledAt).toLocaleString()
+    : null;
+
   const dataPanel = (
     <section className="panel wide">
-      <div className="panel-head"><span className="eyebrow">Draft data</span></div>
+      <div className="panel-head">
+        <span className="eyebrow">Cross-device sync</span>
+        <span className="panel-side">{syncConfigured ? "Active season only" : "Not configured"}</span>
+      </div>
+      {!syncConfigured ? (
+        <div className="empty-note">
+          Sync needs <code>VITE_SUPABASE_URL</code> and <code>VITE_SUPABASE_ANON_KEY</code> at build time.
+          Run <code>supabase/schema.sql</code> in your project, then rebuild.
+        </div>
+      ) : syncCode ? (
+        <>
+          <div className="sync-code-row">
+            <code className="sync-code">{syncCode}</code>
+            <button type="button" className="btn" onClick={copySyncCode} disabled={syncBusy}>Copy</button>
+          </div>
+          <div className="data-actions">
+            <button type="button" className="btn" onClick={pullSyncNow} disabled={syncBusy}>
+              <Ic name="upload" fb="" /> Pull now
+            </button>
+            <button type="button" className="btn danger" onClick={disableSync} disabled={syncBusy}>
+              Disable sync
+            </button>
+          </div>
+          {lastSyncLabel ? <div className="empty-note compact">Last cloud contact: {lastSyncLabel}</div> : null}
+        </>
+      ) : (
+        <>
+          <div className="empty-note">
+            Create a sync code on this device, then enter the same code on your phone or laptop.
+            Only the active season syncs (last write wins).
+          </div>
+          <div className="data-actions">
+            <button type="button" className="btn primary" onClick={enableSync} disabled={syncBusy}>
+              Enable sync
+            </button>
+          </div>
+          <div className="sync-join">
+            <label className="field-label">
+              <span>Have a code?</span>
+              <input
+                className="field"
+                value={syncJoinInput}
+                onChange={(e) => setSyncJoinInput(e.target.value)}
+                placeholder="AWR-XXXX-XXXX-XXXX-XXXX"
+                autoCapitalize="characters"
+                autoCorrect="off"
+                spellCheck={false}
+                disabled={syncBusy}
+              />
+            </label>
+            <button type="button" className="btn" onClick={joinSync} disabled={syncBusy || !syncJoinInput.trim()}>
+              Join
+            </button>
+          </div>
+        </>
+      )}
+      {syncMsg ? <div className={`sync-msg ${syncMsg.type}`}>{syncMsg.text}</div> : null}
+
+      <div className="panel-head sync-archive-head"><span className="eyebrow">Season archive</span></div>
       <div className="data-actions">
-        <button className="btn" onClick={exportDraft}><Ic name="download" fb="" /> Export JSON</button>
-        <button className="btn" onClick={() => fileRef.current && fileRef.current.click()}><Ic name="upload" fb="" /> Import JSON</button>
+        <button type="button" className="btn" onClick={archiveActiveSeason}>
+          <Ic name="download" fb="" /> Download backup
+        </button>
+        <button type="button" className="btn" onClick={() => fileRef.current && fileRef.current.click()}>
+          <Ic name="upload" fb="" /> Restore backup
+        </button>
         <input ref={fileRef} type="file" accept=".json,application/json" style={{ display: "none" }}
           onChange={(e) => { const f = e.target.files[0]; if (f) importDraft(f); e.target.value = ""; }} />
-        <button className="btn danger" onClick={resetDraft} disabled={players.length === 0 && Object.keys(board).length === 0}>
+        <button type="button" className="btn danger" onClick={resetDraft} disabled={players.length === 0 && Object.keys(board).length === 0}>
           <Ic name="refresh" fb="" /> Clear entries
         </button>
       </div>
-      <div className="empty-note">Everything auto-saves as you go. Clear entries wipes this season&apos;s picks and board tracking so you can re-test — export first if you want a backup.</div>
+      <div className="empty-note">
+        Starting the next season also downloads a finished-season backup automatically.
+        Clear entries only wipes this season&apos;s picks and board marks.
+      </div>
     </section>
   );
 
