@@ -32,7 +32,7 @@ const STATUS_ADJ = {
   OFS: { starter: 800, handcuff: -15 },
 };
 
-const norm = (s) => (s || '').toLowerCase().replace(/['']/g, "'").replace(/[.\-]/g, '').trim();
+const norm = (s) => (s || '').toLowerCase().replace(/['']/g, "'").replace(/[.-]/g, '').trim();
 
 
 function loadPreviousPlayers() {

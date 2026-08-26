@@ -37,7 +37,7 @@ const testPayload = { version: 1, seasonId: "test-connection", draft: { players:
 
 console.log("Testing:", url.replace(/^(https:\/\/[^.]+).*/, "$1…"));
 
-const { data: up, error: upErr } = await sb.rpc("upsert_season_sync", {
+const { error: upErr } = await sb.rpc("upsert_season_sync", {
   p_hash: testHash,
   p_season_id: "test-connection",
   p_payload: testPayload,

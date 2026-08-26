@@ -932,9 +932,92 @@ button, select { touch-action: manipulation; }
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
   overscroll-behavior: contain;
+  position: relative;
 }
 .board-scroll thead th { position: sticky; top: 0; background: var(--panel); z-index: 2; }
-.board-table { width: 100%; }
+.board-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+.board-table:not(.plan-board-table) {
+  min-width: 720px;
+}
+.plan-board-table {
+  min-width: 520px;
+}
+.board-table th,
+.board-table td {
+  text-align: center;
+  vertical-align: middle;
+}
+.board-table th.num,
+.board-table td.num {
+  text-align: center;
+}
+.board-table .col-star,
+.board-table .col-target {
+  text-align: center;
+  width: 2.25rem;
+}
+.board-table .star-btn {
+  margin: 0 auto;
+}
+.board-table .pname {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 4px;
+}
+.board-table .pname .linklike {
+  text-align: center;
+}
+.board-table .col-pos .posb {
+  margin: 0 auto;
+}
+.board-table .col-health {
+  text-align: center;
+  min-width: 90px;
+}
+.board-table .col-health .health-tag {
+  margin: 0 auto;
+}
+.board-table .col-status {
+  position: sticky;
+  right: 0;
+  z-index: 3;
+  background: var(--panel);
+  box-shadow: -4px 0 10px -3px var(--shadow-strong);
+  border-left: 1px solid var(--line-soft);
+  text-align: center;
+  width: 9.5rem;
+  min-width: 9rem;
+}
+.board-table thead th.col-status {
+  position: sticky;
+  top: 0;
+  right: 0;
+  z-index: 6;
+  background: var(--panel);
+  box-shadow: -4px 0 10px -3px var(--shadow-strong);
+  border-left: 1px solid var(--line-soft);
+  text-align: center;
+}
+.board-table tbody tr.row-taken .col-status,
+.board-table tbody tr.row-injured .col-status {
+  background: var(--panel);
+}
+.board-table tbody tr:hover .col-status {
+  background: var(--panel-2);
+}
+.board-table .board-seg {
+  margin: 0 auto;
+  justify-content: center;
+}
+.board-table .board-status-dd {
+  margin: 0 auto;
+}
 .star-btn {
   background: none; border: none; color: var(--muted-2); font-size: 17px; cursor: pointer;
   padding: 4px; line-height: 1; min-width: 28px; min-height: 28px;
@@ -1432,35 +1515,46 @@ button, select { touch-action: manipulation; }
   .hide-xs { display: none; }
   .board-scroll .hide-tiny { display: none; }
 
-  /* Board: fit phone width — compact ranks + O/M/G status */
+  /* Board: horizontally scroll fields + sticky status column */
   .root.view-room .board-scroll,
   .board-scroll {
     max-height: min(68vh, 560px);
     max-width: 100%;
   }
   .board-table {
-    table-layout: fixed;
-    width: 100%;
+    table-layout: auto;
+    width: max-content;
+  }
+  .board-table:not(.plan-board-table) {
+    min-width: 620px;
+  }
+  .plan-board-table {
+    min-width: 480px;
+  }
+  .board-table .hide-xs,
+  .board-table .hide-tiny {
+    display: table-cell !important;
+  }
+  .board-table .col-health,
+  .plan-board-table .col-health {
+    display: table-cell !important;
   }
   .board-table .col-star { width: 2.1rem; }
   .board-table .col-rank { width: 2.4rem; }
   .board-table .col-pos { width: 2.4rem; }
   .board-table .col-est { width: 2.6rem; }
-  .board-table .col-status { width: 5.75rem; }
   .board-table .col-player { width: auto; }
-  .board-table th, .board-table td { padding: 6px 3px; }
+  .board-table th, .board-table td { padding: 6px 4px; text-align: center; }
   .board-table .pname .linklike {
-    display: block;
+    display: inline-block;
     max-width: 100%;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+    text-align: center;
   }
   .rank-ovr-inline { display: none; }
   .chip-full { display: none; }
   .chip-short { display: inline; }
   .board-seg { display: none !important; }
-  .board-status-dd { display: block; }
+  .board-status-dd { display: block; margin: 0 auto; }
   .board-status-trigger {
     display: flex;
     align-items: center;
@@ -1468,7 +1562,7 @@ button, select { touch-action: manipulation; }
     gap: 4px;
     width: 100%;
     box-sizing: border-box;
-    margin: 0;
+    margin: 0 auto;
     padding: 6px 7px;
     min-height: 32px;
     border: 1px solid var(--line);
@@ -1526,49 +1620,29 @@ button, select { touch-action: manipulation; }
   .board-status-option.status-mine.on { color: var(--green); }
   .board-status-option.status-gone.on { color: var(--red); }
 
-  /* Health on player name; draft status sticky on the right */
-  .col-health-full { display: none; }
-  .col-health-short { display: inline; }
-  .board-table .col-health,
-  .target-table .col-health,
-  .plan-board-table .col-health {
-    display: none !important;
-  }
-  .pname-health {
-    display: inline-flex;
-    flex-shrink: 0;
-    align-items: center;
-    margin-left: 4px;
-    max-width: 100%;
-  }
-  .pname-health .health-tag {
-    font-size: 10px;
-    padding: 2px 5px;
-  }
-  .board-table .pname {
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 4px 6px;
-  }
-  .board-table .pname .linklike {
-    white-space: normal;
-    overflow: visible;
-    text-overflow: unset;
-    display: inline;
-  }
   .board-table .col-pos { width: 2.1rem; }
   .board-table .col-est { width: 2.35rem; }
   .board-table .col-status {
-    width: 4.85rem;
+    width: 5.5rem;
+    min-width: 5.5rem;
     position: sticky;
     right: 0;
-    z-index: 2;
-    background: var(--panel);
-    box-shadow: -6px 0 10px -6px var(--shadow-strong);
-  }
-  .board-table thead .col-status {
     z-index: 3;
     background: var(--panel);
+    box-shadow: -6px 0 10px -6px var(--shadow-strong);
+    border-left: 1px solid var(--line-soft);
+    text-align: center;
+  }
+  .board-table thead .col-status,
+  .board-table thead th.col-status {
+    position: sticky;
+    top: 0;
+    right: 0;
+    z-index: 6;
+    background: var(--panel);
+    box-shadow: -6px 0 10px -6px var(--shadow-strong);
+    border-left: 1px solid var(--line-soft);
+    text-align: center;
   }
   .board-table tbody tr.row-taken .col-status,
   .board-table tbody tr.row-injured .col-status {
@@ -1770,7 +1844,6 @@ button, select { touch-action: manipulation; }
   color: var(--muted);
 }
 
-.col-health-short { display: none; }
 .pname-health { display: none; }
 
 .health-tag {
@@ -1863,7 +1936,7 @@ button, select { touch-action: manipulation; }
 .health-tag.st-D { color: #e89a4a; border: 1px solid rgba(232,154,74,.35); background: rgba(232,154,74,.08); }
 .health-tag.st-OUT, .health-tag.st-IR, .health-tag.st-OFS { color: var(--red); border: 1px solid rgba(241,101,95,.4); background: rgba(241,101,95,.1); }
 .health-tag.st-PUP { color: #a78bfa; border: 1px solid rgba(167,139,250,.35); background: rgba(167,139,250,.08); }
-.col-health { min-width: 96px; max-width: 140px; text-align: left; vertical-align: top; }
+.col-health { min-width: 96px; max-width: 140px; text-align: center; vertical-align: middle; }
 
 .board-table td.col-health,
 .target-table td.col-health,

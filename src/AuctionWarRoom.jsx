@@ -456,7 +456,7 @@ const PLAYER_DB = [
   ...TEAMS.map((t) => [`${DEF_NAMES[t]} D/ST`, "DEF", t]),
 ].map(([name, pos, team], i) => ({ id: `db${i}`, name, pos, team, bye: TEAM_BYES[team] }));
 
-const norm = (s) => (s || "").toLowerCase().replace(/[’‘]/g, "'").replace(/[.\-]/g, "").trim();
+const norm = (s) => (s || "").toLowerCase().replace(/[’‘]/g, "'").replace(/[.-]/g, "").trim();
 // Player health — updated 2026-08-26T21:34:49.709Z
 // Sources: FantasyPros injury news (8/23); Yahoo Sports training camp tracker; Fantasy Alarm weekend injury roundup (8/23); CBS Sports camp tracker; Adam Schefter / team beat reporters; ESPN (8/25–26); CBS / NFL Network (8/26)
 // Regenerate via: npm run refresh-board
@@ -728,62 +728,6 @@ function assessByeConflict(roster, candidate, slotById = {}) {
   return { level, message, chip, week, mates, starterMates };
 }
 
-/* ---------- fuzzy player matching ---------- */
-function editDist(a, b, cap) {
-  if (a === b) return 0;
-  const la = a.length, lb = b.length;
-  if (Math.abs(la - lb) > cap) return cap + 1;
-  let prev = []; for (let j = 0; j <= lb; j++) prev[j] = j;
-  for (let i = 1; i <= la; i++) {
-    const cur = [i]; let rowMin = i;
-    for (let j = 1; j <= lb; j++) {
-      cur[j] = Math.min(prev[j] + 1, cur[j - 1] + 1, prev[j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1));
-      if (cur[j] < rowMin) rowMin = cur[j];
-    }
-    if (rowMin > cap) return cap + 1;
-    prev = cur;
-  }
-  return prev[lb];
-}
-function fuzzyScore(query, name) {
-  const q = norm(query), n = norm(name);
-  if (!q) return 0;
-  if (n === q) return 100;
-  if (n.startsWith(q)) return 90;
-  if (n.includes(q)) return 82;
-  const qs = q.replace(/\s+/g, ""), ns = n.replace(/\s+/g, "");
-  if (qs.length >= 4 && ns.includes(qs)) return 80;
-  if (qs.length >= 6 && editDist(qs, ns, 2) <= 2) return 85;
-  const qT = q.split(" ").filter(Boolean);
-  const nT = n.split(" ").filter(Boolean);
-  let matched = 0, near = 0;
-  for (const qt of qT) {
-    let best = 0;
-    for (const nt of nT) {
-      if (nt === qt) best = Math.max(best, 3);
-      else if (qt.length >= 2 && nt.startsWith(qt)) best = Math.max(best, 2.5);
-      else {
-        const cap = qt.length >= 6 ? 2 : qt.length >= 4 ? 1 : 0;
-        if (cap > 0 && editDist(qt, nt, cap) <= cap) best = Math.max(best, 2);
-      }
-    }
-    if (best >= 2.5) matched++;
-    else if (best > 0) near++;
-    else return 0; // a query word that matches nothing rules the player out
-  }
-  const cov = (matched + near * 0.7) / qT.length;
-  return Math.round(40 + cov * 40);
-}
-function fuzzySearch(query, { pos = null, limit = 8 } = {}) {
-  const scored = [];
-  for (const p of PLAYER_DB) {
-    if (pos && p.pos !== pos) continue;
-    const s = fuzzyScore(query, p.name);
-    if (s >= 55) scored.push([s, p]);
-  }
-  scored.sort((x, y) => y[0] - x[0] || (POS_RANK[norm(x[1].name)] || 999) - (POS_RANK[norm(y[1].name)] || 999));
-  return scored.slice(0, limit).map((x) => x[1]);
-}
 const PLAN_CATS = ["QB", "RB", "WR", "TE", "K", "DEF", "Bench"];
 const DEFAULT_PLAN = { QB: 45, RB: 70, WR: 55, TE: 12, K: 1, DEF: 2, Bench: 15 }; // 2QB superflex budget split
 const EMPTY_ASST = { name: "", pos: "", team: "", bye: "", proj: "", presetMax: "", bid: "" };
@@ -1163,7 +1107,7 @@ export default function AuctionWarRoom() {
         setCatalog(cat);
         const active = getActiveSeason(cat);
         if (active) applySeasonDraft(active);
-      } catch (e) {
+      } catch {
         const cat = createCatalog(createSeason({ startYear: 2026, settings: DEFAULT_SETTINGS, name: "2026–27 Season" }));
         setCatalog(cat);
         applySeasonDraft(getActiveSeason(cat));
@@ -3001,17 +2945,17 @@ export default function AuctionWarRoom() {
                 <div className="table-scroll board-scroll">
                 <table className="flat board-table">
                   <thead><tr>
-                    <th className="col-star"></th>
-                    <th className="num col-rank" title={isSuperflexLeague(settings) ? "2QB draft rank (by est. auction value)" : "Top-350 overall consensus rank"}>#</th>
-                    <th className="num col-posrank hide-xs" title="Rank within position">Pos#</th>
-                    <th className="col-player">Player</th>
-                    <th className="col-pos">Pos</th>
-                    <th className="col-health" title="Injury designation — updated via refresh-board"><span className="col-health-full">Health</span><span className="col-health-short">Hz</span></th>
-                    <th className="hide-xs">Team</th>
-                    <th className="hide-xs">Bye</th>
-                    <th className="num col-est">Est</th>
-                    <th className="num hide-tiny">Paid</th>
-                    <th className="col-status">Status</th>
+                    <th scope="col" className="col-star" aria-label="Starred"></th>
+                    <th scope="col" className="num col-rank" title={isSuperflexLeague(settings) ? "2QB draft rank (by est. auction value)" : "Top-350 overall consensus rank"}>#</th>
+                    <th scope="col" className="num col-posrank hide-xs" title="Rank within position">Pos#</th>
+                    <th scope="col" className="col-player">Player</th>
+                    <th scope="col" className="col-pos">Pos</th>
+                    <th scope="col" className="col-health" title="Injury designation — updated via refresh-board">Health</th>
+                    <th scope="col" className="col-team hide-xs">Team</th>
+                    <th scope="col" className="col-bye hide-xs">Bye</th>
+                    <th scope="col" className="num col-est">Est</th>
+                    <th scope="col" className="num col-paid hide-tiny">Paid</th>
+                    <th scope="col" className="col-status">Status</th>
                   </tr></thead>
                   <tbody>
                     {boardRows.map((r) => (
@@ -3050,10 +2994,10 @@ export default function AuctionWarRoom() {
                         </td>
                         <td className="col-pos"><span className={`posb p-${r.pos}`}>{r.pos}</span></td>
                         <td className="col-health"><HealthBadge health={r.health} /></td>
-                        <td className="hide-xs">{r.team || "—"}</td>
-                        <td className="hide-xs">{r.bye || "—"}</td>
+                        <td className="col-team hide-xs">{r.team || "—"}</td>
+                        <td className="col-bye hide-xs">{r.bye || "—"}</td>
                         <td className="num col-est">{r.est != null ? money(r.est) : "—"}</td>
-                        <td className={`num hide-tiny ${r.status === "mine" ? "money" : ""}`}>{r.price != null ? money(r.price) : "—"}</td>
+                        <td className={`num col-paid hide-tiny ${r.status === "mine" ? "money" : ""}`}>{r.price != null ? money(r.price) : "—"}</td>
                         <td className="col-status">
                           <div className="seg board-seg">
                             <button className={`seg-btn ${r.status === "available" ? "on" : ""}`} aria-pressed={r.status === "available"} aria-label="Open" onClick={() => setBoardStatus(r, "available")}><span className="seg-full">Open</span><span className="seg-short">O</span></button>
@@ -3212,19 +3156,19 @@ export default function AuctionWarRoom() {
           <table className="flat target-table">
             <thead>
               <tr>
-                <th className="num col-rank">
+                <th scope="col" className="num col-rank">
                   <button type="button" className={`th-sort${targetSort === "overall" ? " on" : ""}`} onClick={() => setTargetSort("overall")}>#</button>
                 </th>
-                <th className="col-player">Player</th>
-                <th className="col-pos">
+                <th scope="col" className="col-player">Player</th>
+                <th scope="col" className="col-pos">
                   <button type="button" className={`th-sort${targetSort === "pos" ? " on" : ""}`} onClick={() => setTargetSort("pos")}>Pos</button>
                 </th>
-                <th className="col-health"><span className="col-health-full">Health</span><span className="col-health-short">Hz</span></th>
-                <th className="hide-xs">Team</th>
-                <th className="hide-xs">Bye</th>
-                <th className="num col-est">Est</th>
-                <th>Status</th>
-                <th></th>
+                <th scope="col" className="col-health">Health</th>
+                <th scope="col" className="col-team hide-xs">Team</th>
+                <th scope="col" className="col-bye hide-xs">Bye</th>
+                <th scope="col" className="num col-est">Est</th>
+                <th scope="col" className="col-status">Status</th>
+                <th scope="col" className="col-actions" aria-label="Actions"></th>
               </tr>
             </thead>
             <tbody>
@@ -3261,10 +3205,10 @@ export default function AuctionWarRoom() {
                       </td>
                       <td className="col-pos"><span className={`posb p-${r.pos}`}>{r.pos}</span></td>
                       <td className="col-health"><HealthBadge health={r.health} /></td>
-                      <td className="hide-xs">{r.team || "—"}</td>
-                      <td className="hide-xs">{r.bye || "—"}</td>
+                      <td className="col-team hide-xs">{r.team || "—"}</td>
+                      <td className="col-bye hide-xs">{r.bye || "—"}</td>
                       <td className="num col-est">{r.est != null ? money(r.est) : "—"}</td>
-                      <td>
+                      <td className="col-status">
                         <span className={`target-status st-${r.status}`}>{statusLabel}</span>
                       </td>
                       <td className="actions">
@@ -3331,14 +3275,14 @@ export default function AuctionWarRoom() {
             <table className="flat board-table plan-board-table">
               <thead>
                 <tr>
-                  <th className="col-target" title="Add to nomination list">★</th>
-                  <th className="num col-rank">#</th>
-                  <th className="col-player">Player</th>
-                  <th className="col-pos">Pos</th>
-                  <th className="col-health"><span className="col-health-full">Health</span><span className="col-health-short">Hz</span></th>
-                  <th className="hide-xs">Team</th>
-                  <th className="num col-est">Est</th>
-                  <th>Status</th>
+                  <th scope="col" className="col-target" title="Add to nomination list" aria-label="Target">★</th>
+                  <th scope="col" className="num col-rank">#</th>
+                  <th scope="col" className="col-player">Player</th>
+                  <th scope="col" className="col-pos">Pos</th>
+                  <th scope="col" className="col-health">Health</th>
+                  <th scope="col" className="col-team hide-xs">Team</th>
+                  <th scope="col" className="num col-est">Est</th>
+                  <th scope="col" className="col-status">Status</th>
                 </tr>
               </thead>
               <tbody>
@@ -3372,9 +3316,9 @@ export default function AuctionWarRoom() {
                       </td>
                       <td className="col-pos"><span className={`posb p-${r.pos}`}>{r.pos}</span></td>
                       <td className="col-health"><HealthBadge health={r.health} /></td>
-                      <td className="hide-xs">{r.team || "—"}</td>
+                      <td className="col-team hide-xs">{r.team || "—"}</td>
                       <td className="num col-est">{r.est != null ? money(r.est) : "—"}</td>
-                      <td><span className={`target-status st-${r.status}`}>{statusLabel}</span></td>
+                      <td className="col-status"><span className={`target-status st-${r.status}`}>{statusLabel}</span></td>
                     </tr>
                   );
                 })}
