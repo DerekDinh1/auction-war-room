@@ -2756,6 +2756,7 @@ export default function AuctionWarRoom() {
         <span className="eyebrow">Available board</span>
         <span className="panel-side">{boardAvailableCount} available · {boardRows.length} shown · {boardShowGone ? "incl. drafted" : "open only"}</span>
       </div>
+      <BoardUpdatesBanner />
             <div>
               <div className="board-controls">
                 <div className="filter-row">
@@ -3361,7 +3362,6 @@ export default function AuctionWarRoom() {
           view={view}
           onChange={changeView}
         />
-        <BoardUpdatesBanner />
       </div>
 
       <motion.main
