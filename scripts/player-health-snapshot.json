@@ -1,18 +1,9 @@
 {
-  "updatedAt": "2026-08-26T21:14:52.000Z",
-  "sources": [
-    "FantasyPros injury news (8/23)",
-    "Yahoo Sports training camp tracker",
-    "Fantasy Alarm weekend injury roundup (8/23)",
-    "CBS Sports camp tracker",
-    "Adam Schefter / team beat reporters",
-    "ESPN (8/25\u201326)",
-    "CBS / NFL Network (8/26)"
-  ],
+  "updatedAt": "2026-08-26T21:14:52.841Z",
   "players": {
     "Ashton Jeanty": {
       "status": "D",
-      "note": "Right knee \u2014 helped off practice 8/23, unable to bear weight; team paused practice; awaiting MRI",
+      "note": "Right knee — helped off practice 8/23, unable to bear weight; team paused practice; awaiting MRI",
       "sources": [
         "FantasyPros",
         "Fantasy Alarm",
@@ -22,7 +13,7 @@
     },
     "Ricky Pearsall": {
       "status": "OFS",
-      "note": "PCL surgery \u2014 out for 2026",
+      "note": "PCL surgery — out for 2026",
       "sources": [
         "Yahoo Sports",
         "CBS Sports"
@@ -31,7 +22,7 @@
     },
     "Chris Brazzell II": {
       "status": "OFS",
-      "note": "LCL tear \u2014 out for 2026",
+      "note": "LCL tear — out for 2026",
       "sources": [
         "Yahoo Sports"
       ],
@@ -39,7 +30,7 @@
     },
     "Jayden Higgins": {
       "status": "OFS",
-      "note": "Torn ACL \u2014 out for 2026 (Ian Rapoport)",
+      "note": "Torn ACL — out for 2026 (Ian Rapoport)",
       "sources": [
         "FantasyPros",
         "Yahoo Sports"
@@ -48,7 +39,7 @@
     },
     "Jordyn Tyson": {
       "status": "IR",
-      "note": "Hamstring \u2014 expected ~2 months, may start on IR",
+      "note": "Hamstring — expected ~2 months, may start on IR",
       "sources": [
         "Yahoo Sports",
         "Fantasy Alarm",
@@ -58,7 +49,7 @@
     },
     "Alvin Kamara": {
       "status": "OUT",
-      "note": "MCL sprain \u2014 expected out ~1 month",
+      "note": "MCL sprain — expected out ~1 month",
       "sources": [
         "Fantasy Alarm"
       ],
@@ -66,7 +57,7 @@
     },
     "Zach Charbonnet": {
       "status": "PUP",
-      "note": "ACL recovery \u2014 has not returned to practice (active/PUP)",
+      "note": "ACL recovery — has not returned to practice (active/PUP)",
       "sources": [
         "Yahoo Sports",
         "Fantasy Alarm",
@@ -76,7 +67,7 @@
     },
     "Breece Hall": {
       "status": "Q",
-      "note": "Groin \u2014 expected out 2\u20133 weeks; team hopeful for Week 1",
+      "note": "Groin — expected out 2–3 weeks; team hopeful for Week 1",
       "sources": [
         "AS USA",
         "Fantasy Alarm"
@@ -85,7 +76,7 @@
     },
     "Jeremiyah Love": {
       "status": "Q",
-      "note": "High-ankle sprain \u2014 light agility work 8/26; multi-week, Week 1 in doubt",
+      "note": "High-ankle sprain — light agility work 8/26; multi-week, Week 1 in doubt",
       "sources": [
         "ESPN",
         "Fantasy Alarm",
@@ -95,7 +86,7 @@
     },
     "Emeka Egbuka": {
       "status": "Q",
-      "note": "Turf toe sprain \u2014 Week 1 availability in doubt",
+      "note": "Turf toe sprain — Week 1 availability in doubt",
       "sources": [
         "Fantasy Alarm",
         "Yahoo Sports"
@@ -104,7 +95,7 @@
     },
     "Sam LaPorta": {
       "status": "Q",
-      "note": "Hip/undisclosed \u2014 missed recent practice",
+      "note": "Hip/undisclosed — missed recent practice",
       "sources": [
         "FantasyPros",
         "Fantasy Alarm"
@@ -113,7 +104,7 @@
     },
     "Puka Nacua": {
       "status": "Q",
-      "note": "Groin soreness \u2014 minor per McVay, monitoring",
+      "note": "Groin soreness — minor per McVay, monitoring",
       "sources": [
         "Yahoo Sports"
       ],
@@ -121,7 +112,7 @@
     },
     "Kyle Monangai": {
       "status": "D",
-      "note": "Hyperextended knee \u2014 multiple weeks, Week 1 in doubt",
+      "note": "Hyperextended knee — multiple weeks, Week 1 in doubt",
       "sources": [
         "Yahoo Sports",
         "Fantasy Alarm"
@@ -130,7 +121,7 @@
     },
     "Michael Pittman Jr.": {
       "status": "Q",
-      "note": "Hamstring \u2014 minor, expected ready Week 1",
+      "note": "Hamstring — minor, expected ready Week 1",
       "sources": [
         "FantasyPros"
       ],
@@ -146,7 +137,7 @@
     },
     "Ja'Marr Chase": {
       "status": "Q",
-      "note": "Left knee hyperextension \u2014 limped off 8/25 practice; held out 8/26 precaution; says he's fine, unlikely for preseason finale",
+      "note": "Left knee hyperextension — limped off 8/25 practice; held out 8/26 precaution; says he's fine, unlikely for preseason finale",
       "sources": [
         "ESPN",
         "Cincy Jungle",
@@ -156,7 +147,7 @@
     },
     "Zay Flowers": {
       "status": "Q",
-      "note": "Undisclosed \u2014 held out of 8/26 practice precaution; expected ready for Week 1",
+      "note": "Undisclosed — held out of 8/26 practice precaution; expected ready for Week 1",
       "sources": [
         "ESPN",
         "Baltimore Sun"
@@ -165,7 +156,7 @@
     },
     "Tyler Warren": {
       "status": "Q",
-      "note": "Groin \u2014 expected out through this week; load-managed for Week 1",
+      "note": "Groin — expected out through this week; load-managed for Week 1",
       "sources": [
         "CBS Sports",
         "Colts beat"
@@ -174,7 +165,7 @@
     },
     "James Conner": {
       "status": "Q",
-      "note": "Foot \u2014 coach says too early to tell on Week 1 availability (8/26)",
+      "note": "Foot — coach says too early to tell on Week 1 availability (8/26)",
       "sources": [
         "ESPN",
         "Arizona Republic"
@@ -183,7 +174,7 @@
     },
     "Keon Coleman": {
       "status": "Q",
-      "note": "Sprained foot/toe \u2014 injured in Bills preseason opener",
+      "note": "Sprained foot/toe — injured in Bills preseason opener",
       "sources": [
         "NFL Network",
         "CBS Sports"
@@ -192,7 +183,7 @@
     },
     "Michael Penix Jr.": {
       "status": "Q",
-      "note": "Knee \u2014 won't play preseason finale; hopeful for Week 1 at Pittsburgh",
+      "note": "Knee — won't play preseason finale; hopeful for Week 1 at Pittsburgh",
       "sources": [
         "ESPN",
         "Falcons beat"
@@ -201,7 +192,7 @@
     },
     "Trey Benson": {
       "status": "IR",
-      "note": "Knee \u2014 reverted to IR 8/25",
+      "note": "Knee — reverted to IR 8/25",
       "sources": [
         "CBS Sports",
         "ESPN"
@@ -210,7 +201,7 @@
     },
     "Josh Downs": {
       "status": "Q",
-      "note": "Calf \u2014 minor; believes he'll resume practicing soon (8/26)",
+      "note": "Calf — minor; believes he'll resume practicing soon (8/26)",
       "sources": [
         "ESPN",
         "Colts beat"
@@ -219,7 +210,7 @@
     },
     "Tucker Kraft": {
       "status": "Q",
-      "note": "Knee \u2014 returned to team drills 8/26; still monitoring",
+      "note": "Knee — returned to team drills 8/26; still monitoring",
       "sources": [
         "NFL.com",
         "ESPN"

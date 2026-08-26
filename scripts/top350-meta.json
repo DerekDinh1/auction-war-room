@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-26T17:59:07.060Z",
+  "generatedAt": "2026-08-26T21:14:52.841Z",
   "method": "Average of FantasyPros PPR + Half-PPR + Standard; injury/handcuff rank adjustments from player-health.json",
   "rankingSources": [
     {
@@ -20,9 +20,11 @@
     "Yahoo Sports training camp tracker",
     "Fantasy Alarm weekend injury roundup (8/23)",
     "CBS Sports camp tracker",
-    "Adam Schefter / team beat reporters"
+    "Adam Schefter / team beat reporters",
+    "ESPN (8/25–26)",
+    "CBS / NFL Network (8/26)"
   ],
-  "healthUpdatedAt": "2026-08-26T17:59:07.060Z",
-  "injuryAdjustments": 23,
+  "healthUpdatedAt": "2026-08-26T21:14:52.841Z",
+  "injuryAdjustments": 30,
   "count": 350
 }

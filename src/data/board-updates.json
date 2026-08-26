@@ -1,0 +1,334 @@
+{
+  "generatedAt": "2026-08-26T21:14:52.841Z",
+  "previousGeneratedAt": "2026-08-26T21:10:28.542Z",
+  "summary": "Top-350 re-ranked from FantasyPros · 158 rank moves · 1 in · 1 out · 9 injury updates",
+  "rankChanges": 158,
+  "enteredCount": 1,
+  "exitedCount": 1,
+  "injuryAdjustments": 30,
+  "count": 350,
+  "highlights": [
+    {
+      "type": "drop",
+      "name": "Josh Downs",
+      "pos": "WR",
+      "team": "IND",
+      "from": 94,
+      "to": 110
+    },
+    {
+      "type": "drop",
+      "name": "Tyler Warren",
+      "pos": "TE",
+      "team": "IND",
+      "from": 54,
+      "to": 67
+    },
+    {
+      "type": "drop",
+      "name": "Keon Coleman",
+      "pos": "WR",
+      "team": "BUF",
+      "from": 231,
+      "to": 243
+    },
+    {
+      "type": "drop",
+      "name": "Zay Flowers",
+      "pos": "WR",
+      "team": "BAL",
+      "from": 30,
+      "to": 41
+    },
+    {
+      "type": "drop",
+      "name": "Michael Penix Jr.",
+      "pos": "QB",
+      "team": "ATL",
+      "from": 262,
+      "to": 273
+    },
+    {
+      "type": "drop",
+      "name": "Tucker Kraft",
+      "pos": "TE",
+      "team": "GB",
+      "from": 70,
+      "to": 80
+    },
+    {
+      "type": "drop",
+      "name": "James Conner",
+      "pos": "RB",
+      "team": "ARI",
+      "from": 179,
+      "to": 187
+    },
+    {
+      "type": "rise",
+      "name": "Lamar Jackson",
+      "pos": "QB",
+      "team": "BAL",
+      "from": 31,
+      "to": 30
+    },
+    {
+      "type": "entered",
+      "name": "John Metchie III",
+      "pos": "WR",
+      "team": "CAR",
+      "rank": 350
+    },
+    {
+      "type": "exited",
+      "name": "Trey Benson",
+      "pos": "RB",
+      "team": "ARI",
+      "rank": 280
+    }
+  ],
+  "injuryHighlights": [
+    {
+      "type": "new",
+      "name": "Trey Benson",
+      "status": "IR",
+      "note": "Knee — reverted to IR 8/25",
+      "pos": null,
+      "team": null
+    },
+    {
+      "type": "note",
+      "name": "Jeremiyah Love",
+      "status": "Q",
+      "note": "High-ankle sprain — light agility work 8/26; multi-week, Week 1 in doubt",
+      "pos": "RB",
+      "team": "ARI"
+    },
+    {
+      "type": "new",
+      "name": "Zay Flowers",
+      "status": "Q",
+      "note": "Undisclosed — held out of 8/26 practice precaution; expected ready for …",
+      "pos": "WR",
+      "team": "BAL"
+    },
+    {
+      "type": "new",
+      "name": "Tyler Warren",
+      "status": "Q",
+      "note": "Groin — expected out through this week; load-managed for Week 1",
+      "pos": "TE",
+      "team": "IND"
+    },
+    {
+      "type": "new",
+      "name": "James Conner",
+      "status": "Q",
+      "note": "Foot — coach says too early to tell on Week 1 availability (8/26)",
+      "pos": "RB",
+      "team": "ARI"
+    },
+    {
+      "type": "new",
+      "name": "Keon Coleman",
+      "status": "Q",
+      "note": "Sprained foot/toe — injured in Bills preseason opener",
+      "pos": "WR",
+      "team": "BUF"
+    },
+    {
+      "type": "new",
+      "name": "Michael Penix Jr.",
+      "status": "Q",
+      "note": "Knee — won't play preseason finale; hopeful for Week 1 at Pittsburgh",
+      "pos": "QB",
+      "team": "ATL"
+    },
+    {
+      "type": "new",
+      "name": "Josh Downs",
+      "status": "Q",
+      "note": "Calf — minor; believes he'll resume practicing soon (8/26)",
+      "pos": "WR",
+      "team": "IND"
+    },
+    {
+      "type": "new",
+      "name": "Tucker Kraft",
+      "status": "Q",
+      "note": "Knee — returned to team drills 8/26; still monitoring",
+      "pos": "TE",
+      "team": "GB"
+    }
+  ],
+  "injuryWatch": [
+    {
+      "name": "Ricky Pearsall",
+      "status": "OFS",
+      "note": "PCL surgery — out for 2026",
+      "pos": null,
+      "team": null
+    },
+    {
+      "name": "Chris Brazzell II",
+      "status": "OFS",
+      "note": "LCL tear — out for 2026",
+      "pos": null,
+      "team": null
+    },
+    {
+      "name": "Jayden Higgins",
+      "status": "OFS",
+      "note": "Torn ACL — out for 2026 (Ian Rapoport)",
+      "pos": null,
+      "team": null
+    },
+    {
+      "name": "Jordyn Tyson",
+      "status": "IR",
+      "note": "Hamstring — expected ~2 months, may start on IR",
+      "pos": "WR",
+      "team": "NO"
+    },
+    {
+      "name": "Trey Benson",
+      "status": "IR",
+      "note": "Knee — reverted to IR 8/25",
+      "pos": null,
+      "team": null
+    },
+    {
+      "name": "Alvin Kamara",
+      "status": "OUT",
+      "note": "MCL sprain — expected out ~1 month",
+      "pos": "RB",
+      "team": "NO"
+    },
+    {
+      "name": "Zach Charbonnet",
+      "status": "PUP",
+      "note": "ACL recovery — has not returned to practice (active/PUP)",
+      "pos": "RB",
+      "team": "SEA"
+    },
+    {
+      "name": "Ashton Jeanty",
+      "status": "D",
+      "note": "Right knee — helped off practice 8/23, unable to bear weight; team paus…",
+      "pos": "RB",
+      "team": "LV"
+    },
+    {
+      "name": "Kyle Monangai",
+      "status": "D",
+      "note": "Hyperextended knee — multiple weeks, Week 1 in doubt",
+      "pos": "RB",
+      "team": "CHI"
+    },
+    {
+      "name": "Breece Hall",
+      "status": "Q",
+      "note": "Groin — expected out 2–3 weeks; team hopeful for Week 1",
+      "pos": "RB",
+      "team": "NYJ"
+    },
+    {
+      "name": "Jeremiyah Love",
+      "status": "Q",
+      "note": "High-ankle sprain — light agility work 8/26; multi-week, Week 1 in doubt",
+      "pos": "RB",
+      "team": "ARI"
+    },
+    {
+      "name": "Emeka Egbuka",
+      "status": "Q",
+      "note": "Turf toe sprain — Week 1 availability in doubt",
+      "pos": "WR",
+      "team": "TB"
+    },
+    {
+      "name": "Sam LaPorta",
+      "status": "Q",
+      "note": "Hip/undisclosed — missed recent practice",
+      "pos": "TE",
+      "team": "DET"
+    },
+    {
+      "name": "Puka Nacua",
+      "status": "Q",
+      "note": "Groin soreness — minor per McVay, monitoring",
+      "pos": "WR",
+      "team": "LAR"
+    },
+    {
+      "name": "Michael Pittman Jr.",
+      "status": "Q",
+      "note": "Hamstring — minor, expected ready Week 1",
+      "pos": "WR",
+      "team": "PIT"
+    },
+    {
+      "name": "George Kittle",
+      "status": "Q",
+      "note": "Working back from Achilles; limited in camp",
+      "pos": "TE",
+      "team": "SF"
+    },
+    {
+      "name": "Ja'Marr Chase",
+      "status": "Q",
+      "note": "Left knee hyperextension — limped off 8/25 practice; held out 8/26 prec…",
+      "pos": "WR",
+      "team": "CIN"
+    },
+    {
+      "name": "Zay Flowers",
+      "status": "Q",
+      "note": "Undisclosed — held out of 8/26 practice precaution; expected ready for …",
+      "pos": "WR",
+      "team": "BAL"
+    },
+    {
+      "name": "Tyler Warren",
+      "status": "Q",
+      "note": "Groin — expected out through this week; load-managed for Week 1",
+      "pos": "TE",
+      "team": "IND"
+    },
+    {
+      "name": "James Conner",
+      "status": "Q",
+      "note": "Foot — coach says too early to tell on Week 1 availability (8/26)",
+      "pos": "RB",
+      "team": "ARI"
+    },
+    {
+      "name": "Keon Coleman",
+      "status": "Q",
+      "note": "Sprained foot/toe — injured in Bills preseason opener",
+      "pos": "WR",
+      "team": "BUF"
+    },
+    {
+      "name": "Michael Penix Jr.",
+      "status": "Q",
+      "note": "Knee — won't play preseason finale; hopeful for Week 1 at Pittsburgh",
+      "pos": "QB",
+      "team": "ATL"
+    },
+    {
+      "name": "Josh Downs",
+      "status": "Q",
+      "note": "Calf — minor; believes he'll resume practicing soon (8/26)",
+      "pos": "WR",
+      "team": "IND"
+    },
+    {
+      "name": "Tucker Kraft",
+      "status": "Q",
+      "note": "Knee — returned to team drills 8/26; still monitoring",
+      "pos": "TE",
+      "team": "GB"
+    }
+  ]
+}

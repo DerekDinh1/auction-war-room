@@ -34,6 +34,174 @@ const STATUS_ADJ = {
 
 const norm = (s) => (s || '').toLowerCase().replace(/['']/g, "'").replace(/[.\-]/g, '').trim();
 
+
+function loadPreviousPlayers() {
+  try {
+    return JSON.parse(readFileSync(join(__dirname, 'top350-players.json'), 'utf8'));
+  } catch {
+    return null;
+  }
+}
+
+function loadPreviousMeta() {
+  try {
+    return JSON.parse(readFileSync(join(__dirname, 'top350-meta.json'), 'utf8'));
+  } catch {
+    return null;
+  }
+}
+
+
+const HEALTH_SNAPSHOT = join(__dirname, 'player-health-snapshot.json');
+const STATUS_ORDER = { OFS: 0, IR: 1, OUT: 2, PUP: 3, D: 4, Q: 5, active: 9 };
+
+function loadHealthSnapshot() {
+  try {
+    return JSON.parse(readFileSync(HEALTH_SNAPSHOT, 'utf8'));
+  } catch {
+    return null;
+  }
+}
+
+function saveHealthSnapshot(health) {
+  writeFileSync(
+    HEALTH_SNAPSHOT,
+    JSON.stringify({ updatedAt: health.updatedAt, players: health.players || {} }, null, 2) + '\n',
+  );
+}
+
+function noteSnippet(note, max = 72) {
+  const s = String(note || '').replace(/\s+/g, ' ').trim();
+  if (s.length <= max) return s;
+  return `${s.slice(0, max - 1)}…`;
+}
+
+function buildInjuryUpdates(prevHealth, nextHealth, top350) {
+  const boardLookup = new Map((top350 || []).map((p) => [p.name, p]));
+  const prev = prevHealth?.players || {};
+  const next = nextHealth?.players || {};
+  const names = new Set([...Object.keys(prev), ...Object.keys(next)]);
+  const highlights = [];
+
+  for (const name of names) {
+    const o = prev[name];
+    const c = next[name];
+    if (!o && c) {
+      highlights.push({
+        type: 'new',
+        name,
+        status: c.status,
+        note: noteSnippet(c.note),
+        pos: boardLookup.get(name)?.pos || null,
+        team: boardLookup.get(name)?.team || null,
+      });
+      continue;
+    }
+    if (o && !c) {
+      highlights.push({ type: 'removed', name, status: o.status, note: noteSnippet(o.note) });
+      continue;
+    }
+    if (!o || !c) continue;
+    if (o.status !== c.status) {
+      highlights.push({
+        type: 'status',
+        name,
+        from: o.status,
+        to: c.status,
+        note: noteSnippet(c.note),
+        pos: boardLookup.get(name)?.pos || null,
+        team: boardLookup.get(name)?.team || null,
+      });
+    } else if (o.note !== c.note) {
+      highlights.push({
+        type: 'note',
+        name,
+        status: c.status,
+        note: noteSnippet(c.note),
+        pos: boardLookup.get(name)?.pos || null,
+        team: boardLookup.get(name)?.team || null,
+      });
+    }
+  }
+
+  highlights.sort((a, b) => (STATUS_ORDER[a.to || a.status] ?? 9) - (STATUS_ORDER[b.to || b.status] ?? 9));
+
+  const watch = Object.entries(next)
+    .filter(([, h]) => h?.status && h.status !== 'active')
+    .map(([name, h]) => ({
+      name,
+      status: h.status,
+      note: noteSnippet(h.note),
+      pos: boardLookup.get(name)?.pos || null,
+      team: boardLookup.get(name)?.team || null,
+    }))
+    .sort((a, b) => (STATUS_ORDER[a.status] ?? 9) - (STATUS_ORDER[b.status] ?? 9));
+
+  return { injuryHighlights: highlights, injuryWatch: watch };
+}
+
+function buildBoardUpdates(prevPlayers, nextPlayers, prevMeta, nextMeta) {
+  const indexed = (players) => {
+    const m = new Map();
+    (players || []).forEach((p, i) => m.set(p.name, { rank: i + 1, pos: p.pos, team: p.team }));
+    return m;
+  };
+  const om = indexed(prevPlayers);
+  const nm = indexed(nextPlayers);
+  const oldNames = new Set(om.keys());
+  const newNames = new Set(nm.keys());
+  const entered = [...newNames].filter((n) => !oldNames.has(n)).sort((a, b) => nm.get(a).rank - nm.get(b).rank);
+  const exited = [...oldNames].filter((n) => !newNames.has(n)).sort((a, b) => om.get(a).rank - om.get(b).rank);
+  const moves = [];
+  for (const name of oldNames) {
+    if (!newNames.has(name)) continue;
+    const from = om.get(name).rank;
+    const to = nm.get(name).rank;
+    if (from === to) continue;
+    const cur = nm.get(name);
+    moves.push({ name, pos: cur.pos, team: cur.team, from, to, delta: from - to, abs: Math.abs(from - to) });
+  }
+  moves.sort((a, b) => b.abs - a.abs);
+
+  const highlights = [];
+  for (const m of moves.slice(0, 8)) {
+    highlights.push({
+      type: m.delta > 0 ? 'rise' : 'drop',
+      name: m.name,
+      pos: m.pos,
+      team: m.team,
+      from: m.from,
+      to: m.to,
+    });
+  }
+  for (const name of entered.slice(0, 5)) {
+    const cur = nm.get(name);
+    highlights.push({ type: 'entered', name, pos: cur.pos, team: cur.team, rank: cur.rank });
+  }
+  for (const name of exited.slice(0, 5)) {
+    const cur = om.get(name);
+    highlights.push({ type: 'exited', name, pos: cur.pos, team: cur.team, rank: cur.rank });
+  }
+
+  const rankChanges = moves.length;
+  const summary = prevPlayers
+    ? `Top-350 re-ranked from FantasyPros · ${rankChanges} rank moves · ${entered.length} in · ${exited.length} out`
+    : `Top-350 board refreshed from FantasyPros (${nextMeta.count || 350} players)`;
+
+  return {
+    generatedAt: nextMeta.generatedAt,
+    previousGeneratedAt: prevMeta?.generatedAt || null,
+    summary,
+    rankChanges,
+    enteredCount: entered.length,
+    exitedCount: exited.length,
+    injuryAdjustments: nextMeta.injuryAdjustments || 0,
+    count: nextMeta.count || 350,
+    highlights,
+  };
+}
+
+
 async function fetchPlayers(url) {
   const res = await fetch(url, { headers: { 'User-Agent': 'Mozilla/5.0 (compatible; AuctionWarRoom/1.0)' } });
   const html = await res.text();
@@ -221,6 +389,9 @@ async function main() {
     console.log(`  Mike Washington Jr.: rank #${top350.indexOf(mike) + 1} (avg ${mike.avg}, adj ${mike.adj})`);
   }
 
+  const prevPlayers = loadPreviousPlayers();
+  const prevMeta = loadPreviousMeta();
+
   const generatedAt = new Date().toISOString();
   health.updatedAt = generatedAt;
 
@@ -234,13 +405,27 @@ async function main() {
     count: 350,
   };
 
+  const prevHealthSnapshot = loadHealthSnapshot();
+  const injury = buildInjuryUpdates(prevHealthSnapshot, health, top350);
+  const updates = {
+    ...buildBoardUpdates(prevPlayers, top350, prevMeta, meta),
+    ...injury,
+  };
+  if (injury.injuryHighlights.length) {
+    updates.summary += ` · ${injury.injuryHighlights.length} injury update${injury.injuryHighlights.length === 1 ? '' : 's'}`;
+  }
+  const updatesPath = join(ROOT, 'src/data/board-updates.json');
+
   writeFileSync(join(__dirname, 'top350-players.json'), JSON.stringify(top350, null, 2) + '\n');
   writeFileSync(join(__dirname, 'top350-meta.json'), JSON.stringify(meta, null, 2) + '\n');
+  writeFileSync(updatesPath, JSON.stringify(updates, null, 2) + '\n');
   writeFileSync(join(__dirname, 'raw-db-generated.js'), genRawDb(top350, generatedAt) + '\n');
   writeFileSync(join(__dirname, 'player-health-generated.js'), genPlayerHealth(health, generatedAt) + '\n');
 
   patchJsx(genRawDb(top350, generatedAt), genPlayerHealth(health, generatedAt));
   console.log('Patched src/AuctionWarRoom.jsx');
+  console.log(`Wrote board updates (${updates.rankChanges} rank moves, ${updates.highlights.length} rank highlights, ${updates.injuryWatch.length} on injury watch)`);
+  saveHealthSnapshot(health);
   console.log('Done.');
 }
 
