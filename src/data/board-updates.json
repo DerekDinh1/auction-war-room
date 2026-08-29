@@ -1,90 +1,76 @@
 {
-  "generatedAt": "2026-08-26T21:34:49.709Z",
-  "previousGeneratedAt": "2026-08-26T21:14:52.841Z",
-  "summary": "Top-350 re-ranked from FantasyPros · 90 rank moves · 1 in · 1 out",
-  "rankChanges": 90,
-  "enteredCount": 1,
-  "exitedCount": 1,
+  "generatedAt": "2026-08-29T17:31:26.022Z",
+  "previousGeneratedAt": "2026-08-26T21:34:49.709Z",
+  "summary": "Top-350 re-ranked from FantasyPros · 261 rank moves · 0 in · 0 out",
+  "rankChanges": 261,
+  "enteredCount": 0,
+  "exitedCount": 0,
   "injuryAdjustments": 30,
   "count": 350,
   "highlights": [
     {
       "type": "rise",
-      "name": "Savion Williams",
+      "name": "Caleb Douglas",
       "pos": "WR",
-      "team": "GB",
-      "from": 347,
-      "to": 342
-    },
-    {
-      "type": "drop",
-      "name": "Chimere Dike",
-      "pos": "WR",
-      "team": "TEN",
-      "from": 242,
-      "to": 245
+      "team": "MIA",
+      "from": 251,
+      "to": 236
     },
     {
       "type": "rise",
-      "name": "Jordan James",
+      "name": "Chris Bell",
+      "pos": "WR",
+      "team": "MIA",
+      "from": 253,
+      "to": 238
+    },
+    {
+      "type": "drop",
+      "name": "Tank Dell",
+      "pos": "WR",
+      "team": "HOU",
+      "from": 189,
+      "to": 200
+    },
+    {
+      "type": "rise",
+      "name": "Najee Harris",
       "pos": "RB",
-      "team": "SF",
-      "from": 245,
-      "to": 242
+      "team": "NYG",
+      "from": 246,
+      "to": 235
     },
     {
       "type": "drop",
-      "name": "Darren Waller",
-      "pos": "TE",
-      "team": "CAR",
-      "from": 290,
-      "to": 293
-    },
-    {
-      "type": "drop",
-      "name": "KaVontae Turpin",
+      "name": "KC Concepcion",
       "pos": "WR",
-      "team": "DAL",
-      "from": 343,
-      "to": 346
-    },
-    {
-      "type": "rise",
-      "name": "Deebo Samuel Sr.",
-      "pos": "WR",
-      "team": "SF",
-      "from": 140,
-      "to": 138
-    },
-    {
-      "type": "rise",
-      "name": "Jalen Nailor",
-      "pos": "WR",
-      "team": "LV",
-      "from": 170,
-      "to": 168
-    },
-    {
-      "type": "rise",
-      "name": "Oronde Gadsden II",
-      "pos": "TE",
-      "team": "LAC",
-      "from": 178,
-      "to": 176
-    },
-    {
-      "type": "entered",
-      "name": "Raheim Sanders",
-      "pos": "RB",
       "team": "CLE",
-      "rank": 350
+      "from": 121,
+      "to": 129
     },
     {
-      "type": "exited",
-      "name": "John Metchie III",
+      "type": "drop",
+      "name": "Troy Franklin",
       "pos": "WR",
-      "team": "CAR",
-      "rank": 350
+      "team": "DEN",
+      "from": 208,
+      "to": 216
+    },
+    {
+      "type": "rise",
+      "name": "Roman Wilson",
+      "pos": "WR",
+      "team": "PIT",
+      "from": 349,
+      "to": 341
+    },
+    {
+      "type": "rise",
+      "name": "Brandon Aubrey",
+      "pos": "K",
+      "team": "DAL",
+      "from": 184,
+      "to": 177
     }
   ],
   "injuryHighlights": [],
