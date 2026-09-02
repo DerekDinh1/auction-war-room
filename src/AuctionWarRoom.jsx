@@ -1,9 +1,48 @@
-import React, { useState, useEffect, useLayoutEffect, useRef, useMemo, useCallback } from "react";
+import React, { useState, useEffect, useRef, useMemo, useCallback } from "react";
 import { motion, AnimatePresence, MotionConfig, useReducedMotion } from "motion/react";
-import { CommandHeader, ViewNav, Modal, Icon, SeasonsPanel, BoardUpdatesBanner } from "./components/index.js";
-import { money } from "./lib/format.js";
+import {
+  CommandHeader,
+  ViewNav,
+  Modal,
+  Icon,
+  SeasonsPanel,
+  BoardUpdatesBanner,
+  HealthBadge,
+  InjuryTag,
+  NameAutocomplete,
+  BoardStatusSelect,
+  PricePrompt,
+  PriceMeter,
+} from "./components/index.js";
+import { money, signedMoney } from "./lib/format.js";
 import { storageGet, storageSet } from "./lib/storage.js";
 import { motionTokens, viewTransition, pressable } from "./lib/motion.js";
+import { norm, loose, boardKey } from "./lib/names.js";
+import {
+  DEFAULT_SETTINGS,
+  clampInt,
+  normalizeSettings,
+  TEAM_BYES,
+  TEAMS,
+  POSITIONS,
+  NEED_POS_PRIORITY,
+  PLAN_CATS,
+  DEFAULT_PLAN,
+  EMPTY_ASST,
+  EMPTY_FORM,
+  BOARD_FILTERS,
+  isSuperflexLeague,
+  slotCostEst,
+  buildRoster,
+  autoSlot,
+  resolveBye,
+  assessByeConflict,
+  shortSlotLabel,
+} from "./lib/league.js";
+import { PLAYER_DB, POS_LISTS, POS_RANK, OVERALL_RANK } from "./data/players.js";
+import { healthFor, injuryNoteFor, healthBlocksDraft, isOutForSeason, seedOutForSeasonBoard } from "./data/health.js";
+import { estValue, buildDraftRank, tierOf } from "./lib/valuation.js";
+import { uid, parseQuick, matchPlayers, fuzzyMatch } from "./lib/search.js";
 import {
   isSupabaseConfigured,
   loadStoredSyncCode,
@@ -35,7 +74,6 @@ import {
   syncStarsAndTargets,
 } from "./lib/seasons.js";
 
-const Ic = Icon; // legacy alias used throughout panels
 const THEME_KEY = "awr-theme";
 function readStoredTheme() {
   try {
@@ -48,922 +86,6 @@ function readStoredTheme() {
 /* ============================================================
    NFL AUCTION WAR ROOM — 12-team, $200, 0.5 PPR, 2QB superflex, 14-man roster
    ============================================================ */
-
-const DEFAULT_SETTINGS = {
-  budget: 200,
-  teams: 12,
-  starters: { QB: 1, RB: 2, WR: 2, TE: 1, FLEX: 1, SUPERFLEX: 1, K: 1, DEF: 1 },
-  bench: 4,
-  flexEligible: { RB: true, WR: true, TE: true, QB: false, K: false, DEF: false },
-  superflexEligible: { QB: true, RB: true, WR: true, TE: true, K: false, DEF: false },
-  onlyOne: { QB: false, K: true, DEF: true, RB: false, WR: false, TE: false }, // 2QB: second QB fills SUPERFLEX
-};
-const clampInt = (v, lo, hi) => Math.max(lo, Math.min(hi, Math.round(Number(v) || 0)));
-function normalizeSettings(raw) {
-  const s = { ...DEFAULT_SETTINGS, ...(raw || {}) };
-  s.starters = { ...DEFAULT_SETTINGS.starters, ...(raw?.starters || {}) };
-  s.flexEligible = { ...DEFAULT_SETTINGS.flexEligible, ...(raw?.flexEligible || {}) };
-  s.superflexEligible = { ...DEFAULT_SETTINGS.superflexEligible, ...(raw?.superflexEligible || {}) };
-  s.onlyOne = { ...DEFAULT_SETTINGS.onlyOne, ...(raw?.onlyOne || {}) };
-  s.budget = clampInt(s.budget, 1, 10000);
-  s.teams = clampInt(s.teams, 2, 32);
-  s.bench = clampInt(s.bench, 0, 20);
-  Object.keys(s.starters).forEach((k) => { s.starters[k] = clampInt(s.starters[k], 0, 10); });
-  return s;
-}
-
-// 2026 bye weeks (official schedule, released May 2026)
-const TEAM_BYES = {
-  ARI: 14, ATL: 11, BAL: 13, BUF: 7, CAR: 5, CHI: 10, CIN: 6, CLE: 11,
-  DAL: 14, DEN: 10, DET: 6, GB: 11, HOU: 8, IND: 13, JAX: 7, KC: 5,
-  LV: 13, LAC: 7, LAR: 11, MIA: 6, MIN: 6, NE: 11, NO: 8, NYG: 8,
-  NYJ: 13, PHI: 10, PIT: 9, SF: 8, SEA: 11, TB: 10, TEN: 9, WAS: 7,
-};
-const TEAMS = Object.keys(TEAM_BYES).sort();
-const TEAM_ALIASES = { JAC: "JAX", WSH: "WAS", ARZ: "ARI", LA: "LAR", OAK: "LV", SD: "LAC", STL: "LAR" };
-
-const POSITIONS = ["QB", "RB", "WR", "TE", "K", "DEF"];
-const POS_ORDER = ["QB", "RB", "WR", "TE", "K", "DEF"]; // display order
-const NEED_POS_PRIORITY = ["RB", "WR", "QB", "TE", "K", "DEF"];
-
-// Built-in player list — Top 350 overall (FantasyPros multi-format avg + injury/handcuff adj)
-// Average of FantasyPros expert consensus rank_ave across PPR, Half-PPR, and Standard draft rankings
-// Generated 2026-08-26T21:34:49.709Z · 350 players · ordered by adjusted consensus rank
-const RAW_DB = [
-  ["Jahmyr Gibbs","RB","DET"], // 1 · avg 1.33
-  ["Bijan Robinson","RB","ATL"], // 2 · avg 3.00
-  ["Jaxon Smith-Njigba","WR","SEA"], // 3 · avg 5.00
-  ["Amon-Ra St. Brown","WR","DET"], // 4 · avg 6.00
-  ["CeeDee Lamb","WR","DAL"], // 5 · avg 8.00
-  ["Jonathan Taylor","RB","IND"], // 6 · avg 8.33
-  ["Christian McCaffrey","RB","SF"], // 7 · avg 8.67
-  ["Justin Jefferson","WR","MIN"], // 8 · avg 10.00
-  ["James Cook III","RB","BUF"], // 9 · avg 11.00
-  ["A.J. Brown","WR","NE"], // 10 · avg 12.67
-  ["Drake London","WR","ATL"], // 11 · avg 13.00
-  ["Ja'Marr Chase","WR","CIN"], // 12 · avg 2.00 · adj +12
-  ["Nico Collins","WR","HOU"], // 13 · avg 14.67
-  ["Chase Brown","RB","CIN"], // 14 · avg 15.33
-  ["Puka Nacua","WR","LAR"], // 15 · avg 3.67 · adj +12
-  ["Brock Bowers","TE","LV"], // 16 · avg 17.00
-  ["Saquon Barkley","RB","PHI"], // 17 · avg 18.00
-  ["De'Von Achane","RB","MIA"], // 18 · avg 19.00
-  ["Davante Adams","WR","LAR"], // 19 · avg 47.00 · adj -28
-  ["George Pickens","WR","DAL"], // 20 · avg 19.67
-  ["Chris Olave","WR","NO"], // 21 · avg 21.33
-  ["Trey McBride","TE","ARI"], // 22 · avg 22.00
-  ["Derrick Henry","RB","BAL"], // 23 · avg 23.00
-  ["Kenneth Walker III","RB","KC"], // 24 · avg 23.00
-  ["Omarion Hampton","RB","LAC"], // 25 · avg 23.00
-  ["Josh Allen","QB","BUF"], // 26 · avg 25.33
-  ["Malik Nabers","WR","NYG"], // 27 · avg 25.67
-  ["Rashee Rice","WR","KC"], // 28 · avg 26.33
-  ["DeVonta Smith","WR","PHI"], // 29 · avg 27.33
-  ["Lamar Jackson","QB","BAL"], // 30 · avg 31.67
-  ["Tee Higgins","WR","CIN"], // 31 · avg 33.33
-  ["Kyren Williams","RB","LAR"], // 32 · avg 34.33
-  ["Tetairoa McMillan","WR","CAR"], // 33 · avg 36.00
-  ["Javonte Williams","RB","DAL"], // 34 · avg 37.00
-  ["Ladd McConkey","WR","LAC"], // 35 · avg 37.33
-  ["Jaylen Waddle","WR","DEN"], // 36 · avg 37.67
-  ["Garrett Wilson","WR","NYJ"], // 37 · avg 38.00
-  ["Drake Maye","QB","NE"], // 38 · avg 38.67
-  ["Colston Loveland","TE","CHI"], // 39 · avg 39.00
-  ["Josh Jacobs","RB","GB"], // 40 · avg 40.33
-  ["Zay Flowers","WR","BAL"], // 41 · avg 30.33 · adj +12
-  ["Joe Burrow","QB","CIN"], // 42 · avg 45.33
-  ["Travis Etienne Jr.","RB","NO"], // 43 · avg 46.67
-  ["Terry McLaurin","WR","WAS"], // 44 · avg 47.00
-  ["Ashton Jeanty","RB","LV"], // 45 · avg 25.33 · adj +22
-  ["Breece Hall","RB","NYJ"], // 46 · avg 37.67 · adj +12
-  ["D'Andre Swift","RB","CHI"], // 47 · avg 50.00
-  ["Jameson Williams","WR","DET"], // 48 · avg 51.00
-  ["Emeka Egbuka","WR","TB"], // 49 · avg 39.67 · adj +12
-  ["Luther Burden III","WR","CHI"], // 50 · avg 52.00
-  ["Jayden Daniels","QB","WAS"], // 51 · avg 53.67
-  ["Cam Skattebo","RB","NYG"], // 52 · avg 54.00
-  ["Jeremiyah Love","RB","ARI"], // 53 · avg 42.67 · adj +12
-  ["Christian Watson","WR","GB"], // 54 · avg 56.00
-  ["DJ Moore","WR","BUF"], // 55 · avg 56.00
-  ["Quinshon Judkins","RB","CLE"], // 56 · avg 56.67
-  ["Bucky Irving","RB","TB"], // 57 · avg 57.33
-  ["Jalen Hurts","QB","PHI"], // 58 · avg 57.67
-  ["David Montgomery","RB","HOU"], // 59 · avg 58.00
-  ["Mike Evans","WR","SF"], // 60 · avg 58.33
-  ["Rome Odunze","WR","CHI"], // 61 · avg 58.67
-  ["Bhayshul Tuten","RB","JAC"], // 62 · avg 64.00
-  ["Caleb Williams","QB","CHI"], // 63 · avg 66.00
-  ["Parker Washington","WR","JAC"], // 64 · avg 66.00
-  ["Jadarian Price","RB","SEA"], // 65 · avg 66.33
-  ["TreVeyon Henderson","RB","NE"], // 66 · avg 66.67
-  ["Tyler Warren","TE","IND"], // 67 · avg 55.33 · adj +12
-  ["Marvin Harrison Jr.","WR","ARI"], // 68 · avg 68.67
-  ["Justin Herbert","QB","LAC"], // 69 · avg 69.33
-  ["Carnell Tate","WR","TEN"], // 70 · avg 70.33
-  ["Rhamondre Stevenson","RB","NE"], // 71 · avg 71.67
-  ["Trevor Lawrence","QB","JAC"], // 72 · avg 73.67
-  ["Jaylen Warren","RB","PIT"], // 73 · avg 74.33
-  ["Dak Prescott","QB","DAL"], // 74 · avg 75.67
-  ["Brian Thomas Jr.","WR","JAC"], // 75 · avg 76.33
-  ["DK Metcalf","WR","PIT"], // 76 · avg 77.00
-  ["Harold Fannin Jr.","TE","CLE"], // 77 · avg 78.67
-  ["Tony Pollard","RB","TEN"], // 78 · avg 78.67
-  ["Chris Godwin Jr.","WR","TB"], // 79 · avg 81.00
-  ["Tucker Kraft","TE","GB"], // 80 · avg 70.33 · adj +12
-  ["Courtland Sutton","WR","DEN"], // 81 · avg 83.00
-  ["Kyle Pitts Sr.","TE","ATL"], // 82 · avg 83.00
-  ["Rico Dowdle","RB","PIT"], // 83 · avg 83.00
-  ["Jonathon Brooks","RB","CAR"], // 84 · avg 85.33
-  ["Quentin Johnston","WR","LAC"], // 85 · avg 87.33
-  ["J.K. Dobbins","RB","DEN"], // 86 · avg 88.67
-  ["Brock Purdy","QB","SF"], // 87 · avg 91.33
-  ["Michael Wilson","WR","ARI"], // 88 · avg 91.33
-  ["Sam LaPorta","TE","DET"], // 89 · avg 81.00 · adj +12
-  ["Chuba Hubbard","RB","CAR"], // 90 · avg 93.00
-  ["Jaxson Dart","QB","NYG"], // 91 · avg 94.00
-  ["Alec Pierce","WR","IND"], // 92 · avg 94.67
-  ["Blake Corum","RB","LAR"], // 93 · avg 96.00
-  ["Bo Nix","QB","DEN"], // 94 · avg 98.00
-  ["Jacory Croskey-Merritt","RB","WAS"], // 95 · avg 100.00
-  ["RJ Harvey","RB","DEN"], // 96 · avg 100.00
-  ["Travis Kelce","TE","KC"], // 97 · avg 100.33
-  ["Patrick Mahomes II","QB","KC"], // 98 · avg 100.67
-  ["Wan'Dale Robinson","WR","TEN"], // 99 · avg 102.00
-  ["Tyler Allgeier","RB","ARI"], // 100 · avg 130.67 · adj -28
-  ["Michael Pittman Jr.","WR","PIT"], // 101 · avg 90.67 · adj +12
-  ["Jordan Addison","WR","MIN"], // 102 · avg 102.67
-  ["Matthew Stafford","QB","LAR"], // 103 · avg 104.67
-  ["Jayden Reed","WR","GB"], // 104 · avg 105.00
-  ["Jordan Mason","RB","MIN"], // 105 · avg 105.33
-  ["Stefon Diggs","WR","WAS"], // 106 · avg 105.33
-  ["George Kittle","TE","SF"], // 107 · avg 93.67 · adj +12
-  ["Kenny Gainwell","RB","TB"], // 108 · avg 106.00
-  ["Jared Goff","QB","DET"], // 109 · avg 107.33
-  ["Josh Downs","WR","IND"], // 110 · avg 96.00 · adj +12
-  ["Dalton Kincaid","TE","BUF"], // 111 · avg 108.67
-  ["Jakobi Meyers","WR","JAC"], // 112 · avg 109.33
-  ["Makai Lemon","WR","PHI"], // 113 · avg 109.67
-  ["Rachaad White","RB","WAS"], // 114 · avg 111.00
-  ["Dallas Goedert","TE","PHI"], // 115 · avg 113.67
-  ["Kyler Murray","QB","MIN"], // 116 · avg 114.00
-  ["Aaron Jones Sr.","RB","MIN"], // 117 · avg 116.00
-  ["Isaiah Likely","TE","NYG"], // 118 · avg 118.67
-  ["Baker Mayfield","QB","TB"], // 119 · avg 119.67
-  ["Jordan Love","QB","GB"], // 120 · avg 120.67
-  ["KC Concepcion","WR","CLE"], // 121 · avg 122.00
-  ["Mike Washington Jr.","RB","LV"], // 122 · avg 161.00 · adj -38
-  ["Chris Rodriguez Jr.","RB","JAC"], // 123 · avg 123.67
-  ["Mark Andrews","TE","BAL"], // 124 · avg 123.67
-  ["Xavier Worthy","WR","KC"], // 125 · avg 124.33
-  ["Romeo Doubs","WR","NE"], // 126 · avg 125.33
-  ["Tyler Shough","QB","NO"], // 127 · avg 125.67
-  ["Jake Ferguson","TE","DAL"], // 128 · avg 126.33
-  ["Matthew Golden","WR","GB"], // 129 · avg 126.33
-  ["Jalen Coker","WR","CAR"], // 130 · avg 127.67
-  ["Kyle Monangai","RB","CHI"], // 131 · avg 108.33 · adj +22
-  ["Woody Marks","RB","HOU"], // 132 · avg 130.67
-  ["Braelon Allen","RB","NYJ"], // 133 · avg 158.67 · adj -28
-  ["Khalil Shakir","WR","BUF"], // 134 · avg 131.33
-  ["Malik Willis","QB","MIA"], // 135 · avg 132.00
-  ["Juwan Johnson","TE","NO"], // 136 · avg 135.33
-  ["Jalen McMillan","WR","TB"], // 137 · avg 164.67 · adj -28
-  ["Deebo Samuel Sr.","WR","SF"], // 138 · avg 138.33
-  ["Sam Darnold","QB","SEA"], // 139 · avg 138.33
-  ["De'Zhaun Stribling","WR","SF"], // 140 · avg 138.67
-  ["Tyjae Spears","RB","TEN"], // 141 · avg 139.33
-  ["Keaton Mitchell","RB","LAC"], // 142 · avg 141.00
-  ["Rashid Shaheed","WR","SEA"], // 143 · avg 141.67
-  ["C.J. Stroud","QB","HOU"], // 144 · avg 142.67
-  ["Jonah Coleman","RB","DEN"], // 145 · avg 144.67
-  ["Tank Bigsby","RB","PHI"], // 146 · avg 145.67
-  ["Daniel Jones","QB","IND"], // 147 · avg 147.33
-  ["Hunter Henry","TE","NE"], // 148 · avg 147.67
-  ["Brenton Strange","TE","JAC"], // 149 · avg 148.67
-  ["Dylan Sampson","RB","CLE"], // 150 · avg 149.67
-  ["Tyrone Tracy Jr.","RB","NYG"], // 151 · avg 150.67
-  ["Isiah Pacheco","RB","DET"], // 152 · avg 151.00
-  ["Cam Ward","QB","TEN"], // 153 · avg 151.33
-  ["Denzel Boston","WR","CLE"], // 154 · avg 151.33
-  ["Chig Okonkwo","TE","WAS"], // 155 · avg 152.00
-  ["Brian Robinson Jr.","RB","ATL"], // 156 · avg 157.67
-  ["Adonai Mitchell","WR","NYJ"], // 157 · avg 158.33
-  ["Dalton Schultz","TE","HOU"], // 158 · avg 158.33
-  ["Tre Tucker","WR","LV"], // 159 · avg 158.67
-  ["Jauan Jennings","WR","MIN"], // 160 · avg 161.67
-  ["MarShawn Lloyd","RB","GB"], // 161 · avg 162.00
-  ["Jerry Jeudy","WR","CLE"], // 162 · avg 162.67
-  ["Bryce Young","QB","CAR"], // 163 · avg 167.67
-  ["Tre' Harris","WR","LAC"], // 164 · avg 171.00
-  ["Kayshon Boutte","WR","HOU"], // 165 · avg 171.67
-  ["Dontayvion Wicks","WR","PHI"], // 166 · avg 174.00
-  ["Emmett Johnson","RB","KC"], // 167 · avg 175.33
-  ["Jalen Nailor","WR","LV"], // 168 · avg 178.33
-  ["Omar Cooper Jr.","WR","NYJ"], // 169 · avg 178.33
-  ["Zach Charbonnet","RB","SEA"], // 170 · avg 143.67 · adj +35
-  ["AJ Barner","TE","SEA"], // 171 · avg 179.00
-  ["Ray Davis","RB","BUF"], // 172 · avg 179.00
-  ["Ryan Flournoy","WR","DAL"], // 173 · avg 181.67
-  ["T.J. Hockenson","TE","MIN"], // 174 · avg 183.33
-  ["Terrance Ferguson","TE","LAR"], // 175 · avg 183.33
-  ["Oronde Gadsden II","TE","LAC"], // 176 · avg 184.33
-  ["Pat Bryant","WR","DEN"], // 177 · avg 184.33
-  ["Jacoby Brissett","QB","ARI"], // 178 · avg 184.67
-  ["Kimani Vidal","RB","LAC"], // 179 · avg 186.00
-  ["Calvin Ridley","WR","TEN"], // 180 · avg 186.33
-  ["Malik Washington","WR","MIA"], // 181 · avg 186.67
-  ["Travis Hunter","WR","JAC"], // 182 · avg 189.33
-  ["Sean Tucker","RB","TB"], // 183 · avg 191.00
-  ["Brandon Aubrey","K","DAL"], // 184 · avg 191.33
-  ["Keenan Allen","WR","IND"], // 185 · avg 193.00
-  ["Nicholas Singleton","RB","TEN"], // 186 · avg 194.67
-  ["James Conner","RB","ARI"], // 187 · avg 213.67 · adj -16
-  ["Cameron Dicker","K","LAC"], // 188 · avg 198.00
-  ["Tank Dell","WR","HOU"], // 189 · avg 198.33
-  ["Jaylin Noel","WR","HOU"], // 190 · avg 199.33
-  ["Kenyon Sadiq","TE","NYJ"], // 191 · avg 199.67
-  ["Ka'imi Fairbairn","K","HOU"], // 192 · avg 200.67
-  ["Alvin Kamara","RB","NO"], // 193 · avg 156.00 · adj +45
-  ["Cam Little","K","JAC"], // 194 · avg 204.33
-  ["Gunnar Helm","TE","TEN"], // 195 · avg 206.00
-  ["Jason Myers","K","SEA"], // 196 · avg 208.00
-  ["Jaydon Blue","RB","DAL"], // 197 · avg 209.00
-  ["Rashod Bateman","WR","BAL"], // 198 · avg 209.33
-  ["Geno Smith","QB","NYJ"], // 199 · avg 210.00
-  ["Kaytron Allen","RB","WAS"], // 200 · avg 211.33
-  ["Aaron Rodgers","QB","PIT"], // 201 · avg 212.33
-  ["Isaac TeSlaa","WR","DET"], // 202 · avg 212.33
-  ["Pat Freiermuth","TE","PIT"], // 203 · avg 213.33
-  ["Tyler Loop","K","BAL"], // 204 · avg 214.67
-  ["Emanuel Wilson","RB","SEA"], // 205 · avg 215.00
-  ["Eddy Pineiro","K","SF"], // 206 · avg 215.33
-  ["Darnell Mooney","WR","NYG"], // 207 · avg 218.33
-  ["Troy Franklin","WR","DEN"], // 208 · avg 220.00
-  ["Cade Otton","TE","TB"], // 209 · avg 221.67
-  ["Jake Bates","K","DET"], // 210 · avg 221.67
-  ["Cooper Kupp","WR","SEA"], // 211 · avg 222.67
-  ["Cairo Santos","K","CHI"], // 212 · avg 224.67
-  ["Jaylen Wright","RB","MIA"], // 213 · avg 227.00
-  ["Isaiah Davis","RB","NYJ"], // 214 · avg 256.33 · adj -28
-  ["George Holani","RB","SEA"], // 215 · avg 228.67
-  ["Germie Bernard","WR","PIT"], // 216 · avg 230.33
-  ["Evan McPherson","K","CIN"], // 217 · avg 232.00
-  ["Jordyn Tyson","WR","NO"], // 218 · avg 132.67 · adj +100
-  ["Kaelon Black","RB","SF"], // 219 · avg 232.67
-  ["Harrison Mevis","K","LAR"], // 220 · avg 233.67
-  ["Zachariah Branch","WR","ATL"], // 221 · avg 234.67
-  ["Andy Borregales","K","NE"], // 222 · avg 235.00
-  ["Devin Neal","RB","NO"], // 223 · avg 285.00 · adj -50
-  ["Chase McLaughlin","K","TB"], // 224 · avg 236.00
-  ["David Njoku","TE","LAC"], // 225 · avg 237.67
-  ["Kendre Miller","RB","NO"], // 226 · avg 289.00 · adj -50
-  ["Evan Engram","TE","DEN"], // 227 · avg 241.33
-  ["Ja'Kobi Lane","WR","BAL"], // 228 · avg 242.00
-  ["Justice Hill","RB","BAL"], // 229 · avg 244.00
-  ["Antonio Williams","WR","WAS"], // 230 · avg 244.33
-  ["Ollie Gordon II","RB","MIA"], // 231 · avg 247.33
-  ["Devaughn Vele","WR","NO"], // 232 · avg 247.67
-  ["Malachi Fields","WR","NYG"], // 233 · avg 247.67
-  ["Fernando Mendoza","QB","LV"], // 234 · avg 249.00
-  ["Jack Bech","WR","LV"], // 235 · avg 249.67
-  ["Demond Claiborne","RB","MIN"], // 236 · avg 250.00
-  ["Colby Parkinson","TE","LAR"], // 237 · avg 250.33
-  ["Greg Dulcich","TE","MIA"], // 238 · avg 251.33
-  ["Harrison Butker","K","KC"], // 239 · avg 252.33
-  ["Chris Boswell","K","PIT"], // 240 · avg 254.33
-  ["Ted Hurst III","WR","TB"], // 241 · avg 255.67
-  ["Jordan James","RB","SF"], // 242 · avg 256.33
-  ["Keon Coleman","WR","BUF"], // 243 · avg 244.33 · adj +12
-  ["Elic Ayomanor","WR","TEN"], // 244 · avg 257.00
-  ["Chimere Dike","WR","TEN"], // 245 · avg 257.33
-  ["Najee Harris","RB","NYG"], // 246 · avg 257.33
-  ["Samaje Perine","RB","CIN"], // 247 · avg 259.00
-  ["Chris Brooks","RB","GB"], // 248 · avg 261.33
-  ["Tory Horton","WR","SEA"], // 249 · avg 261.33
-  ["Tua Tagovailoa","QB","ATL"], // 250 · avg 261.33
-  ["Caleb Douglas","WR","MIA"], // 251 · avg 262.67
-  ["Tyquan Thornton","WR","KC"], // 252 · avg 263.67
-  ["Chris Bell","WR","MIA"], // 253 · avg 264.33
-  ["Ty Johnson","RB","BUF"], // 254 · avg 264.33
-  ["Wil Lutz","K","DEN"], // 255 · avg 271.67
-  ["LeQuint Allen Jr.","RB","JAC"], // 256 · avg 272.33
-  ["Malik Davis","RB","DAL"], // 257 · avg 272.67
-  ["Christian Kirk","WR","SF"], // 258 · avg 273.67
-  ["Will Reichard","K","MIN"], // 259 · avg 273.67
-  ["Darius Slayton","WR","NYG"], // 260 · avg 274.00
-  ["Elijah Sarratt","WR","BAL"], // 261 · avg 275.33
-  ["Mason Taylor","TE","NYJ"], // 262 · avg 278.33
-  ["DJ Giddens","RB","IND"], // 263 · avg 278.67
-  ["Theo Johnson","TE","NYG"], // 264 · avg 278.67
-  ["Seth McGowan","RB","IND"], // 265 · avg 279.67
-  ["Xavier Legette","WR","CAR"], // 266 · avg 279.67
-  ["Cyrus Allen","WR","KC"], // 267 · avg 280.67
-  ["Kirk Cousins","QB","LV"], // 268 · avg 281.00
-  ["Marvin Mims Jr.","WR","DEN"], // 269 · avg 282.67
-  ["Eli Stowers","TE","PHI"], // 270 · avg 285.67
-  ["Deshaun Watson","QB","CLE"], // 271 · avg 286.00
-  ["Shedeur Sanders","QB","CLE"], // 272 · avg 286.33
-  ["Michael Penix Jr.","QB","ATL"], // 273 · avg 277.67 · adj +12
-  ["Adam Randall","RB","BAL"], // 274 · avg 292.00
-  ["Emari Demercado","RB","KC"], // 275 · avg 292.00
-  ["Brashard Smith","RB","KC"], // 276 · avg 294.33
-  ["Kyle Williams","WR","NE"], // 277 · avg 296.00
-  ["Devin Singletary","RB","NYG"], // 278 · avg 297.00
-  ["Hollywood Brown","WR","PHI"], // 279 · avg 297.67
-  ["Mike Gesicki","TE","CIN"], // 280 · avg 297.67
-  ["Mack Hollins","WR","NE"], // 281 · avg 301.67
-  ["Trevor Etienne","RB","CAR"], // 282 · avg 302.33
-  ["Kaleb Johnson","RB","PIT"], // 283 · avg 302.67
-  ["Isaiah Bond","WR","CLE"], // 284 · avg 304.00
-  ["Skyler Bell","WR","BUF"], // 285 · avg 306.33
-  ["Jerome Ford","RB","WAS"], // 286 · avg 308.67
-  ["Brandon Aiyuk","WR","SF"], // 287 · avg 309.00
-  ["Isaac Guerendo","RB","SF"], // 288 · avg 310.67
-  ["Charlie Smyth","K","NO"], // 289 · avg 311.00
-  ["Tahj Brooks","RB","CIN"], // 290 · avg 311.33
-  ["Andrei Iosivas","WR","CIN"], // 291 · avg 312.33
-  ["Jake Tonges","TE","SF"], // 292 · avg 312.33
-  ["Darren Waller","TE","CAR"], // 293 · avg 313.00
-  ["Jarquez Hunter","RB","LAR"], // 294 · avg 314.33
-  ["Tez Johnson","WR","TB"], // 295 · avg 343.00 · adj -28
-  ["Audric Estime","RB","NO"], // 296 · avg 316.00
-  ["Jaleel McLaughlin","RB","DEN"], // 297 · avg 316.00
-  ["Tyreek Hill","WR","FA"], // 298 · avg 317.67
-  ["Darnell Washington","TE","PIT"], // 299 · avg 319.33
-  ["Oscar Delp","TE","NO"], // 300 · avg 319.33
-  ["Will Shipley","RB","PHI"], // 301 · avg 320.00
-  ["Michael Mayer","TE","LV"], // 302 · avg 322.67
-  ["Jahan Dotson","WR","ATL"], // 303 · avg 324.33
-  ["DeMario Douglas","WR","NE"], // 304 · avg 325.00
-  ["Elijah Arroyo","TE","SEA"], // 305 · avg 327.00
-  ["Charlie Kolar","TE","LAC"], // 306 · avg 329.33
-  ["Jalen Tolbert","WR","MIA"], // 307 · avg 329.33
-  ["Bryce Lance","WR","NO"], // 308 · avg 329.67
-  ["Kareem Hunt","RB","FA"], // 309 · avg 331.33
-  ["Xavier Hutchinson","WR","HOU"], // 310 · avg 331.33
-  ["Carson Beck","QB","ARI"], // 311 · avg 332.00
-  ["J.J. McCarthy","QB","MIN"], // 312 · avg 333.33
-  ["Cole Kmet","TE","CHI"], // 313 · avg 335.33
-  ["Erick All Jr.","TE","CIN"], // 314 · avg 336.33
-  ["Konata Mumpfield","WR","LAR"], // 315 · avg 337.67
-  ["Tyler Higbee","TE","LAR"], // 316 · avg 337.67
-  ["Cedric Tillman","WR","CLE"], // 317 · avg 339.33
-  ["Eli Raridon","TE","NE"], // 318 · avg 341.00
-  ["Luke McCaffrey","WR","WAS"], // 319 · avg 343.00
-  ["Joe Mixon","RB","FA"], // 320 · avg 343.33
-  ["Jalen Royals","WR","KC"], // 321 · avg 344.00
-  ["Dawson Knox","TE","BUF"], // 322 · avg 345.67
-  ["Olamide Zaccheaus","WR","ATL"], // 323 · avg 345.67
-  ["Brenen Thompson","WR","LAC"], // 324 · avg 349.00
-  ["Max Klare","TE","LAR"], // 325 · avg 349.00
-  ["Bam Knight","RB","ARI"], // 326 · avg 349.67
-  ["Kendrick Bourne","WR","ARI"], // 327 · avg 349.67
-  ["Noah Gray","TE","KC"], // 328 · avg 349.67
-  ["Mac Jones","QB","SF"], // 329 · avg 351.33
-  ["Joshua Palmer","WR","BUF"], // 330 · avg 352.33
-  ["Jake Elliott","K","PHI"], // 331 · avg 355.00
-  ["Ja'Tavion Sanders","TE","CAR"], // 332 · avg 357.33
-  ["Eli Heidenreich","RB","PIT"], // 333 · avg 358.33
-  ["Treylon Burks","WR","WAS"], // 334 · avg 358.67
-  ["Justin Fields","QB","KC"], // 335 · avg 363.00
-  ["Ty Simpson","QB","LAR"], // 336 · avg 365.33
-  ["Tyler Bass","K","BUF"], // 337 · avg 365.33
-  ["Justin Joly","TE","DEN"], // 338 · avg 366.00
-  ["Michael Carter","RB","TEN"], // 339 · avg 366.67
-  ["Jawhar Jordan","RB","HOU"], // 340 · avg 367.67
-  ["Malik Benson","WR","LV"], // 341 · avg 368.00
-  ["Savion Williams","WR","GB"], // 342 · avg 371.33
-  ["Trey Smack","K","GB"], // 343 · avg 371.33
-  ["Kevin Coleman Jr.","WR","MIA"], // 344 · avg 372.67
-  ["Jordan Whittington","WR","LAR"], // 345 · avg 400.67 · adj -28
-  ["KaVontae Turpin","WR","DAL"], // 346 · avg 373.67
-  ["Dont'e Thornton Jr.","WR","LV"], // 347 · avg 374.00
-  ["Kalif Raymond","WR","CHI"], // 348 · avg 374.67
-  ["Roman Wilson","WR","PIT"], // 349 · avg 376.00
-  ["Raheim Sanders","RB","CLE"], // 350 · avg 376.33
-];
-
-
-const DEF_NAMES = {
-  ARI:"Cardinals", ATL:"Falcons", BAL:"Ravens", BUF:"Bills", CAR:"Panthers", CHI:"Bears",
-  CIN:"Bengals", CLE:"Browns", DAL:"Cowboys", DEN:"Broncos", DET:"Lions", GB:"Packers",
-  HOU:"Texans", IND:"Colts", JAX:"Jaguars", KC:"Chiefs", LV:"Raiders", LAC:"Chargers",
-  LAR:"Rams", MIA:"Dolphins", MIN:"Vikings", NE:"Patriots", NO:"Saints", NYG:"Giants",
-  NYJ:"Jets", PHI:"Eagles", PIT:"Steelers", SF:"49ers", SEA:"Seahawks", TB:"Buccaneers",
-  TEN:"Titans", WAS:"Commanders",
-};
-const PLAYER_DB = [
-  ...RAW_DB,
-  ...TEAMS.map((t) => [`${DEF_NAMES[t]} D/ST`, "DEF", t]),
-].map(([name, pos, team], i) => ({ id: `db${i}`, name, pos, team, bye: TEAM_BYES[team] }));
-
-const norm = (s) => (s || "").toLowerCase().replace(/[’‘]/g, "'").replace(/[.-]/g, "").trim();
-// Player health — updated 2026-08-26T21:34:49.709Z
-// Sources: FantasyPros injury news (8/23); Yahoo Sports training camp tracker; Fantasy Alarm weekend injury roundup (8/23); CBS Sports camp tracker; Adam Schefter / team beat reporters; ESPN (8/25–26); CBS / NFL Network (8/26)
-// Regenerate via: npm run refresh-board
-const PLAYER_HEALTH = {
-  [norm("Ashton Jeanty")]: { status: "D", note: "Right knee — helped off practice 8/23, unable to bear weight; team paused practice; awaiting MRI", sources: ["FantasyPros","Fantasy Alarm","Adam Schefter"], updatedAt: "2026-08-23" },
-  [norm("Ricky Pearsall")]: { status: "OFS", note: "PCL surgery — out for 2026", sources: ["Yahoo Sports","CBS Sports"], updatedAt: "2026-08-20" },
-  [norm("Chris Brazzell II")]: { status: "OFS", note: "LCL tear — out for 2026", sources: ["Yahoo Sports"], updatedAt: "2026-08-18" },
-  [norm("Jayden Higgins")]: { status: "OFS", note: "Torn ACL — out for 2026 (Ian Rapoport)", sources: ["FantasyPros","Yahoo Sports"], updatedAt: "2026-08-20" },
-  [norm("Jordyn Tyson")]: { status: "IR", note: "Hamstring — expected ~2 months, may start on IR", sources: ["Yahoo Sports","Fantasy Alarm","AS USA"], updatedAt: "2026-08-22" },
-  [norm("Alvin Kamara")]: { status: "OUT", note: "MCL sprain — expected out ~1 month", sources: ["Fantasy Alarm"], updatedAt: "2026-08-22" },
-  [norm("Zach Charbonnet")]: { status: "PUP", note: "ACL recovery — has not returned to practice (active/PUP)", sources: ["Yahoo Sports","Fantasy Alarm","AS USA"], updatedAt: "2026-08-22" },
-  [norm("Breece Hall")]: { status: "Q", note: "Groin — expected out 2–3 weeks; team hopeful for Week 1", sources: ["AS USA","Fantasy Alarm"], updatedAt: "2026-08-22" },
-  [norm("Jeremiyah Love")]: { status: "Q", note: "High-ankle sprain — light agility work 8/26; multi-week, Week 1 in doubt", sources: ["ESPN","Fantasy Alarm","Arizona Republic"], updatedAt: "2026-08-26" },
-  [norm("Emeka Egbuka")]: { status: "Q", note: "Turf toe sprain — Week 1 availability in doubt", sources: ["Fantasy Alarm","Yahoo Sports"], updatedAt: "2026-08-22" },
-  [norm("Sam LaPorta")]: { status: "Q", note: "Hip/undisclosed — missed recent practice", sources: ["FantasyPros","Fantasy Alarm"], updatedAt: "2026-08-21" },
-  [norm("Puka Nacua")]: { status: "Q", note: "Groin soreness — minor per McVay, monitoring", sources: ["Yahoo Sports"], updatedAt: "2026-08-22" },
-  [norm("Kyle Monangai")]: { status: "D", note: "Hyperextended knee — multiple weeks, Week 1 in doubt", sources: ["Yahoo Sports","Fantasy Alarm"], updatedAt: "2026-08-21" },
-  [norm("Michael Pittman Jr.")]: { status: "Q", note: "Hamstring — minor, expected ready Week 1", sources: ["FantasyPros"], updatedAt: "2026-08-21" },
-  [norm("George Kittle")]: { status: "Q", note: "Working back from Achilles; limited in camp", sources: ["AS USA"], updatedAt: "2026-08-20" },
-  [norm("Ja'Marr Chase")]: { status: "Q", note: "Left knee hyperextension — limped off 8/25 practice; held out 8/26 precaution; says he's fine, unlikely for preseason finale", sources: ["ESPN","Cincy Jungle","WCPO"], updatedAt: "2026-08-26" },
-  [norm("Zay Flowers")]: { status: "Q", note: "Undisclosed — held out of 8/26 practice precaution; expected ready for Week 1", sources: ["ESPN","Baltimore Sun"], updatedAt: "2026-08-26" },
-  [norm("Tyler Warren")]: { status: "Q", note: "Groin — expected out through this week; load-managed for Week 1", sources: ["CBS Sports","Colts beat"], updatedAt: "2026-08-26" },
-  [norm("James Conner")]: { status: "Q", note: "Foot — coach says too early to tell on Week 1 availability (8/26)", sources: ["ESPN","Arizona Republic"], updatedAt: "2026-08-26" },
-  [norm("Keon Coleman")]: { status: "Q", note: "Sprained foot/toe — injured in Bills preseason opener", sources: ["NFL Network","CBS Sports"], updatedAt: "2026-08-26" },
-  [norm("Michael Penix Jr.")]: { status: "Q", note: "Knee — won't play preseason finale; hopeful for Week 1 at Pittsburgh", sources: ["ESPN","Falcons beat"], updatedAt: "2026-08-26" },
-  [norm("Trey Benson")]: { status: "IR", note: "Knee — reverted to IR 8/25", sources: ["CBS Sports","ESPN"], updatedAt: "2026-08-25" },
-  [norm("Josh Downs")]: { status: "Q", note: "Calf — minor; believes he'll resume practicing soon (8/26)", sources: ["ESPN","Colts beat"], updatedAt: "2026-08-26" },
-  [norm("Tucker Kraft")]: { status: "Q", note: "Knee — returned to team drills 8/26; still monitoring", sources: ["NFL.com","ESPN"], updatedAt: "2026-08-26" },
-};
-const healthFor = (name) => PLAYER_HEALTH[norm(name)] || null;
-const injuryNoteFor = (name) => {
-  const h = healthFor(name);
-  if (!h) return null;
-  if (h.status === "OFS" || h.status === "IR" || h.status === "OUT") return h.note;
-  return null;
-};
-const healthBlocksDraft = (name) => {
-  const s = healthFor(name)?.status;
-  return s === "OFS" || s === "IR" || s === "OUT";
-};
-
-const HEALTH_LABELS = { Q: "Q", D: "D", OUT: "OUT", IR: "IR", OFS: "OFS", PUP: "PUP" };
-function healthSnippet(note, max = 48) {
-  if (!note) return "";
-  let s = note.split(" — ")[0].split(" - ")[0].trim();
-  if (s.length > max) s = `${s.slice(0, max - 1)}…`;
-  return s;
-}
-function HealthTip({ label, note, sources, updatedAt, statusClass, variant = "badge" }) {
-  const triggerRef = useRef(null);
-  const tipRef = useRef(null);
-  const [open, setOpen] = useState(false);
-  const [place, setPlace] = useState(null); // null until measured — avoids flash at 0,0
-  const snippet = healthSnippet(note);
-  const meta = [sources?.length ? sources.join(", ") : "", updatedAt ? `Updated ${updatedAt}` : ""].filter(Boolean).join(" · ");
-  const fallback = [snippet ? `${label} — ${snippet}` : label, note, meta].filter(Boolean).join(" · ");
-
-  const reposition = useCallback(() => {
-    const el = triggerRef.current;
-    const tip = tipRef.current;
-    if (!el || !tip) return;
-    const r = el.getBoundingClientRect();
-    const tw = tip.offsetWidth || 200;
-    const th = tip.offsetHeight || 80;
-    const gap = 8;
-    const pad = 8;
-    const spaceAbove = r.top - pad;
-    const spaceBelow = window.innerHeight - r.bottom - pad;
-    const side = spaceAbove >= th + gap || spaceAbove >= spaceBelow ? "above" : "below";
-    let top = side === "above" ? r.top - th - gap : r.bottom + gap;
-    let left = r.left + r.width / 2 - tw / 2;
-    left = Math.max(pad, Math.min(left, window.innerWidth - tw - pad));
-    top = Math.max(pad, Math.min(top, window.innerHeight - th - pad));
-    setPlace({ top, left, side });
-  }, []);
-
-  useLayoutEffect(() => {
-    if (!open) {
-      setPlace(null);
-      return undefined;
-    }
-    reposition();
-    // second pass after paint in case first measure used fallback size
-    const raf = requestAnimationFrame(reposition);
-    const onScroll = () => reposition();
-    const onResize = () => reposition();
-    window.addEventListener("scroll", onScroll, true);
-    window.addEventListener("resize", onResize);
-    return () => {
-      cancelAnimationFrame(raf);
-      window.removeEventListener("scroll", onScroll, true);
-      window.removeEventListener("resize", onResize);
-    };
-  }, [open, reposition]);
-
-  if (!note) {
-    return <span className={`health-tag ${statusClass}${variant === "injury" ? " injury-tag" : ""}`}>{label}</span>;
-  }
-  return (
-    <span
-      ref={triggerRef}
-      className={`health-tag has-tip ${statusClass}${variant === "injury" ? " injury-tag" : ""}${open ? " is-open" : ""}`}
-      title={open ? undefined : fallback}
-      tabIndex={0}
-      onMouseEnter={() => setOpen(true)}
-      onMouseLeave={() => setOpen(false)}
-      onFocus={() => setOpen(true)}
-      onBlur={() => setOpen(false)}
-    >
-      <span className="health-tag-label">{label}</span>
-      {open ? (
-        <span
-          ref={tipRef}
-          className={`health-tip side-${place?.side || "above"}${place ? " is-ready" : ""}`}
-          role="tooltip"
-          style={place ? { top: place.top, left: place.left } : { top: -9999, left: -9999 }}
-        >
-          <span className="health-tip-snippet">{snippet || note}</span>
-          {note && snippet && note.length > snippet.length ? <span className="health-tip-detail">{note}</span> : null}
-          {meta ? <span className="health-tip-meta">{meta}</span> : null}
-        </span>
-      ) : null}
-    </span>
-  );
-}
-function HealthBadge({ health }) {
-  if (!health) return <span className="health-tag st-active">—</span>;
-  const label = HEALTH_LABELS[health.status] || health.status;
-  return (
-    <HealthTip
-      label={label}
-      note={health.note}
-      sources={health.sources}
-      updatedAt={health.updatedAt}
-      statusClass={`st-${health.status}`}
-    />
-  );
-}
-function InjuryTag({ note, label = "OUT" }) {
-  return <HealthTip label={label} note={note} statusClass="st-OUT" variant="injury" />;
-}
-const isOutForSeason = (name) => healthFor(name)?.status === "OFS";
-const seedOutForSeasonBoard = (boardData) => {
-  const next = { ...(boardData || {}) };
-  Object.entries(PLAYER_HEALTH).filter(([, h]) => h.status === "OFS" || h.status === "IR" || h.status === "OUT").forEach(([key, h]) => {
-    const p = PLAYER_DB.find((x) => norm(x.name) === key);
-    if (!p) return;
-    const cur = next[key];
-    if (cur?.status === "mine") return;
-    next[key] = {
-      ...(cur || {}),
-      name: p.name, pos: p.pos, team: p.team, bye: p.bye,
-      status: "gone", price: cur?.price ?? null, star: !!cur?.star,
-      injuryNote: h.note,
-    };
-  });
-  return next;
-};
-
-/* ---------- estimated auction values (12-team, $200; DB is roughly rank-ordered) ---------- */
-const POS_LISTS = {};
-PLAYER_DB.forEach((p) => { (POS_LISTS[p.pos] = POS_LISTS[p.pos] || []).push(p); });
-const POS_RANK = {};
-Object.values(POS_LISTS).forEach((list) => list.forEach((p, i) => { POS_RANK[norm(p.name)] = i + 1; }));
-const OVERALL_RANK = {};
-RAW_DB.forEach(([name], i) => { OVERALL_RANK[norm(name)] = i + 1; }); // 1–350 consensus board order (1QB)
-
-function isSuperflexLeague(settings) {
-  return (settings?.starters?.SUPERFLEX || 0) > 0 && settings?.superflexEligible?.QB !== false;
-}
-
-/** Auction $ estimate; pass league settings for 2QB/superflex QB premium. */
-function estValue(pos, name, settings = null) {
-  const r = POS_RANK[norm(name)];
-  if (!r) return null;
-  const sf = isSuperflexLeague(settings);
-  let v;
-  if (pos === "RB" || pos === "WR") {
-    v = (sf ? 58 : 62) * Math.exp(-0.085 * (r - 1));
-  } else if (pos === "QB") {
-    v = sf
-      ? 62 * Math.exp(-0.095 * (r - 1))   // 2QB: Allen ~$62, QB12 ~$23, QB24 ~$8
-      : 26 * Math.exp(-0.2 * (r - 1));
-  } else if (pos === "TE") {
-    v = 30 * Math.exp(-0.3 * (r - 1));
-  } else {
-    v = r <= 3 ? 2 : 1;
-  }
-  return Math.max(1, Math.round(v));
-}
-
-/** Value-based draft order for superflex; falls back to consensus overall rank in 1QB. */
-function buildDraftRank(settings) {
-  if (!isSuperflexLeague(settings)) return OVERALL_RANK;
-  const entries = RAW_DB.map(([name, pos]) => ({
-    key: norm(name),
-    est: estValue(pos, name, settings) || 0,
-    consensus: OVERALL_RANK[norm(name)] || 9999,
-  }));
-  entries.sort((a, b) => b.est - a.est || a.consensus - b.consensus || a.key.localeCompare(b.key));
-  const map = {};
-  entries.forEach((e, i) => { map[e.key] = i + 1; });
-  return map;
-}
-
-function slotCostEst(settings) {
-  const sf = isSuperflexLeague(settings);
-  return {
-    QB: sf ? 14 : 8,
-    RB: 13,
-    WR: 12,
-    TE: 6,
-    FLEX: sf ? 10 : 8,
-    SUPERFLEX: 14,
-    K: 1,
-    DEF: 1,
-  };
-}
-const tierOf = (name) => { const r = POS_RANK[norm(name)]; return r ? Math.ceil(r / 6) : null; };
-
-function resolveBye(player) {
-  if (player?.bye != null && player.bye !== "") {
-    const n = Number(player.bye);
-    if (Number.isFinite(n) && n > 0) return n;
-  }
-  return TEAM_BYES[player?.team] || null;
-}
-
-/** Bye overlap if `candidate` were added to `roster`. null when clean. */
-function assessByeConflict(roster, candidate, slotById = {}) {
-  const week = resolveBye(candidate);
-  if (!week) return null;
-  const mates = (roster || []).filter((p) => resolveBye(p) === week);
-  if (!mates.length) return null;
-
-  const starterMates = mates.filter((p) => slotById[p.slot]?.starter);
-  const samePosStarters = starterMates.filter((p) => p.pos === candidate.pos);
-  const qb = roster.find((p) => p.slot === "QB");
-  const te = roster.find((p) => p.slot === "TE");
-  const short = (p) => (p.name || "").split(/\s+/).filter(Boolean).pop() || p.name;
-  const qbTeClash =
-    (candidate.pos === "TE" && qb && resolveBye(qb) === week) ||
-    (candidate.pos === "QB" && te && resolveBye(te) === week);
-
-  let level = 1;
-  if (starterMates.length >= 2 || mates.length >= 3 || samePosStarters.length >= 1 || qbTeClash) level = 2;
-
-  let message;
-  if (starterMates.length >= 2) {
-    message = `Week ${week} bye with ${starterMates.length} starters (${starterMates.map(short).join(", ")})`;
-  } else if (samePosStarters.length >= 1) {
-    message = `Week ${week} stacks another ${candidate.pos} starter (${short(samePosStarters[0])})`;
-  } else if (candidate.pos === "TE" && qb && resolveBye(qb) === week) {
-    message = `Same Week ${week} bye as your QB`;
-  } else if (candidate.pos === "QB" && te && resolveBye(te) === week) {
-    message = `Same Week ${week} bye as your TE`;
-  } else if (mates.length >= 3) {
-    message = `Week ${week} already has ${mates.length} players`;
-  } else if (starterMates.length === 1) {
-    message = `Week ${week} bye with ${starterMates[0].pos} ${short(starterMates[0])}`;
-  } else {
-    message = `Week ${week} bye with ${mates.map(short).join(", ")}`;
-  }
-
-  const chip = starterMates.length
-    ? `Bye ${week} · ${starterMates.map(short).join(", ")}`
-    : `Bye ${week} · overlap`;
-
-  return { level, message, chip, week, mates, starterMates };
-}
-
-const PLAN_CATS = ["QB", "RB", "WR", "TE", "K", "DEF", "Bench"];
-const DEFAULT_PLAN = { QB: 45, RB: 70, WR: 55, TE: 12, K: 1, DEF: 2, Bench: 15 }; // 2QB superflex budget split
-const EMPTY_ASST = { name: "", pos: "", team: "", bye: "", proj: "", presetMax: "", bid: "" };
-
-// ---------- roster slots (built from settings) ----------
-function buildRoster(settings) {
-  const st = settings.starters;
-  const flexAccepts = POSITIONS.filter((p) => settings.flexEligible[p]);
-  const superflexAccepts = POSITIONS.filter((p) => settings.superflexEligible?.[p]);
-  const slots = [];
-  const addMany = (pos, n) => {
-    for (let i = 1; i <= n; i++) {
-      slots.push({ id: n === 1 ? pos : `${pos}${i}`, label: n === 1 ? pos : `${pos}${i}`, accepts: [pos], starter: true, pos });
-    }
-  };
-  addMany("QB", st.QB);
-  addMany("RB", st.RB);
-  addMany("WR", st.WR);
-  addMany("TE", st.TE);
-  for (let i = 1; i <= (st.FLEX || 0); i++) {
-    slots.push({ id: st.FLEX === 1 ? "FLEX" : `FLEX${i}`, label: st.FLEX === 1 ? "FLEX" : `FLEX${i}`,
-      accepts: flexAccepts.length ? flexAccepts : POSITIONS, starter: true, pos: "FLEX" });
-  }
-  for (let i = 1; i <= (st.SUPERFLEX || 0); i++) {
-    slots.push({ id: st.SUPERFLEX === 1 ? "SUPERFLEX" : `SUPERFLEX${i}`, label: st.SUPERFLEX === 1 ? "SUPERFLEX" : `SUPERFLEX${i}`,
-      accepts: superflexAccepts.length ? superflexAccepts : POSITIONS, starter: true, pos: "SUPERFLEX" });
-  }
-  addMany("K", st.K);
-  addMany("DEF", st.DEF);
-  for (let i = 1; i <= settings.bench; i++) {
-    slots.push({ id: `B${i}`, label: `Bench ${i}`, accepts: POSITIONS, starter: false, pos: "BENCH" });
-  }
-  const byId = Object.fromEntries(slots.map((x) => [x.id, x]));
-  const autoOrder = {};
-  POSITIONS.forEach((pos) => {
-    autoOrder[pos] = slots.filter((x) => x.starter && x.accepts.includes(pos) && x.pos === pos).map((x) => x.id)
-      .concat(slots.filter((x) => x.starter && x.pos === "FLEX" && x.accepts.includes(pos)).map((x) => x.id))
-      .concat(slots.filter((x) => x.starter && x.pos === "SUPERFLEX" && x.accepts.includes(pos)).map((x) => x.id));
-  });
-  const benchIds = slots.filter((x) => !x.starter).map((x) => x.id);
-  const size = slots.length;
-  return { slots, byId, autoOrder, benchIds, size };
-}
-function autoSlot(pos, occupied, roster) {
-  for (const id of roster.autoOrder[pos] || []) if (!occupied.has(id)) return id;
-  for (const id of roster.benchIds) if (!occupied.has(id)) return id;
-  return null;
-}
-// rough $ each open starting slot should command, by position
-const BOARD_FILTERS = ["ALL", "QB", "RB", "WR", "TE", "K", "DEF"];
-const boardKey = (name) => norm(name);
-
-const uid = () => Math.random().toString(36).slice(2, 10) + Date.now().toString(36);
-
-/* ---------- quick-add parser ---------- */
-function parseQuick(raw) {
-  const input = raw.trim();
-  if (!input) return null;
-  const out = { name: "", pos: null, team: null, bye: null, price: null };
-  const takeNum = (tok) => {
-    const m = tok.replace(/^\$/, "");
-    return /^\d+(\.\d+)?$/.test(m) ? parseFloat(m) : null;
-  };
-  if (input.includes(",")) {
-    const parts = input.split(",").map((p) => p.trim()).filter(Boolean);
-    out.name = parts[0];
-    const nums = [];
-    for (const p of parts.slice(1)) {
-      const n = takeNum(p);
-      if (n !== null) { nums.push(n); continue; }
-      const up = p.toUpperCase();
-      const posGuess = up === "DST" || up === "D/ST" ? "DEF" : up;
-      if (POSITIONS.includes(posGuess)) { out.pos = posGuess; continue; }
-      const team = TEAM_ALIASES[up] || up;
-      if (TEAM_BYES[team]) { out.team = team; continue; }
-    }
-    if (nums.length === 1) out.price = nums[0];
-    else if (nums.length >= 2) { out.bye = nums[0]; out.price = nums[nums.length - 1]; }
-  } else {
-    const toks = input.split(/\s+/);
-    const last = takeNum(toks[toks.length - 1]);
-    if (last !== null && toks.length > 1) { out.price = last; out.name = toks.slice(0, -1).join(" "); }
-    else out.name = input;
-  }
-  return out;
-}
-function matchPlayers(query, pos) {
-  const res = fuzzyMatch(query, pos, 8);
-  const exact = res.filter((p) => loose(p.name) === loose(query));
-  if (exact.length === 1) return exact;
-  const q = loose(query);
-  const lastName = res.filter((p) => loose(p.name).split(" ").includes(q));
-  if (lastName.length === 1) return lastName;
-  return res;
-}
-
-/* ---------- fuzzy name matching ("Jamarr Chase" → "Ja'Marr Chase") ---------- */
-const loose = (s) => norm(s).replace(/[^a-z0-9 ]+/g, "").replace(/\s+/g, " ").trim();
-function lev(a, b) {
-  if (Math.abs(a.length - b.length) > 2) return 3;
-  const dp = Array.from({ length: a.length + 1 }, () => new Array(b.length + 1).fill(0));
-  for (let i = 0; i <= a.length; i++) dp[i][0] = i;
-  for (let j = 0; j <= b.length; j++) dp[0][j] = j;
-  for (let i = 1; i <= a.length; i++)
-    for (let j = 1; j <= b.length; j++)
-      dp[i][j] = Math.min(dp[i - 1][j] + 1, dp[i][j - 1] + 1, dp[i - 1][j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1));
-  return dp[a.length][b.length];
-}
-function fuzzyMatch(query, pos, limit = 8) {
-  const q = loose(query);
-  if (!q || q.length < 2) return [];
-  const qToks = q.split(" ");
-  const scored = [];
-  for (const p of PLAYER_DB) {
-    if (pos && p.pos !== pos) continue;
-    const n = loose(p.name);
-    let score = -1;
-    if (n === q) score = 100;
-    else if (n.startsWith(q)) score = 85;
-    else if (n.includes(q)) score = 75;
-    else {
-      const nToks = n.split(" ");
-      let ok = true, s = 0;
-      for (const qt of qToks) {
-        let best = 0;
-        for (const nt of nToks) {
-          if (nt === qt) best = Math.max(best, 20);
-          else if (qt.length >= 2 && nt.startsWith(qt)) best = Math.max(best, 14);
-          else if (qt.length >= 4 && lev(qt, nt) <= (qt.length >= 6 ? 2 : 1)) best = Math.max(best, 9);
-        }
-        if (!best) { ok = false; break; }
-        s += best;
-      }
-      if (ok) score = s;
-    }
-    if (score >= 0) scored.push([score, p]);
-  }
-  scored.sort((a, b) => b[0] - a[0] || (POS_RANK[norm(a[1].name)] || 99) - (POS_RANK[norm(b[1].name)] || 99));
-  return scored.slice(0, limit).map((x) => x[1]);
-}
-
-function NameAutocomplete({ value, onChange, onSelect, placeholder, inputRef, posFilter, ariaLabel, listId = "asst-ac-list" }) {
-  const [open, setOpen] = useState(false);
-  const [activeIdx, setActiveIdx] = useState(-1);
-  const reduce = useReducedMotion();
-  const sugg = useMemo(() => {
-    if (!value || value.length < 2) return [];
-    return fuzzyMatch(value, posFilter, 8);
-  }, [value, posFilter]);
-  const expanded = open && sugg.length > 0;
-  const activeId = expanded && activeIdx >= 0 && sugg[activeIdx] ? `${listId}-opt-${sugg[activeIdx].id}` : undefined;
-
-  useEffect(() => { setActiveIdx(-1); }, [value, posFilter]);
-
-  const pick = (p) => {
-    onSelect(p);
-    setOpen(false);
-    setActiveIdx(-1);
-  };
-
-  return (
-    <div className="ac-wrap">
-      <input
-        ref={inputRef}
-        className="field"
-        role="combobox"
-        aria-autocomplete="list"
-        aria-haspopup="listbox"
-        aria-expanded={expanded}
-        aria-controls={listId}
-        aria-activedescendant={activeId}
-        value={value}
-        placeholder={placeholder}
-        aria-label={ariaLabel || placeholder}
-        onChange={(e) => { onChange(e.target.value); setOpen(true); setActiveIdx(-1); }}
-        onFocus={() => setOpen(true)}
-        onBlur={() => setTimeout(() => setOpen(false), 200)}
-        onKeyDown={(e) => {
-          if (!sugg.length) return;
-          if (e.key === "ArrowDown") {
-            e.preventDefault();
-            setOpen(true);
-            setActiveIdx((i) => (i + 1) % sugg.length);
-          } else if (e.key === "ArrowUp") {
-            e.preventDefault();
-            setOpen(true);
-            setActiveIdx((i) => (i <= 0 ? sugg.length - 1 : i - 1));
-          } else if (e.key === "Enter" && activeIdx >= 0 && sugg[activeIdx]) {
-            e.preventDefault();
-            pick(sugg[activeIdx]);
-          } else if (e.key === "Escape") {
-            setOpen(false);
-            setActiveIdx(-1);
-          }
-        }}
-        autoComplete="off"
-      />
-      <AnimatePresence>
-        {expanded ? (
-          <motion.div
-            className="ac-list"
-            id={listId}
-            role="listbox"
-            aria-label="Player suggestions"
-            initial={reduce ? { opacity: 0 } : { opacity: 0, y: -6, scale: 0.98 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={reduce ? { opacity: 0 } : { opacity: 0, y: -4, scale: 0.98 }}
-            transition={reduce ? { duration: 0.12 } : motionTokens.spring.snappy}
-            style={{ transformOrigin: "top center" }}
-          >
-            {sugg.map((p, i) => (
-              <motion.button
-                key={p.id}
-                id={`${listId}-opt-${p.id}`}
-                type="button"
-                role="option"
-                aria-selected={i === activeIdx}
-                className={`ac-item${i === activeIdx ? " active" : ""}`}
-                onMouseDown={(e) => { e.preventDefault(); pick(p); }}
-                initial={reduce ? false : { opacity: 0, x: -4 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: i * 0.02, duration: motionTokens.duration.fast }}
-                whileTap={reduce ? undefined : { scale: 0.98 }}
-              >
-                <span>{p.name}</span>
-                <span className="ac-meta">{p.pos} · {p.team} · Bye {p.bye}</span>
-              </motion.button>
-            ))}
-          </motion.div>
-        ) : null}
-      </AnimatePresence>
-    </div>
-  );
-}
-
-/* ============================================================ */
 export default function AuctionWarRoom() {
   const [players, setPlayers] = useState([]);   // {id,name,pos,team,bye,price,proj,slot,pick}
   const [board, setBoard] = useState({});       // { normName: {status:'mine'|'gone', price, star, pos, team, bye, name} }
@@ -994,8 +116,7 @@ export default function AuctionWarRoom() {
   const press = pressable(reduceMotion);
 
   // form state
-  const emptyForm = { name: "", pos: "", team: "", bye: "", price: "", proj: "" };
-  const [form, setForm] = useState(emptyForm);
+  const [form, setForm] = useState(EMPTY_FORM);
   const [quick, setQuick] = useState("");
   const quickRef = useRef(null);
   const fileRef = useRef(null);
@@ -1345,7 +466,7 @@ export default function AuctionWarRoom() {
       }
     });
     return { groups, issues, level, weekMeta };
-  }, [players]);
+  }, [players, SLOT_BY_ID]);
 
   /* ------- value totals ------- */
   const projected = players.filter((p) => p.proj != null && p.proj !== "");
@@ -1373,7 +494,7 @@ export default function AuctionWarRoom() {
       0.2 * completion + 0.25 * budgetScore + 0.25 * balance + 0.15 * byeScore + 0.15 * valueScore;
     const letter = overall == null ? "—" : overall >= 90 ? "A" : overall >= 80 ? "B" : overall >= 68 ? "C" : overall >= 55 ? "D" : "F";
     return { completion, budgetScore, balance, byeScore, valueScore, overall, letter };
-  }, [drafted, spotsLeft, spent, maxBid, occupied, posCounts, byeInfo, projected.length, totalValue, openStarters.length]);
+  }, [drafted, spotsLeft, spent, maxBid, occupied, posCounts, byeInfo, projected.length, totalValue, openStarters.length, BUDGET, ROSTER_SIZE, SLOTS, onlyOnePositions]);
 
   /* ------- budget health & plan ------- */
   const benchOpen = Math.max(0, spotsLeft - openStarters.length);
@@ -1473,7 +594,7 @@ export default function AuctionWarRoom() {
     if (budgetHealth === "tight" && tier === "bid") { tier = "value"; why.push("Budget is tight — don't stretch past the number."); }
 
     return { pos, V, est, projIn, preset, bid, hasBid, suggested, recMax, absMax: maxBid, tier, why: why.join(" "), slot, slotLabel, discount, byeConflict };
-  }, [assistant, players, posCounts, openStarters, maxBid, spotsLeft, budgetHealth, SLOT_BY_ID, settings]);
+  }, [assistant, players, posCounts, openStarters, maxBid, spotsLeft, budgetHealth, SLOT_BY_ID, settings, posNeed, roster]);
 
   /* ------- market inflation from off-the-board prices ------- */
   const market = useMemo(() => {
@@ -1542,14 +663,15 @@ export default function AuctionWarRoom() {
   }, [assistant.name, assistant.pos, assistant.team, adjEst]);
 
   // Prefill Suggested max from the engine; keep syncing until you edit the field
+  const suggested = analysis?.suggested;
   useEffect(() => {
-    if (!analysis || presetTouchedRef.current) return;
-    const next = String(analysis.suggested);
+    if (suggested == null || presetTouchedRef.current) return;
+    const next = String(suggested);
     setAssistant((a) => {
       if (!a.name || a.presetMax === next) return a;
       return { ...a, presetMax: next };
     });
-  }, [assistant.name, analysis?.suggested]);
+  }, [assistant.name, suggested]);
 
   const bumpBid = (d) => setAssistant((a) => {
     const cur = a.bid === "" ? 0 : Math.round(Number(a.bid)) || 0;
@@ -1626,11 +748,11 @@ export default function AuctionWarRoom() {
     // whatever route the pick came from, reset the assistant for the next nomination
     setAssistant(EMPTY_ASST);
     showToast(`${player.name} → ${SLOT_BY_ID[slot].label} for ${money(player.price)}`, "ok");
-    setForm(emptyForm); setQuick("");
+    setForm(EMPTY_FORM); setQuick("");
     if (after) after();
     if (quickRef.current) quickRef.current.focus();
     return true;
-  }, [players, nextPick, showToast, roster, ROSTER_SIZE]);
+  }, [players, nextPick, showToast, roster, ROSTER_SIZE, SLOT_BY_ID]);
 
   const tryAdd = useCallback((data, after) => {
     if (!data.name || !data.name.trim()) { showToast("Enter a player name first.", "err"); return; }
@@ -1744,7 +866,7 @@ export default function AuctionWarRoom() {
     } else if (parsed.pos) {
       tryAdd({ name: parsed.name, pos: parsed.pos, team: parsed.team || "", bye: parsed.bye || (parsed.team ? TEAM_BYES[parsed.team] : ""), price: parsed.price, proj: "" });
     } else {
-      setForm({ ...emptyForm, name: parsed.name, price: String(parsed.price) });
+      setForm({ ...EMPTY_FORM, name: parsed.name, price: String(parsed.price) });
       showToast("Couldn't identify that player — finish the details below.", "warn");
     }
   };
@@ -1968,7 +1090,7 @@ export default function AuctionWarRoom() {
   };
 
   const targetRows = useMemo(() => {
-    const posIdx = Object.fromEntries(POS_ORDER.map((pos, i) => [pos, i]));
+    const posIdx = Object.fromEntries(POSITIONS.map((pos, i) => [pos, i]));
     const rows = targets.map((t) => {
       const k = boardKey(t.name);
       let status = "available";
@@ -2160,7 +1282,7 @@ export default function AuctionWarRoom() {
         setBoard({});
         setNextPick(1);
         setAssistant(EMPTY_ASST);
-        setForm(emptyForm);
+        setForm(EMPTY_FORM);
         setQuick("");
         setEditRow(null);
         setQuickOpen(false);
@@ -2396,7 +1518,7 @@ export default function AuctionWarRoom() {
                               </td>
                               <td className="alt-est col-est num">{p.est != null ? money(p.est) : "—"}</td>
                               <td className="col-action">
-                                <button className="icon-btn alt-gone" title="Mark off the board" aria-label={`Mark ${p.name} off the board`} onClick={() => setPriceAsk({ mode: "gone", player: p })}><Ic name="cross-small" fb="✕" /></button>
+                                <button className="icon-btn alt-gone" title="Mark off the board" aria-label={`Mark ${p.name} off the board`} onClick={() => setPriceAsk({ mode: "gone", player: p })}><Icon name="cross-small" fb="✕" /></button>
                               </td>
                             </tr>
                             );
@@ -2452,7 +1574,7 @@ export default function AuctionWarRoom() {
                     <tr key={s.id} className={`empty-row ${s.starter ? "need" : ""}`}>
                       <td className="slot col-slot">
                         <span className="slot-full">{s.label}</span>
-                        <span className="slot-short">{s.starter ? s.label : s.id.replace(/^B/, "BN")}</span>
+                        <span className="slot-short">{shortSlotLabel(s)}</span>
                       </td>
                       <td className="empty-cell col-player">
                         {s.starter ? (
@@ -2602,12 +1724,12 @@ export default function AuctionWarRoom() {
                             onFocus={(e) => e.target.select()}
                             onChange={(e) => patchEdit({ proj: e.target.value })}
                             onKeyDown={onEditKey}
-                            title={editVal == null ? "Projected $" : `Value ${editVal > 0 ? `+$${editVal}` : money(editVal)}`}
+                            title={editVal == null ? "Projected $" : `Value ${signedMoney(editVal)}`}
                           />
                         </td>
                         <td className="actions col-actions">
                           <button className="icon-btn ok" title="Save" aria-label={`Save ${editRow.name}`} onClick={() => saveEdit(editRow)}><span aria-hidden="true">✓</span></button>
-                          <button className="icon-btn" title="Cancel" aria-label="Cancel edit" onClick={() => setEditRow(null)}><Ic name="cross-small" fb="✕" /></button>
+                          <button className="icon-btn" title="Cancel" aria-label="Cancel edit" onClick={() => setEditRow(null)}><Icon name="cross-small" fb="✕" /></button>
                         </td>
                       </tr>
                     );
@@ -2616,18 +1738,18 @@ export default function AuctionWarRoom() {
                       <tr key={s.id}>
                         <td className="slot col-slot">
                           <span className="slot-full">{s.label}</span>
-                          <span className="slot-short">{s.starter ? s.label : s.id.replace(/^B/, "BN")}</span>
+                          <span className="slot-short">{shortSlotLabel(s)}</span>
                         </td>
                         <td className="pname col-player">
                           <span className="pname-main">{p.name}</span>
                           <span className={`pos-chip p-${p.pos}`}>{p.pos}</span>
-                          {p.bye && byeInfo.groups[p.bye]?.length >= 3 ? <span className="bye-flag" title="Bye-week pileup"><Ic name="flag" fb="⚑" /></span> : null}
+                          {p.bye && byeInfo.groups[p.bye]?.length >= 3 ? <span className="bye-flag" title="Bye-week pileup"><Icon name="flag" fb="⚑" /></span> : null}
                           {meta ? <span className="pname-meta">{meta}</span> : null}
                         </td>
                         <td className="col-team">{p.team || "—"}</td>
                         <td className="col-bye">{p.bye || "—"}</td>
                         <td className="num money col-paid">{money(p.price)}</td>
-                        <td className={`num val hide-xs col-value ${v == null ? "" : valueTone(v)}`}>{v == null ? "—" : v > 0 ? `+$${v}` : money(v)}</td>
+                        <td className={`num val hide-xs col-value ${v == null ? "" : valueTone(v)}`}>{v == null ? "—" : signedMoney(v)}</td>
                         <td className="actions col-actions">
                           <select className="move" value="" aria-label={`Move ${p.name} to another slot`} onChange={(e) => { movePlayer(p.id, e.target.value); e.target.value = ""; }} title="Move player">
                             <option value="" disabled>Move</option>
@@ -2635,8 +1757,8 @@ export default function AuctionWarRoom() {
                               <option key={t2.id} value={t2.id}>{t2.label}{occupied.has(t2.id) ? " (swap)" : ""}</option>
                             ))}
                           </select>
-                          <button className="icon-btn" title="Edit" aria-label={`Edit ${p.name}`} onClick={() => setEditRow({ ...p, proj: p.proj == null ? "" : String(p.proj) })}><Ic name="pencil" fb="✎" /></button>
-                          <button className="icon-btn danger" title="Delete and refund" aria-label={`Delete ${p.name} and refund`} onClick={() => deletePlayer(p.id)}><Ic name="cross-small" fb="✕" /></button>
+                          <button className="icon-btn" title="Edit" aria-label={`Edit ${p.name}`} onClick={() => setEditRow({ ...p, proj: p.proj == null ? "" : String(p.proj) })}><Icon name="pencil" fb="✎" /></button>
+                          <button className="icon-btn danger" title="Delete and refund" aria-label={`Delete ${p.name} and refund`} onClick={() => deletePlayer(p.id)}><Icon name="cross-small" fb="✕" /></button>
                         </td>
                       </tr>
                     );
@@ -2652,7 +1774,7 @@ export default function AuctionWarRoom() {
                 <td className="col-team" aria-hidden="true"></td>
                 <td className="col-bye" aria-hidden="true"></td>
                 <td className="num money col-paid">{money(spent)}</td>
-                <td className={`num val hide-xs col-value ${projected.length ? valueTone(totalValue) : ""}`}>{projected.length ? (totalValue > 0 ? `+$${totalValue}` : money(totalValue)) : "—"}</td>
+                <td className={`num val hide-xs col-value ${projected.length ? valueTone(totalValue) : ""}`}>{projected.length ? signedMoney(totalValue) : "—"}</td>
                 <td className="col-actions" aria-hidden="true"></td>
               </tr>
             </tfoot>
@@ -2777,7 +1899,7 @@ export default function AuctionWarRoom() {
               <span className="panel-side">{superflexOpen > 0 ? `+${superflexOpen} SF` : flexOpen > 0 ? `+${flexOpen} FLEX` : "starters / required"}</span>
             </div>
             <div className="pos-grid">
-              {POS_ORDER.map((pos) => {
+              {POSITIONS.map((pos) => {
                 const have = posCounts[pos] || 0;
                 const need = posNeed[pos] || 0;
                 const short = have < need;
@@ -2881,7 +2003,7 @@ export default function AuctionWarRoom() {
               <ul className="issues">{byeInfo.issues.map((m, i) => <li key={i}>{m}</li>)}</ul>
             )}
             {Object.keys(byeInfo.groups).length === 0 ? (
-              <div className="empty-note">Bye weeks appear here as you draft — you\u2019ll get a warning if too many starters share a week.</div>
+              <div className="empty-note">Bye weeks appear here as you draft — you’ll get a warning if too many starters share a week.</div>
             ) : (
               <div className="bye-list">
                 {Object.entries(byeInfo.groups).sort((a, b) => a[0] - b[0]).map(([wk, list]) => {
@@ -2922,7 +2044,7 @@ export default function AuctionWarRoom() {
             <div className="value-line">
               <div><label>Projected</label><span>{projected.length ? money(totalProj) : "—"}</span></div>
               <div><label>Paid</label><span>{projected.length ? money(totalPaidProj) : "—"}</span></div>
-              <div><label>Net value</label><span className={`val ${projected.length ? valueTone(totalValue) : ""}`}>{projected.length ? (totalValue > 0 ? `+$${totalValue}` : money(totalValue)) : "—"}</span></div>
+              <div><label>Net value</label><span className={`val ${projected.length ? valueTone(totalValue) : ""}`}>{projected.length ? signedMoney(totalValue) : "—"}</span></div>
             </div>
             <div className="bars">
               {[["Budget", health.budgetScore], ["Balance", health.balance], ["Byes", health.byeScore], ["Value", health.valueScore], ["Complete", health.completion]].map(([l, v]) => (
@@ -3019,7 +2141,7 @@ export default function AuctionWarRoom() {
                               animate={{ scale: 1, opacity: 1 }}
                               transition={motionTokens.spring.snappy}
                             >
-                              <Ic name="star" solid={r.star} fb={r.star ? "★" : "☆"} />
+                              <Icon name="star" solid={r.star} fb={r.star ? "★" : "☆"} />
                             </motion.span>
                           </motion.button>
                         </td>
@@ -3080,15 +2202,15 @@ export default function AuctionWarRoom() {
                         <td className="pname">{p.name}</td>
                         <td><span className={`posb p-${p.pos}`}>{p.pos}</span></td><td className="hide-xs">{p.team || "—"}</td>
                         <td className="num money">{money(p.price)}</td>
-                        <td className={`num val hide-xs ${v == null ? "" : valueTone(v)}`}>{v == null ? "—" : v > 0 ? `+$${v}` : money(v)}</td>
+                        <td className={`num val hide-xs ${v == null ? "" : valueTone(v)}`}>{v == null ? "—" : signedMoney(v)}</td>
                         <td className="actions">
                           <button className="icon-btn" title="Edit" aria-label={`Edit ${p.name}`} onClick={() => {
                             setEditRow({ ...p, proj: p.proj == null ? "" : String(p.proj) });
                             requestAnimationFrame(() => {
                               document.querySelector("tr.roster-editing")?.scrollIntoView({ block: "nearest", behavior: "smooth" });
                             });
-                          }}><Ic name="pencil" fb="✎" /></button>
-                          <button className="icon-btn danger" title="Undo pick" aria-label={`Undo pick: ${p.name}`} onClick={() => deletePlayer(p.id)}><Ic name="cross-small" fb="✕" /></button>
+                          }}><Icon name="pencil" fb="✎" /></button>
+                          <button className="icon-btn danger" title="Undo pick" aria-label={`Undo pick: ${p.name}`} onClick={() => deletePlayer(p.id)}><Icon name="cross-small" fb="✕" /></button>
                         </td>
                       </tr>
                     );
@@ -3108,7 +2230,7 @@ export default function AuctionWarRoom() {
       </div>
             <div className="table-scroll">
               <table className="flat">
-                <thead><tr><th>Category</th><th className="num">Target $</th><th className="num">Spent</th><th className="num plan-derived">Left in plan</th><th className="num">Over / under</th></tr></thead>
+                <thead><tr><th>Category</th><th className="num">Target</th><th className="num">Spent</th><th className="num plan-derived">Left in plan</th><th className="num">Over / under</th></tr></thead>
                 <tbody>
                   {PLAN_CATS.map((c) => {
                     const tgt = Number(plan[c]) || 0;
@@ -3254,7 +2376,7 @@ export default function AuctionWarRoom() {
                       </td>
                       <td className="actions">
                         <button className="icon-btn danger" title="Remove target" aria-label={`Remove ${r.name}`} onClick={() => removeTarget(r.name)}>
-                          <Ic name="cross-small" fb="✕" />
+                          <Icon name="cross-small" fb="✕" />
                         </button>
                       </td>
                     </tr>
@@ -3343,7 +2465,7 @@ export default function AuctionWarRoom() {
                           onClick={() => toggleTarget(r)}
                           whileTap={reduceMotion ? undefined : { scale: 0.88 }}
                         >
-                          <Ic name={onTargets ? "star" : "plus-small"} fb={onTargets ? "★" : "+"} />
+                          <Icon name={onTargets ? "star" : "plus-small"} fb={onTargets ? "★" : "+"} />
                         </motion.button>
                       </td>
                       <td className="num rank-cell col-rank">{r.overall ?? "—"}</td>
@@ -3464,6 +2586,16 @@ export default function AuctionWarRoom() {
             onYes: () => { setSettings(DEFAULT_SETTINGS); setConfirmBox(null); showToast("Settings restored to defaults.", "ok"); },
           })}>Restore defaults</button>
         </div>
+
+        <div className="set-block set-appearance">
+          <div className="eyebrow small">Appearance</div>
+          <div className="toggle-row" role="group" aria-label="Theme">
+            {["dark", "light"].map((t) => (
+              <motion.button type="button" key={t} className={`chip ${theme === t ? "on" : ""}`} aria-pressed={theme === t}
+                onClick={() => { if (theme !== t) changeTheme(); }} {...press}>{t === "dark" ? "Dark" : "Light"}</motion.button>
+            ))}
+          </div>
+        </div>
       </div>
 
       {players.length > 0 && (
@@ -3486,7 +2618,7 @@ export default function AuctionWarRoom() {
           disabled={players.length === 0 && Object.keys(board).length === 0}
           {...press}
         >
-          <Ic name="refresh" fb="" /> Clear entries
+          <Icon name="refresh" fb="" /> Clear entries
         </motion.button>
       </div>
     </section>
@@ -3516,7 +2648,7 @@ export default function AuctionWarRoom() {
           </div>
           <div className="data-actions">
             <button type="button" className="btn" onClick={pullSyncNow} disabled={syncBusy}>
-              <Ic name="upload" fb="" /> Pull now
+              <Icon name="upload" fb="" /> Pull now
             </button>
             <button type="button" className="btn danger" onClick={disableSync} disabled={syncBusy}>
               Disable sync
@@ -3560,15 +2692,15 @@ export default function AuctionWarRoom() {
       <div className="panel-head sync-archive-head"><span className="eyebrow">Season archive</span></div>
       <div className="data-actions">
         <button type="button" className="btn" onClick={archiveActiveSeason}>
-          <Ic name="download" fb="" /> Download backup
+          <Icon name="download" fb="" /> Download backup
         </button>
         <button type="button" className="btn" onClick={() => fileRef.current && fileRef.current.click()}>
-          <Ic name="upload" fb="" /> Restore backup
+          <Icon name="upload" fb="" /> Restore backup
         </button>
         <input ref={fileRef} type="file" accept=".json,application/json" style={{ display: "none" }}
           onChange={(e) => { const f = e.target.files[0]; if (f) importDraft(f); e.target.value = ""; }} />
         <button type="button" className="btn danger" onClick={resetDraft} disabled={players.length === 0 && Object.keys(board).length === 0}>
-          <Ic name="refresh" fb="" /> Clear entries
+          <Icon name="refresh" fb="" /> Clear entries
         </button>
       </div>
       <div className="empty-note">
@@ -3800,242 +2932,3 @@ export default function AuctionWarRoom() {
     </MotionConfig>
   );
 }
-
-const BOARD_STATUS_OPTIONS = [
-  { value: "available", label: "Open" },
-  { value: "mine", label: "Won" },
-  { value: "gone", label: "Gone" },
-];
-
-function BoardStatusSelect({ value, playerName, onChange }) {
-  const [open, setOpen] = useState(false);
-  const [place, setPlace] = useState("down");
-  const [menuStyle, setMenuStyle] = useState(null);
-  const wrapRef = useRef(null);
-  const triggerRef = useRef(null);
-  const menuId = useMemo(() => `board-status-${norm(playerName).replace(/\s+/g, "-") || "x"}`, [playerName]);
-  const current = BOARD_STATUS_OPTIONS.find((o) => o.value === value) || BOARD_STATUS_OPTIONS[0];
-
-  const close = useCallback(() => {
-    setOpen(false);
-    triggerRef.current?.focus();
-  }, []);
-
-  const positionMenu = useCallback(() => {
-    const trig = triggerRef.current;
-    if (!trig) return;
-    const r = trig.getBoundingClientRect();
-    const menuH = BOARD_STATUS_OPTIONS.length * 36 + 8;
-    const gap = 4;
-    const spaceBelow = window.innerHeight - r.bottom - gap;
-    const spaceAbove = r.top - gap;
-    const goUp = spaceBelow < menuH && spaceAbove > spaceBelow;
-    const width = Math.max(r.width, 92);
-    const left = Math.min(Math.max(8, r.left), window.innerWidth - width - 8);
-    setPlace(goUp ? "up" : "down");
-    setMenuStyle({
-      position: "fixed",
-      left,
-      width,
-      zIndex: 140,
-      ...(goUp
-        ? { top: "auto", bottom: Math.max(8, window.innerHeight - r.top + gap) }
-        : { top: r.bottom + gap, bottom: "auto" }),
-    });
-  }, []);
-
-  useLayoutEffect(() => {
-    if (!open) {
-      setMenuStyle(null);
-      return;
-    }
-    positionMenu();
-  }, [open, positionMenu]);
-
-  useEffect(() => {
-    if (!open) return;
-    const onDoc = (e) => {
-      if (wrapRef.current && !wrapRef.current.contains(e.target)) setOpen(false);
-    };
-    const onKey = (e) => {
-      if (e.key === "Escape") {
-        e.preventDefault();
-        close();
-      }
-    };
-    const onReposition = () => positionMenu();
-    const onScrollClose = () => setOpen(false);
-    document.addEventListener("mousedown", onDoc);
-    document.addEventListener("keydown", onKey);
-    window.addEventListener("resize", onReposition);
-    document.addEventListener("scroll", onScrollClose, true);
-    return () => {
-      document.removeEventListener("mousedown", onDoc);
-      document.removeEventListener("keydown", onKey);
-      window.removeEventListener("resize", onReposition);
-      document.removeEventListener("scroll", onScrollClose, true);
-    };
-  }, [open, close, positionMenu]);
-
-  const reduce = useReducedMotion();
-
-  return (
-    <div className={`board-status-dd status-${value}${open ? " open" : ""}`} ref={wrapRef}>
-      <motion.button
-        ref={triggerRef}
-        type="button"
-        className="board-status-trigger"
-        aria-haspopup="listbox"
-        aria-expanded={open}
-        aria-controls={menuId}
-        aria-label={`Status for ${playerName}`}
-        onClick={() => setOpen((v) => !v)}
-        whileTap={reduce ? undefined : { scale: 0.97 }}
-        transition={motionTokens.spring.tap}
-      >
-        <span className="board-status-value">{current.label}</span>
-        <motion.span
-          className="board-status-caret"
-          aria-hidden="true"
-          animate={{ rotate: open ? (place === "up" ? 0 : 180) : 0 }}
-          transition={{ duration: motionTokens.duration.fast }}
-        >
-          ▾
-        </motion.span>
-      </motion.button>
-      <AnimatePresence>
-        {open && menuStyle ? (
-          <motion.ul
-            id={menuId}
-            className={`board-status-menu place-${place}`}
-            role="listbox"
-            aria-label={`Status for ${playerName}`}
-            style={{ ...menuStyle, transformOrigin: place === "up" ? "bottom center" : "top center" }}
-            initial={reduce ? { opacity: 0 } : { opacity: 0, scale: 0.96, y: place === "up" ? 6 : -6 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={reduce ? { opacity: 0 } : { opacity: 0, scale: 0.96, y: place === "up" ? 4 : -4 }}
-            transition={reduce ? { duration: 0.12 } : motionTokens.spring.snappy}
-          >
-            {BOARD_STATUS_OPTIONS.map((o) => (
-              <li key={o.value} role="presentation">
-                <motion.button
-                  type="button"
-                  role="option"
-                  aria-selected={o.value === value}
-                  className={`board-status-option status-${o.value}${o.value === value ? " on" : ""}`}
-                  onClick={() => {
-                    close();
-                    if (o.value !== value) onChange(o.value);
-                  }}
-                  whileTap={reduce ? undefined : { scale: 0.97 }}
-                >
-                  {o.label}
-                </motion.button>
-              </li>
-            ))}
-          </motion.ul>
-        ) : null}
-      </AnimatePresence>
-    </div>
-  );
-}
-
-function PricePrompt({ target, onCancel, onConfirm, mode = "mine", onSkip = null }) {
-  const gone = mode === "gone";
-  const suggest = target.maxBid != null ? Math.round(target.maxBid) : null;
-  const [price, setPrice] = useState(() => (suggest != null ? String(suggest) : ""));
-  const ok = price !== "" && Number.isFinite(Number(price));
-  return (
-    <Modal title={gone ? `${target.name} went to another team — final price?` : `You won ${target.name} — for how much?`} onClose={onCancel}>
-      <div className="price-ask">
-        <input className="field big-field" inputMode="numeric" /* Modal focuses this via effect; autoFocus would fire before the effect captures the opener */ aria-label={gone ? "Final sale price in dollars" : "Winning bid in dollars"}
-          placeholder={suggest != null ? `${gone ? "Sold for" : "Winning bid"} — e.g. ${suggest}` : (gone ? "Sold for $" : "Winning bid $")}
-          onFocus={(e) => e.target.select()}
-          value={price} onChange={(e) => setPrice(e.target.value.replace(/[^0-9]/g, ""))}
-          onKeyDown={(e) => { if (e.key === "Enter" && ok) onConfirm(Math.round(Number(price))); }} />
-        {suggest != null && price !== String(suggest) && (
-          <button className="btn tiny-fill" onClick={() => setPrice(String(suggest))}>Use {money(suggest)}</button>
-        )}
-        <span className="hint">
-          {target.est != null ? `Estimated value ${money(target.est)}. ` : ""}
-          {gone ? "Prices feed your market-inflation read — skip if you didn't catch it." : ""}
-        </span>
-      </div>
-      <div className="modal-actions">
-        <button className="btn" onClick={onCancel}>Cancel</button>
-        {onSkip && <button className="btn" onClick={onSkip}>Skip price</button>}
-        <button className="btn primary" disabled={!ok} onClick={() => onConfirm(Math.round(Number(price)))}>{gone ? "Mark gone" : "Add to roster"}</button>
-      </div>
-    </Modal>
-  );
-}
-
-function meterEdge(p) {
-  if (p >= 90) return "m-edge-end";
-  if (p <= 10) return "m-edge-start";
-  return "";
-}
-
-function PriceMeter({ bid, V, recMax, absMax, tier }) {
-  const reduce = useReducedMotion();
-  const hasBid = bid != null;
-  const safeRec = recMax != null ? recMax : 0;
-  const safeAbs = absMax != null ? absMax : 0;
-  // Scale to the decision range — leftover abs budget must not crush Proj/Rec/Bid into a left pile
-  const focusMax = Math.max(V || 0, safeRec, bid || 0, 1);
-  const includeAbsOnBar = safeAbs > 0 && safeAbs <= focusMax * 2.25;
-  const scale = Math.max(focusMax * 1.5, includeAbsOnBar ? safeAbs : 0, 12);
-  const pct = (x) => Math.min(100, Math.max(0, ((x != null ? x : 0) / scale) * 100));
-  const greatEnd = V != null ? V * 0.82 : safeRec > 0 ? safeRec * 0.6 : scale * 0.35;
-  const fairEnd = V != null ? Math.max(V, safeRec * 0.8) : safeRec > 0 ? safeRec * 0.85 : scale * 0.65;
-  const recEnd = safeRec > 0 ? safeRec : scale * 0.85;
-
-  const projPct = V != null ? pct(V) : null;
-  const recPct = safeRec > 0 ? pct(safeRec) : null;
-  const absPct = safeAbs > 0 ? pct(safeAbs) : null;
-  const bidPct = hasBid ? pct(bid) : null;
-
-  return (
-    <div className={`meter-wrap${hasBid ? " has-bid" : ""}`}>
-      <div className="meter" role="img" aria-label={`Value meter. Recommended max ${money(recMax)}${V != null ? `, projection ${money(V)}` : ""}, absolute max ${money(absMax)}${hasBid ? `, current bid ${money(bid)}` : ""}.`}>
-        <div className="zone great" style={{ width: `${pct(greatEnd)}%` }} />
-        <div className="zone fair" style={{ width: `${Math.max(0, pct(fairEnd) - pct(greatEnd))}%` }} />
-        <div className="zone caution" style={{ width: `${Math.max(0, pct(recEnd) - pct(fairEnd))}%` }} />
-        <div className="zone over" style={{ width: `${Math.max(0, 100 - pct(recEnd))}%` }} />
-        {projPct != null && <div className={`marker m-proj ${meterEdge(projPct)}`} style={{ left: `${projPct}%` }} title={`Proj ${money(V)}`} />}
-        {recPct != null && <div className={`marker m-rec ${meterEdge(recPct)}`} style={{ left: `${recPct}%` }} title={`Rec ${money(recMax)}`} />}
-        {includeAbsOnBar && absPct != null && <div className={`marker m-abs ${meterEdge(absPct)}`} style={{ left: `${absPct}%` }} title={`Abs ${money(absMax)}`} />}
-        <AnimatePresence>
-          {hasBid ? (
-            <motion.div
-              key="bid-marker"
-              className={`bid-marker t-${tier} ${meterEdge(bidPct)}`}
-              title={`Bid ${money(bid)}`}
-              initial={reduce ? false : { opacity: 0, y: -4 }}
-              animate={{
-                opacity: 1,
-                y: 0,
-                left: `${bidPct}%`,
-                x: bidPct <= 2 ? "0%" : bidPct >= 98 ? "-100%" : "-50%",
-              }}
-              exit={reduce ? { opacity: 0 } : { opacity: 0, y: -2 }}
-              transition={reduce ? { duration: 0.12 } : motionTokens.spring.snappy}
-            >
-              <div className="bid-tri" />
-            </motion.div>
-          ) : null}
-        </AnimatePresence>
-      </div>
-      <div className="meter-legend">
-        <span>Great</span>
-        <span>Fair</span>
-        <span>Caution</span>
-        <span>Overpay</span>
-      </div>
-    </div>
-  );
-}
-
-/* ============================================================
-   Styles — broadcast-scoreboard dark theme
-   ============================================================ */

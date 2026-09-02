@@ -6,3 +6,8 @@ export { default as ViewNav } from "./header/ViewNav.jsx";
 export { default as SeasonSwitcher } from "./header/SeasonSwitcher.jsx";
 export { default as SeasonsPanel } from "./header/SeasonsPanel.jsx";
 export { default as BoardUpdatesBanner } from "./BoardUpdatesBanner.jsx";
+export { default as NameAutocomplete } from "./ui/NameAutocomplete.jsx";
+export { default as PricePrompt } from "./ui/PricePrompt.jsx";
+export { default as BoardStatusSelect } from "./board/BoardStatusSelect.jsx";
+export { default as PriceMeter } from "./assistant/PriceMeter.jsx";
+export { HealthTip, HealthBadge, InjuryTag } from "./health/HealthTip.jsx";

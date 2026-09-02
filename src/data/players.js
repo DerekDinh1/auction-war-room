@@ -1,7 +1,10 @@
+import { norm } from "../lib/names.js";
+import { TEAMS, TEAM_BYES } from "../lib/league.js";
+
 // Built-in player list — Top 350 overall (FantasyPros multi-format avg + injury/handcuff adj)
 // Average of FantasyPros expert consensus rank_ave across PPR, Half-PPR, and Standard draft rankings
 // Generated 2026-08-26T21:34:49.709Z · 350 players · ordered by adjusted consensus rank
-const RAW_DB = [
+export const RAW_DB = [
   ["Jahmyr Gibbs","RB","DET"], // 1 · avg 1.33
   ["Bijan Robinson","RB","ATL"], // 2 · avg 3.00
   ["Jaxon Smith-Njigba","WR","SEA"], // 3 · avg 5.00
@@ -354,3 +357,23 @@ const RAW_DB = [
   ["Raheim Sanders","RB","CLE"], // 350 · avg 376.33
 ];
 
+export const DEF_NAMES = {
+  ARI:"Cardinals", ATL:"Falcons", BAL:"Ravens", BUF:"Bills", CAR:"Panthers", CHI:"Bears",
+  CIN:"Bengals", CLE:"Browns", DAL:"Cowboys", DEN:"Broncos", DET:"Lions", GB:"Packers",
+  HOU:"Texans", IND:"Colts", JAX:"Jaguars", KC:"Chiefs", LV:"Raiders", LAC:"Chargers",
+  LAR:"Rams", MIA:"Dolphins", MIN:"Vikings", NE:"Patriots", NO:"Saints", NYG:"Giants",
+  NYJ:"Jets", PHI:"Eagles", PIT:"Steelers", SF:"49ers", SEA:"Seahawks", TB:"Buccaneers",
+  TEN:"Titans", WAS:"Commanders",
+};
+export const PLAYER_DB = [
+  ...RAW_DB,
+  ...TEAMS.map((t) => [`${DEF_NAMES[t]} D/ST`, "DEF", t]),
+].map(([name, pos, team], i) => ({ id: `db${i}`, name, pos, team, bye: TEAM_BYES[team] }));
+
+/* ---------- estimated auction values (12-team, $200; DB is roughly rank-ordered) ---------- */
+export const POS_LISTS = {};
+PLAYER_DB.forEach((p) => { (POS_LISTS[p.pos] = POS_LISTS[p.pos] || []).push(p); });
+export const POS_RANK = {};
+Object.values(POS_LISTS).forEach((list) => list.forEach((p, i) => { POS_RANK[norm(p.name)] = i + 1; }));
+export const OVERALL_RANK = {};
+RAW_DB.forEach(([name], i) => { OVERALL_RANK[norm(name)] = i + 1; }); // 1–350 consensus board order (1QB)

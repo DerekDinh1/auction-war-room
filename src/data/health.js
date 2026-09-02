@@ -1,7 +1,10 @@
+import { norm } from "../lib/names.js";
+import { PLAYER_DB } from "./players.js";
+
 // Player health — updated 2026-08-26T21:34:49.709Z
 // Sources: FantasyPros injury news (8/23); Yahoo Sports training camp tracker; Fantasy Alarm weekend injury roundup (8/23); CBS Sports camp tracker; Adam Schefter / team beat reporters; ESPN (8/25–26); CBS / NFL Network (8/26)
 // Regenerate via: npm run refresh-board
-const PLAYER_HEALTH = {
+export const PLAYER_HEALTH = {
   [norm("Ashton Jeanty")]: { status: "D", note: "Right knee — helped off practice 8/23, unable to bear weight; team paused practice; awaiting MRI", sources: ["FantasyPros","Fantasy Alarm","Adam Schefter"], updatedAt: "2026-08-23" },
   [norm("Ricky Pearsall")]: { status: "OFS", note: "PCL surgery — out for 2026", sources: ["Yahoo Sports","CBS Sports"], updatedAt: "2026-08-20" },
   [norm("Chris Brazzell II")]: { status: "OFS", note: "LCL tear — out for 2026", sources: ["Yahoo Sports"], updatedAt: "2026-08-18" },
@@ -27,4 +30,39 @@ const PLAYER_HEALTH = {
   [norm("Josh Downs")]: { status: "Q", note: "Calf — minor; believes he'll resume practicing soon (8/26)", sources: ["ESPN","Colts beat"], updatedAt: "2026-08-26" },
   [norm("Tucker Kraft")]: { status: "Q", note: "Knee — returned to team drills 8/26; still monitoring", sources: ["NFL.com","ESPN"], updatedAt: "2026-08-26" },
 };
+export const healthFor = (name) => PLAYER_HEALTH[norm(name)] || null;
+export const injuryNoteFor = (name) => {
+  const h = healthFor(name);
+  if (!h) return null;
+  if (h.status === "OFS" || h.status === "IR" || h.status === "OUT") return h.note;
+  return null;
+};
+export const healthBlocksDraft = (name) => {
+  const s = healthFor(name)?.status;
+  return s === "OFS" || s === "IR" || s === "OUT";
+};
 
+export const HEALTH_LABELS = { Q: "Q", D: "D", OUT: "OUT", IR: "IR", OFS: "OFS", PUP: "PUP" };
+export function healthSnippet(note, max = 48) {
+  if (!note) return "";
+  let s = note.split(" — ")[0].split(" - ")[0].trim();
+  if (s.length > max) s = `${s.slice(0, max - 1)}…`;
+  return s;
+}
+export const isOutForSeason = (name) => healthFor(name)?.status === "OFS";
+export const seedOutForSeasonBoard = (boardData) => {
+  const next = { ...(boardData || {}) };
+  Object.entries(PLAYER_HEALTH).filter(([, h]) => h.status === "OFS" || h.status === "IR" || h.status === "OUT").forEach(([key, h]) => {
+    const p = PLAYER_DB.find((x) => norm(x.name) === key);
+    if (!p) return;
+    const cur = next[key];
+    if (cur?.status === "mine") return;
+    next[key] = {
+      ...(cur || {}),
+      name: p.name, pos: p.pos, team: p.team, bye: p.bye,
+      status: "gone", price: cur?.price ?? null, star: !!cur?.star,
+      injuryNote: h.note,
+    };
+  });
+  return next;
+};

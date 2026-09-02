@@ -37,7 +37,7 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git checkout -b "$BR"
-          git add scripts/ src/AuctionWarRoom.jsx src/data/board-updates.json
+          git add scripts/ src/data/
           git commit -m "Refresh top-350 rankings and health adjustments ($(date +%Y-%m-%d))"
           git push -u origin "$BR"
           BODY="## Summary

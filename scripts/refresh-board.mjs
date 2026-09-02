@@ -14,7 +14,8 @@ import { fileURLToPath } from 'url';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(__dirname, '..');
-const JSX = join(ROOT, 'src/AuctionWarRoom.jsx');
+const PLAYERS_JS = join(ROOT, 'src/data/players.js');
+const HEALTH_JS = join(ROOT, 'src/data/health.js');
 
 const FP_URLS = {
   PPR: 'https://www.fantasypros.com/nfl/rankings/ppr-cheatsheets.php',
@@ -306,7 +307,7 @@ function genRawDb(players, generatedAt) {
     '// Built-in player list — Top 350 overall (FantasyPros multi-format avg + injury/handcuff adj)',
     '// Average of FantasyPros expert consensus rank_ave across PPR, Half-PPR, and Standard draft rankings',
     `// Generated ${generatedAt} · 350 players · ordered by adjusted consensus rank`,
-    'const RAW_DB = [',
+    'export const RAW_DB = [',
   ];
   players.forEach((p, i) => {
     const tag = p.adj ? ` · adj ${p.adj > 0 ? '+' : ''}${p.adj.toFixed(0)}` : '';
@@ -322,7 +323,7 @@ function genPlayerHealth(health, generatedAt) {
     `// Player health — updated ${health.updatedAt || generatedAt}`,
     '// Sources: ' + (health.sources || []).join('; '),
     '// Regenerate via: npm run refresh-board',
-    'const PLAYER_HEALTH = {',
+    'export const PLAYER_HEALTH = {',
   ];
   for (const [name, h] of Object.entries(health.players || {})) {
     const src = JSON.stringify(h.sources || []);
@@ -333,36 +334,17 @@ function genPlayerHealth(health, generatedAt) {
   return lines.join('\n');
 }
 
-function patchJsx(rawBlock, healthBlock) {
-  let jsx = readFileSync(JSX, 'utf8');
-  jsx = jsx.replace(
-    /\/\/ Built-in player list — Top 350 overall[\s\S]*?^const RAW_DB = \[[\s\S]*?\n\];/m,
+function patchDataFiles(rawBlock, healthBlock) {
+  const players = readFileSync(PLAYERS_JS, 'utf8').replace(
+    /\/\/ Built-in player list — Top 350 overall[\s\S]*?^export const RAW_DB = \[[\s\S]*?\n\];/m,
     rawBlock.trim(),
   );
-  if (/const PLAYER_HEALTH = \{/.test(jsx)) {
-    jsx = jsx.replace(
-      /\/\/ Player health[\s\S]*?^const PLAYER_HEALTH = \{[\s\S]*?\n\};/m,
-      healthBlock.trim(),
-    );
-  } else {
-    jsx = jsx.replace(
-      /\/\/ Confirmed out for 2026[\s\S]*?^const OUT_FOR_SEASON = \{[\s\S]*?\};/m,
-      healthBlock.trim(),
-    );
-    jsx = jsx.replace(
-      /const injuryNoteFor = \(name\) => OUT_FOR_SEASON\[norm\(name\)\] \|\| null;/,
-      'const healthFor = (name) => PLAYER_HEALTH[norm(name)] || null;',
-    );
-    jsx = jsx.replace(
-      /const isOutForSeason = \(name\) => !!injuryNoteFor\(name\);/,
-      'const injuryNoteFor = (name) => {\n  const h = healthFor(name);\n  if (!h) return null;\n  if (h.status === "OFS" || h.status === "IR" || h.status === "OUT") return h.note;\n  return null;\n};\nconst healthBlocksDraft = (name) => {\n  const s = healthFor(name)?.status;\n  return s === "OFS" || s === "IR" || s === "OUT";\n};\nconst isOutForSeason = (name) => healthFor(name)?.status === "OFS";',
-    );
-    jsx = jsx.replace(
-      /Object\.entries\(OUT_FOR_SEASON\)/,
-      'Object.entries(PLAYER_HEALTH).filter(([, h]) => h.status === "OFS" || h.status === "IR" || h.status === "OUT")',
-    );
-  }
-  writeFileSync(JSX, jsx);
+  writeFileSync(PLAYERS_JS, players);
+  const health = readFileSync(HEALTH_JS, 'utf8').replace(
+    /\/\/ Player health[\s\S]*?^export const PLAYER_HEALTH = \{[\s\S]*?\n\};/m,
+    healthBlock.trim(),
+  );
+  writeFileSync(HEALTH_JS, health);
 }
 
 async function main() {
@@ -419,11 +401,9 @@ async function main() {
   writeFileSync(join(__dirname, 'top350-players.json'), JSON.stringify(top350, null, 2) + '\n');
   writeFileSync(join(__dirname, 'top350-meta.json'), JSON.stringify(meta, null, 2) + '\n');
   writeFileSync(updatesPath, JSON.stringify(updates, null, 2) + '\n');
-  writeFileSync(join(__dirname, 'raw-db-generated.js'), genRawDb(top350, generatedAt) + '\n');
-  writeFileSync(join(__dirname, 'player-health-generated.js'), genPlayerHealth(health, generatedAt) + '\n');
 
-  patchJsx(genRawDb(top350, generatedAt), genPlayerHealth(health, generatedAt));
-  console.log('Patched src/AuctionWarRoom.jsx');
+  patchDataFiles(genRawDb(top350, generatedAt), genPlayerHealth(health, generatedAt));
+  console.log('Patched src/data/players.js and src/data/health.js');
   console.log(`Wrote board updates (${updates.rankChanges} rank moves, ${updates.highlights.length} rank highlights, ${updates.injuryWatch.length} on injury watch)`);
   saveHealthSnapshot(health);
   console.log('Done.');

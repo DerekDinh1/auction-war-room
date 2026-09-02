@@ -130,7 +130,7 @@ export default function CommandHeader({
             aria-activedescendant={activeId}
             aria-label="Quick add: player name and price"
             value={quick}
-            placeholder='Quick add — "Ja&#39;Marr Chase, WR, CIN, 52" or just "Chase 52"'
+            placeholder='Quick add — "Chase 52"'
             onChange={onQuickChange}
             onFocus={onQuickFocus}
             onBlur={onQuickBlur}
