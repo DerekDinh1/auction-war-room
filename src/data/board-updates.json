@@ -1,89 +1,131 @@
 {
-  "generatedAt": "2026-08-26T21:34:49.709Z",
-  "previousGeneratedAt": "2026-08-26T21:14:52.841Z",
-  "summary": "Top-350 re-ranked from FantasyPros · 90 rank moves · 1 in · 1 out",
-  "rankChanges": 90,
-  "enteredCount": 1,
-  "exitedCount": 1,
-  "injuryAdjustments": 30,
+  "generatedAt": "2026-09-02T17:38:47.316Z",
+  "previousGeneratedAt": "2026-08-26T21:34:49.709Z",
+  "summary": "Top-350 re-ranked from FantasyPros · 295 rank moves · 4 in · 4 out",
+  "rankChanges": 295,
+  "enteredCount": 4,
+  "exitedCount": 4,
+  "injuryAdjustments": 29,
   "count": 350,
   "highlights": [
     {
-      "type": "rise",
-      "name": "Savion Williams",
-      "pos": "WR",
-      "team": "GB",
-      "from": 347,
-      "to": 342
-    },
-    {
       "type": "drop",
-      "name": "Chimere Dike",
-      "pos": "WR",
-      "team": "TEN",
-      "from": 242,
-      "to": 245
-    },
-    {
-      "type": "rise",
-      "name": "Jordan James",
+      "name": "Josh Jacobs",
       "pos": "RB",
-      "team": "SF",
-      "from": 245,
-      "to": 242
+      "team": "GB",
+      "from": 40,
+      "to": 145
     },
     {
       "type": "drop",
-      "name": "Darren Waller",
-      "pos": "TE",
-      "team": "CAR",
-      "from": 290,
-      "to": 293
+      "name": "Jaydon Blue",
+      "pos": "RB",
+      "team": "PHI",
+      "from": 197,
+      "to": 269
     },
     {
-      "type": "drop",
-      "name": "KaVontae Turpin",
-      "pos": "WR",
+      "type": "rise",
+      "name": "MarShawn Lloyd",
+      "pos": "RB",
+      "team": "GB",
+      "from": 161,
+      "to": 91
+    },
+    {
+      "type": "rise",
+      "name": "Malik Davis",
+      "pos": "RB",
       "team": "DAL",
-      "from": 343,
-      "to": 346
+      "from": 257,
+      "to": 206
     },
     {
       "type": "rise",
-      "name": "Deebo Samuel Sr.",
+      "name": "Kaleb Johnson",
+      "pos": "RB",
+      "team": "GB",
+      "from": 283,
+      "to": 236
+    },
+    {
+      "type": "rise",
+      "name": "Chris Bell",
       "pos": "WR",
-      "team": "SF",
-      "from": 140,
-      "to": 138
+      "team": "MIA",
+      "from": 253,
+      "to": 216
     },
     {
-      "type": "rise",
-      "name": "Jalen Nailor",
+      "type": "drop",
+      "name": "Tank Dell",
       "pos": "WR",
-      "team": "LV",
-      "from": 170,
-      "to": 168
+      "team": "HOU",
+      "from": 189,
+      "to": 224
     },
     {
       "type": "rise",
-      "name": "Oronde Gadsden II",
-      "pos": "TE",
-      "team": "LAC",
-      "from": 178,
-      "to": 176
+      "name": "Najee Harris",
+      "pos": "RB",
+      "team": "NYG",
+      "from": 246,
+      "to": 219
     },
     {
       "type": "entered",
-      "name": "Raheim Sanders",
+      "name": "Zavion Thomas",
+      "pos": "WR",
+      "team": "CHI",
+      "rank": 339
+    },
+    {
+      "type": "entered",
+      "name": "Anthony Richardson Sr.",
+      "pos": "QB",
+      "team": "IND",
+      "rank": 345
+    },
+    {
+      "type": "entered",
+      "name": "Roschon Johnson",
       "pos": "RB",
-      "team": "CLE",
+      "team": "CHI",
+      "rank": 349
+    },
+    {
+      "type": "entered",
+      "name": "Jacob Saylors",
+      "pos": "RB",
+      "team": "DET",
       "rank": 350
     },
     {
       "type": "exited",
-      "name": "John Metchie III",
+      "name": "Antonio Williams",
       "pos": "WR",
-      "team": "CAR",
+      "team": "WAS",
+      "rank": 230
+    },
+    {
+      "type": "exited",
+      "name": "Jawhar Jordan",
+      "pos": "RB",
+      "team": "HOU",
+      "rank": 340
+    },
+    {
+      "type": "exited",
+      "name": "Jordan Whittington",
+      "pos": "WR",
+      "team": "LAR",
+      "rank": 345
+    },
+    {
+      "type": "exited",
+      "name": "Raheim Sanders",
+      "pos": "RB",
+      "team": "CLE",
       "rank": 350
     }
   ],
