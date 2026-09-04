@@ -1,145 +1,89 @@
 {
-  "generatedAt": "2026-09-03T17:33:30.147Z",
-  "previousGeneratedAt": "2026-08-26T21:34:49.709Z",
-  "summary": "Top-350 re-ranked from FantasyPros · 310 rank moves · 5 in · 5 out",
-  "rankChanges": 310,
-  "enteredCount": 5,
-  "exitedCount": 5,
+  "generatedAt": "2026-09-04T17:23:56.111Z",
+  "previousGeneratedAt": "2026-09-03T17:33:30.147Z",
+  "summary": "Top-350 re-ranked from FantasyPros · 209 rank moves · 1 in · 1 out",
+  "rankChanges": 209,
+  "enteredCount": 1,
+  "exitedCount": 1,
   "injuryAdjustments": 29,
   "count": 350,
   "highlights": [
     {
-      "type": "drop",
-      "name": "Josh Jacobs",
+      "type": "rise",
+      "name": "Bam Knight",
       "pos": "RB",
-      "team": "GB",
-      "from": 40,
-      "to": 148
+      "team": "ARI",
+      "from": 327,
+      "to": 314
     },
     {
       "type": "drop",
-      "name": "Jaydon Blue",
+      "name": "Mike Washington Jr.",
+      "pos": "RB",
+      "team": "LV",
+      "from": 103,
+      "to": 110
+    },
+    {
+      "type": "rise",
+      "name": "Zachariah Branch",
+      "pos": "WR",
+      "team": "ATL",
+      "from": 217,
+      "to": 210
+    },
+    {
+      "type": "rise",
+      "name": "Jacob Saylors",
+      "pos": "RB",
+      "team": "DET",
+      "from": 336,
+      "to": 329
+    },
+    {
+      "type": "rise",
+      "name": "Will Shipley",
       "pos": "RB",
       "team": "PHI",
-      "from": 197,
-      "to": 274
-    },
-    {
-      "type": "rise",
-      "name": "MarShawn Lloyd",
-      "pos": "RB",
-      "team": "GB",
-      "from": 161,
-      "to": 91
-    },
-    {
-      "type": "rise",
-      "name": "Malik Davis",
-      "pos": "RB",
-      "team": "DAL",
-      "from": 257,
-      "to": 204
-    },
-    {
-      "type": "rise",
-      "name": "Kaleb Johnson",
-      "pos": "RB",
-      "team": "GB",
-      "from": 283,
-      "to": 231
-    },
-    {
-      "type": "rise",
-      "name": "Chris Bell",
-      "pos": "WR",
-      "team": "MIA",
-      "from": 253,
-      "to": 209
+      "from": 302,
+      "to": 296
     },
     {
       "type": "drop",
-      "name": "Tank Dell",
-      "pos": "WR",
-      "team": "HOU",
-      "from": 189,
-      "to": 227
+      "name": "J.J. McCarthy",
+      "pos": "QB",
+      "team": "MIN",
+      "from": 320,
+      "to": 326
     },
     {
-      "type": "rise",
+      "type": "drop",
       "name": "Ja'Kobi Lane",
       "pos": "WR",
       "team": "BAL",
-      "from": 228,
+      "from": 191,
+      "to": 196
+    },
+    {
+      "type": "rise",
+      "name": "Rashod Bateman",
+      "pos": "WR",
+      "team": "BAL",
+      "from": 196,
       "to": 191
     },
     {
       "type": "entered",
-      "name": "Jacob Saylors",
-      "pos": "RB",
-      "team": "DET",
-      "rank": 336
-    },
-    {
-      "type": "entered",
-      "name": "Roschon Johnson",
-      "pos": "RB",
-      "team": "CHI",
-      "rank": 341
-    },
-    {
-      "type": "entered",
-      "name": "Zavion Thomas",
+      "name": "Dont'e Thornton Jr.",
       "pos": "WR",
-      "team": "CHI",
-      "rank": 343
-    },
-    {
-      "type": "entered",
-      "name": "Anthony Richardson Sr.",
-      "pos": "QB",
-      "team": "IND",
-      "rank": 347
-    },
-    {
-      "type": "entered",
-      "name": "Demarcus Robinson",
-      "pos": "WR",
-      "team": "SF",
+      "team": "LV",
       "rank": 350
     },
     {
       "type": "exited",
-      "name": "Antonio Williams",
-      "pos": "WR",
-      "team": "WAS",
-      "rank": 230
-    },
-    {
-      "type": "exited",
-      "name": "Justin Joly",
-      "pos": "TE",
-      "team": "DEN",
-      "rank": 338
-    },
-    {
-      "type": "exited",
-      "name": "Jawhar Jordan",
-      "pos": "RB",
-      "team": "HOU",
-      "rank": 340
-    },
-    {
-      "type": "exited",
-      "name": "Jordan Whittington",
-      "pos": "WR",
-      "team": "LAR",
-      "rank": 345
-    },
-    {
-      "type": "exited",
-      "name": "Dont'e Thornton Jr.",
-      "pos": "WR",
-      "team": "LV",
+      "name": "Anthony Richardson Sr.",
+      "pos": "QB",
+      "team": "IND",
       "rank": 347
     }
   ],
