@@ -1,90 +1,104 @@
 {
-  "generatedAt": "2026-09-04T17:23:56.111Z",
-  "previousGeneratedAt": "2026-09-03T17:33:30.147Z",
-  "summary": "Top-350 re-ranked from FantasyPros · 209 rank moves · 1 in · 1 out",
-  "rankChanges": 209,
-  "enteredCount": 1,
-  "exitedCount": 1,
+  "generatedAt": "2026-09-05T16:33:49.435Z",
+  "previousGeneratedAt": "2026-09-04T17:23:56.111Z",
+  "summary": "Top-350 re-ranked from FantasyPros · 215 rank moves · 2 in · 2 out",
+  "rankChanges": 215,
+  "enteredCount": 2,
+  "exitedCount": 2,
   "injuryAdjustments": 29,
   "count": 350,
   "highlights": [
     {
-      "type": "rise",
-      "name": "Bam Knight",
-      "pos": "RB",
-      "team": "ARI",
-      "from": 327,
-      "to": 314
-    },
-    {
       "type": "drop",
-      "name": "Mike Washington Jr.",
+      "name": "Joe Mixon",
       "pos": "RB",
-      "team": "LV",
-      "from": 103,
-      "to": 110
-    },
-    {
-      "type": "rise",
-      "name": "Zachariah Branch",
-      "pos": "WR",
-      "team": "ATL",
-      "from": 217,
-      "to": 210
+      "team": "FA",
+      "from": 320,
+      "to": 332
     },
     {
       "type": "rise",
       "name": "Jacob Saylors",
       "pos": "RB",
       "team": "DET",
-      "from": 336,
-      "to": 329
+      "from": 329,
+      "to": 317
     },
     {
       "type": "rise",
-      "name": "Will Shipley",
+      "name": "DeMario Douglas",
+      "pos": "WR",
+      "team": "NE",
+      "from": 293,
+      "to": 286
+    },
+    {
+      "type": "rise",
+      "name": "Joshua Palmer",
+      "pos": "WR",
+      "team": "BUF",
+      "from": 327,
+      "to": 320
+    },
+    {
+      "type": "drop",
+      "name": "Jalen Royals",
+      "pos": "WR",
+      "team": "KC",
+      "from": 322,
+      "to": 328
+    },
+    {
+      "type": "rise",
+      "name": "Josh Jacobs",
       "pos": "RB",
-      "team": "PHI",
-      "from": 302,
-      "to": 296
+      "team": "GB",
+      "from": 152,
+      "to": 147
     },
     {
       "type": "drop",
-      "name": "J.J. McCarthy",
-      "pos": "QB",
-      "team": "MIN",
-      "from": 320,
-      "to": 326
+      "name": "Isiah Pacheco",
+      "pos": "RB",
+      "team": "DET",
+      "from": 174,
+      "to": 179
     },
     {
       "type": "drop",
-      "name": "Ja'Kobi Lane",
-      "pos": "WR",
-      "team": "BAL",
-      "from": 191,
-      "to": 196
-    },
-    {
-      "type": "rise",
-      "name": "Rashod Bateman",
-      "pos": "WR",
-      "team": "BAL",
-      "from": 196,
-      "to": 191
+      "name": "James Conner",
+      "pos": "RB",
+      "team": "ARI",
+      "from": 197,
+      "to": 202
     },
     {
       "type": "entered",
-      "name": "Dont'e Thornton Jr.",
-      "pos": "WR",
-      "team": "LV",
+      "name": "Anthony Richardson Sr.",
+      "pos": "QB",
+      "team": "IND",
+      "rank": 349
+    },
+    {
+      "type": "entered",
+      "name": "Sione Vaki",
+      "pos": "RB",
+      "team": "DET",
       "rank": 350
     },
     {
       "type": "exited",
-      "name": "Anthony Richardson Sr.",
-      "pos": "QB",
-      "team": "IND",
-      "rank": 347
+      "name": "Savion Williams",
+      "pos": "WR",
+      "team": "GB",
+      "rank": 349
+    },
+    {
+      "type": "exited",
+      "name": "Dont'e Thornton Jr.",
+      "pos": "WR",
+      "team": "LV",
+      "rank": 350
     }
   ],
   "injuryHighlights": [],
