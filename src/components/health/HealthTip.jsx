@@ -96,3 +96,11 @@ export function HealthBadge({ health }) {
 export function InjuryTag({ note, label = "OUT" }) {
   return <HealthTip label={label} note={note} statusClass="st-OUT" variant="injury" />;
 }
+
+export function RookieTag() {
+  return (
+    <span className="health-tag rookie-tag st-R" title="Rookie" aria-label="Rookie">
+      R
+    </span>
+  );
+}

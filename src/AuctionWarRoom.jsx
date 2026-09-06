@@ -9,6 +9,7 @@ import {
   BoardUpdatesBanner,
   HealthBadge,
   InjuryTag,
+  RookieTag,
   NameAutocomplete,
   BoardStatusSelect,
   PricePrompt,
@@ -41,6 +42,7 @@ import {
 } from "./lib/league.js";
 import { PLAYER_DB, POS_LISTS, POS_RANK, OVERALL_RANK } from "./data/players.js";
 import { healthFor, injuryNoteFor, healthBlocksDraft, isOutForSeason, seedOutForSeasonBoard } from "./data/health.js";
+import { isRookie } from "./data/rookies.js";
 import { estValue, buildDraftRank, tierOf } from "./lib/valuation.js";
 import { uid, parseQuick, matchPlayers, fuzzyMatch } from "./lib/search.js";
 import {
@@ -889,7 +891,7 @@ export default function AuctionWarRoom() {
         rank: POS_RANK[norm(p.name)] || 999,
         overall: draftRank[norm(p.name)] || null,
         consensus: OVERALL_RANK[norm(p.name)] || null,
-        health, injuryNote,
+        health, injuryNote, rookie: isRookie(p.name),
       };
     });
     // custom players tracked off-board that aren't in the built-in DB
@@ -899,6 +901,8 @@ export default function AuctionWarRoom() {
         id: `x-${k}`, name: b.name, pos: b.pos || "", team: b.team || "", bye: b.bye || null, key: k,
         status: b.status || "available", price: b.price ?? null, star: !!b.star,
         est: adjEst(b.pos, b.name), tier: null, rank: 999, overall: null,
+        health: healthFor(b.name), injuryNote: b.injuryNote || injuryNoteFor(b.name),
+        rookie: isRookie(b.name),
       });
     });
     const filtered = rows
@@ -1107,7 +1111,7 @@ export default function AuctionWarRoom() {
         rank: POS_RANK[k] || 999,
         overall: draftRank[k] || 9999,
         bye: t.bye || TEAM_BYES[t.team] || null,
-        health: healthFor(t.name), injuryNote,
+        health: healthFor(t.name), injuryNote, rookie: isRookie(t.name),
       };
     });
     const filtered = targetFilter === "ALL" ? rows : rows.filter((r) => r.pos === targetFilter);
@@ -2149,6 +2153,7 @@ export default function AuctionWarRoom() {
                         <td className="num rank-cell col-posrank hide-xs">{r.rank < 999 ? r.rank : "—"}</td>
                         <td className="pname col-player">
                           <button className="linklike" onClick={() => loadSuggestion(r)} title="Load into Draft Assistant">{r.name}</button>
+                          {r.rookie ? <RookieTag /> : null}
                           {r.health && r.health.status && r.health.status !== "active" ? (
                             <span className="pname-health"><HealthBadge health={r.health} /></span>
                           ) : r.injuryNote ? (
@@ -2360,6 +2365,7 @@ export default function AuctionWarRoom() {
                         >
                           {r.name}
                         </button>
+                        {r.rookie ? <RookieTag /> : null}
                         {r.health && r.health.status && r.health.status !== "active" ? (
                             <span className="pname-health"><HealthBadge health={r.health} /></span>
                           ) : r.injuryNote ? (
@@ -2471,6 +2477,7 @@ export default function AuctionWarRoom() {
                       <td className="num rank-cell col-rank">{r.overall ?? "—"}</td>
                       <td className="pname col-player">
                         <button className="linklike" onClick={() => loadTargetToRoom(r)} title="Load into Draft Assistant">{r.name}</button>
+                        {r.rookie ? <RookieTag /> : null}
                         {r.health && r.health.status && r.health.status !== "active" ? (
                             <span className="pname-health"><HealthBadge health={r.health} /></span>
                           ) : r.injuryNote ? (

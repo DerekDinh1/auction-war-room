@@ -10,4 +10,4 @@ export { default as NameAutocomplete } from "./ui/NameAutocomplete.jsx";
 export { default as PricePrompt } from "./ui/PricePrompt.jsx";
 export { default as BoardStatusSelect } from "./board/BoardStatusSelect.jsx";
 export { default as PriceMeter } from "./assistant/PriceMeter.jsx";
-export { HealthTip, HealthBadge, InjuryTag } from "./health/HealthTip.jsx";
+export { HealthTip, HealthBadge, InjuryTag, RookieTag } from "./health/HealthTip.jsx";

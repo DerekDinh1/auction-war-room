@@ -1966,6 +1966,19 @@ button, select { touch-action: manipulation; }
 .health-tag.st-D { color: #e89a4a; border: 1px solid rgba(232,154,74,.35); background: rgba(232,154,74,.08); }
 .health-tag.st-OUT, .health-tag.st-IR, .health-tag.st-OFS { color: var(--red); border: 1px solid rgba(241,101,95,.4); background: rgba(241,101,95,.1); }
 .health-tag.st-PUP { color: #a78bfa; border: 1px solid rgba(167,139,250,.35); background: rgba(167,139,250,.08); }
+.health-tag.st-R {
+  color: #5ec8e8;
+  border: 1px solid rgba(94,200,232,.4);
+  background: rgba(94,200,232,.1);
+  margin-left: 4px;
+  vertical-align: middle;
+}
+.board-table .pname .rookie-tag,
+.target-table .pname .rookie-tag,
+.plan-board-table .pname .rookie-tag {
+  display: inline-flex;
+  vertical-align: middle;
+}
 .col-health { min-width: 96px; max-width: 140px; text-align: center; vertical-align: middle; }
 
 .board-table td.col-health,
