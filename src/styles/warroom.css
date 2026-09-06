@@ -1471,12 +1471,13 @@ button, select { touch-action: manipulation; }
   .needs-panel .open-slots { display: none; }
   /* Sticky header budget (~140px): brand + season on one row, single-line meta strip, tighter vitals */
   .command { padding: 6px 10px 5px; gap: 6px; }
-  .command-top { gap: 6px; }
+  .command-top { gap: 8px; }
   .brand { flex-direction: row; align-items: center; justify-content: space-between; gap: 8px; }
   .brand-title { font-size: 14px; }
   .brand-sub { display: none; }
-  .season-switcher { margin-top: 0; flex: none; }
-  .season-trigger { gap: 6px; padding: 2px 8px; margin: -7px 0; }
+  .season-switcher { margin-top: 0; flex: none; align-self: center; }
+  /* Keep 40px tap height without negative margins — those bled over Max Bid below */
+  .season-trigger { gap: 6px; padding: 6px 10px; margin: 0; min-height: 36px; }
   .season-kicker { display: none; }
   .season-label { font-size: 12.5px; }
   .season-menu { left: auto; right: 0; }
