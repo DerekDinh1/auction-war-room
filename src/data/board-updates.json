@@ -1,8 +1,8 @@
 {
-  "generatedAt": "2026-09-05T16:33:49.435Z",
-  "previousGeneratedAt": "2026-09-04T17:23:56.111Z",
-  "summary": "Top-350 re-ranked from FantasyPros · 215 rank moves · 2 in · 2 out",
-  "rankChanges": 215,
+  "generatedAt": "2026-09-06T16:43:23.712Z",
+  "previousGeneratedAt": "2026-09-05T16:33:49.435Z",
+  "summary": "Top-350 re-ranked from FantasyPros · 192 rank moves · 2 in · 2 out",
+  "rankChanges": 192,
   "enteredCount": 2,
   "exitedCount": 2,
   "injuryAdjustments": 29,
@@ -10,94 +10,94 @@
   "highlights": [
     {
       "type": "drop",
-      "name": "Joe Mixon",
-      "pos": "RB",
-      "team": "FA",
-      "from": 320,
-      "to": 332
-    },
-    {
-      "type": "rise",
-      "name": "Jacob Saylors",
-      "pos": "RB",
-      "team": "DET",
-      "from": 329,
-      "to": 317
-    },
-    {
-      "type": "rise",
-      "name": "DeMario Douglas",
+      "name": "Konata Mumpfield",
       "pos": "WR",
-      "team": "NE",
-      "from": 293,
-      "to": 286
+      "team": "LAR",
+      "from": 319,
+      "to": 329
     },
     {
       "type": "rise",
-      "name": "Joshua Palmer",
+      "name": "Malik Benson",
       "pos": "WR",
-      "team": "BUF",
-      "from": 327,
-      "to": 320
-    },
-    {
-      "type": "drop",
-      "name": "Jalen Royals",
-      "pos": "WR",
-      "team": "KC",
-      "from": 322,
-      "to": 328
+      "team": "LV",
+      "from": 330,
+      "to": 322
     },
     {
       "type": "rise",
-      "name": "Josh Jacobs",
+      "name": "Kaelon Black",
       "pos": "RB",
+      "team": "SF",
+      "from": 198,
+      "to": 192
+    },
+    {
+      "type": "rise",
+      "name": "Jayden Reed",
+      "pos": "WR",
       "team": "GB",
-      "from": 152,
-      "to": 147
+      "from": 102,
+      "to": 97
     },
     {
       "type": "drop",
-      "name": "Isiah Pacheco",
+      "name": "Rashod Bateman",
+      "pos": "WR",
+      "team": "BAL",
+      "from": 193,
+      "to": 198
+    },
+    {
+      "type": "rise",
+      "name": "Malik Davis",
       "pos": "RB",
+      "team": "DAL",
+      "from": 199,
+      "to": 194
+    },
+    {
+      "type": "drop",
+      "name": "Isaac TeSlaa",
+      "pos": "WR",
       "team": "DET",
-      "from": 174,
-      "to": 179
+      "from": 200,
+      "to": 205
     },
     {
       "type": "drop",
       "name": "James Conner",
       "pos": "RB",
       "team": "ARI",
-      "from": 197,
-      "to": 202
+      "from": 202,
+      "to": 207
     },
     {
       "type": "entered",
+      "name": "Tutu Atwell",
+      "pos": "WR",
+      "team": "LAR",
+      "rank": 347
+    },
+    {
+      "type": "entered",
+      "name": "Colbie Young",
+      "pos": "WR",
+      "team": "CIN",
+      "rank": 348
+    },
+    {
+      "type": "exited",
       "name": "Anthony Richardson Sr.",
       "pos": "QB",
       "team": "IND",
       "rank": 349
     },
     {
-      "type": "entered",
+      "type": "exited",
       "name": "Sione Vaki",
       "pos": "RB",
       "team": "DET",
-      "rank": 350
-    },
-    {
-      "type": "exited",
-      "name": "Savion Williams",
-      "pos": "WR",
-      "team": "GB",
-      "rank": 349
-    },
-    {
-      "type": "exited",
-      "name": "Dont'e Thornton Jr.",
-      "pos": "WR",
-      "team": "LV",
       "rank": 350
     }
   ],
