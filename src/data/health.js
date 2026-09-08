@@ -1,7 +1,7 @@
 import { norm } from "../lib/names.js";
 import { PLAYER_DB } from "./players.js";
 
-// Player health — updated 2026-09-07T18:37:07.444Z
+// Player health — updated 2026-09-08T17:46:35.088Z
 // Sources: FantasyPros injury news (8/23); Yahoo Sports training camp tracker; Fantasy Alarm weekend injury roundup (8/23); CBS Sports camp tracker; Adam Schefter / team beat reporters; ESPN (8/25–26); CBS / NFL Network (8/26)
 // Regenerate via: npm run refresh-board
 export const PLAYER_HEALTH = {
