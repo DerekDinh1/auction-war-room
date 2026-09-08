@@ -1,118 +1,104 @@
 {
-  "generatedAt": "2026-09-07T18:37:07.444Z",
-  "previousGeneratedAt": "2026-09-06T16:43:23.712Z",
-  "summary": "Top-350 re-ranked from FantasyPros · 226 rank moves · 3 in · 3 out",
-  "rankChanges": 226,
-  "enteredCount": 3,
-  "exitedCount": 3,
+  "generatedAt": "2026-09-08T17:46:35.088Z",
+  "previousGeneratedAt": "2026-09-07T18:37:07.444Z",
+  "summary": "Top-350 re-ranked from FantasyPros · 214 rank moves · 2 in · 2 out",
+  "rankChanges": 214,
+  "enteredCount": 2,
+  "exitedCount": 2,
   "injuryAdjustments": 30,
   "count": 350,
   "highlights": [
     {
-      "type": "rise",
-      "name": "Roschon Johnson",
+      "type": "drop",
+      "name": "Isiah Pacheco",
       "pos": "RB",
-      "team": "CHI",
-      "from": 343,
-      "to": 328
-    },
-    {
-      "type": "rise",
-      "name": "Kaleb Johnson",
-      "pos": "RB",
-      "team": "GB",
-      "from": 229,
-      "to": 220
-    },
-    {
-      "type": "rise",
-      "name": "Chase McLaughlin",
-      "pos": "K",
-      "team": "TB",
-      "from": 231,
-      "to": 222
+      "team": "DET",
+      "from": 182,
+      "to": 192
     },
     {
       "type": "drop",
-      "name": "Joe Mixon",
-      "pos": "RB",
+      "name": "Darius Slayton",
+      "pos": "WR",
       "team": "FA",
-      "from": 336,
-      "to": 345
+      "from": 262,
+      "to": 272
     },
     {
       "type": "drop",
-      "name": "Travis Hunter",
-      "pos": "WR",
-      "team": "JAC",
-      "from": 187,
-      "to": 194
-    },
-    {
-      "type": "drop",
-      "name": "Nicholas Singleton",
+      "name": "Emanuel Wilson",
       "pos": "RB",
-      "team": "TEN",
-      "from": 190,
-      "to": 197
-    },
-    {
-      "type": "drop",
-      "name": "Malachi Fields",
-      "pos": "WR",
-      "team": "NYG",
-      "from": 201,
-      "to": 208
+      "team": "SEA",
+      "from": 221,
+      "to": 229
     },
     {
       "type": "rise",
-      "name": "Geno Smith",
-      "pos": "QB",
-      "team": "NYJ",
-      "from": 210,
-      "to": 203
+      "name": "Germie Bernard",
+      "pos": "WR",
+      "team": "PIT",
+      "from": 228,
+      "to": 221
+    },
+    {
+      "type": "rise",
+      "name": "DeMario Douglas",
+      "pos": "WR",
+      "team": "NE",
+      "from": 286,
+      "to": 279
+    },
+    {
+      "type": "rise",
+      "name": "Jacob Saylors",
+      "pos": "RB",
+      "team": "DET",
+      "from": 310,
+      "to": 303
+    },
+    {
+      "type": "rise",
+      "name": "Chris Bell",
+      "pos": "WR",
+      "team": "MIA",
+      "from": 207,
+      "to": 201
+    },
+    {
+      "type": "drop",
+      "name": "Tank Dell",
+      "pos": "WR",
+      "team": "HOU",
+      "from": 234,
+      "to": 240
     },
     {
       "type": "entered",
-      "name": "Jordan Whittington",
+      "name": "Tutu Atwell",
       "pos": "WR",
       "team": "LAR",
-      "rank": 346
+      "rank": 349
     },
     {
       "type": "entered",
-      "name": "Anthony Richardson Sr.",
-      "pos": "QB",
-      "team": "IND",
-      "rank": 347
-    },
-    {
-      "type": "entered",
-      "name": "Dont'e Thornton Jr.",
-      "pos": "WR",
-      "team": "LV",
+      "name": "Noah Fant",
+      "pos": "TE",
+      "team": "NO",
       "rank": 350
     },
     {
       "type": "exited",
-      "name": "Ty Simpson",
-      "pos": "QB",
-      "team": "LAR",
-      "rank": 346
-    },
-    {
-      "type": "exited",
-      "name": "Tutu Atwell",
+      "name": "Demarcus Robinson",
       "pos": "WR",
-      "team": "LAR",
-      "rank": 347
+      "team": "SF",
+      "rank": 348
     },
     {
       "type": "exited",
-      "name": "Michael Carter",
-      "pos": "RB",
-      "team": "TEN",
-      "rank": 349
+      "name": "Dont'e Thornton Jr.",
+      "pos": "WR",
+      "team": "LV",
+      "rank": 350
     }
   ],
   "injuryHighlights": [],
