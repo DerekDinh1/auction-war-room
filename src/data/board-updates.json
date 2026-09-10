@@ -1,117 +1,103 @@
 {
-  "generatedAt": "2026-09-09T17:36:50.993Z",
-  "previousGeneratedAt": "2026-09-08T17:46:35.088Z",
-  "summary": "Top-350 re-ranked from FantasyPros · 230 rank moves · 3 in · 3 out",
-  "rankChanges": 230,
-  "enteredCount": 3,
-  "exitedCount": 3,
+  "generatedAt": "2026-09-10T17:30:04.891Z",
+  "previousGeneratedAt": "2026-09-09T17:36:50.993Z",
+  "summary": "Top-350 re-ranked from FantasyPros · 264 rank moves · 2 in · 2 out",
+  "rankChanges": 264,
+  "enteredCount": 2,
+  "exitedCount": 2,
   "injuryAdjustments": 30,
   "count": 350,
   "highlights": [
-    {
-      "type": "rise",
-      "name": "Zavion Thomas",
-      "pos": "WR",
-      "team": "CHI",
-      "from": 335,
-      "to": 327
-    },
-    {
-      "type": "drop",
-      "name": "Jaylin Noel",
-      "pos": "WR",
-      "team": "HOU",
-      "from": 186,
-      "to": 193
-    },
     {
       "type": "drop",
       "name": "Isiah Pacheco",
       "pos": "RB",
       "team": "DET",
-      "from": 192,
-      "to": 199
+      "from": 199,
+      "to": 220
     },
     {
-      "type": "rise",
-      "name": "Malik Davis",
-      "pos": "RB",
-      "team": "DAL",
-      "from": 196,
-      "to": 189
+      "type": "drop",
+      "name": "Brock Bowers",
+      "pos": "TE",
+      "team": "LV",
+      "from": 16,
+      "to": 32
     },
     {
-      "type": "rise",
-      "name": "Eddy Pineiro",
-      "pos": "K",
+      "type": "drop",
+      "name": "Brandon Aiyuk",
+      "pos": "WR",
       "team": "SF",
-      "from": 204,
-      "to": 197
-    },
-    {
-      "type": "drop",
-      "name": "Jaylen Wright",
-      "pos": "RB",
-      "team": "MIA",
-      "from": 212,
-      "to": 219
-    },
-    {
-      "type": "drop",
-      "name": "Germie Bernard",
-      "pos": "WR",
-      "team": "PIT",
-      "from": 221,
-      "to": 228
+      "from": 300,
+      "to": 313
     },
     {
       "type": "rise",
-      "name": "Kareem Hunt",
-      "pos": "RB",
-      "team": "FA",
-      "from": 310,
-      "to": 303
+      "name": "Michael Mayer",
+      "pos": "TE",
+      "team": "LV",
+      "from": 296,
+      "to": 285
     },
     {
-      "type": "entered",
-      "name": "Odell Beckham Jr.",
+      "type": "rise",
+      "name": "Justice Hill",
+      "pos": "RB",
+      "team": "BAL",
+      "from": 220,
+      "to": 210
+    },
+    {
+      "type": "rise",
+      "name": "Chris Bell",
       "pos": "WR",
-      "team": "NYG",
-      "rank": 343
+      "team": "MIA",
+      "from": 201,
+      "to": 192
+    },
+    {
+      "type": "rise",
+      "name": "Caleb Douglas",
+      "pos": "WR",
+      "team": "MIA",
+      "from": 233,
+      "to": 224
+    },
+    {
+      "type": "drop",
+      "name": "Tank Dell",
+      "pos": "WR",
+      "team": "HOU",
+      "from": 246,
+      "to": 254
     },
     {
       "type": "entered",
-      "name": "Sione Vaki",
+      "name": "Rasheen Ali",
       "pos": "RB",
-      "team": "DET",
-      "rank": 344
+      "team": "BAL",
+      "rank": 346
     },
     {
       "type": "entered",
-      "name": "Ty Simpson",
-      "pos": "QB",
-      "team": "LAR",
+      "name": "Noah Fant",
+      "pos": "TE",
+      "team": "NO",
       "rank": 350
     },
     {
       "type": "exited",
-      "name": "Anthony Richardson Sr.",
-      "pos": "QB",
-      "team": "IND",
+      "name": "Colbie Young",
+      "pos": "WR",
+      "team": "CIN",
       "rank": 348
     },
     {
       "type": "exited",
-      "name": "Tutu Atwell",
-      "pos": "WR",
+      "name": "Ty Simpson",
+      "pos": "QB",
       "team": "LAR",
-      "rank": 349
-    },
-    {
-      "type": "exited",
-      "name": "Noah Fant",
-      "pos": "TE",
-      "team": "NO",
       "rank": 350
     }
   ],
