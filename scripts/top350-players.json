@@ -17,15 +17,15 @@
     "name": "Bijan Robinson",
     "pos": "RB",
     "team": "ATL",
-    "avg": 3,
+    "avg": 3.33,
     "ranks": {
       "PPR": 4,
-      "HALF": 2,
+      "HALF": 3,
       "STD": 3
     },
     "nSources": 3,
     "adj": 0,
-    "sortAvg": 3
+    "sortAvg": 3.33
   },
   {
     "name": "Jaxon Smith-Njigba",
@@ -98,20 +98,6 @@
     "sortAvg": 9.67
   },
   {
-    "name": "James Cook III",
-    "pos": "RB",
-    "team": "BUF",
-    "avg": 10.33,
-    "ranks": {
-      "PPR": 14,
-      "HALF": 9,
-      "STD": 8
-    },
-    "nSources": 3,
-    "adj": 0,
-    "sortAvg": 10.33
-  },
-  {
     "name": "Justin Jefferson",
     "pos": "WR",
     "team": "MIN",
@@ -126,76 +112,90 @@
     "sortAvg": 10.33
   },
   {
+    "name": "James Cook III",
+    "pos": "RB",
+    "team": "BUF",
+    "avg": 10.67,
+    "ranks": {
+      "PPR": 15,
+      "HALF": 9,
+      "STD": 8
+    },
+    "nSources": 3,
+    "adj": 0,
+    "sortAvg": 10.67
+  },
+  {
     "name": "A.J. Brown",
     "pos": "WR",
     "team": "NE",
-    "avg": 11.67,
+    "avg": 11.33,
     "ranks": {
       "PPR": 11,
-      "HALF": 13,
+      "HALF": 12,
       "STD": 11
     },
     "nSources": 3,
     "adj": 0,
-    "sortAvg": 11.67
+    "sortAvg": 11.33
   },
   {
     "name": "Ja'Marr Chase",
     "pos": "WR",
     "team": "CIN",
-    "avg": 2,
+    "avg": 1.67,
     "ranks": {
       "PPR": 1,
-      "HALF": 3,
+      "HALF": 2,
       "STD": 2
     },
     "nSources": 3,
     "adj": 12,
     "healthStatus": "Q",
     "healthNote": "Left knee hyperextension — limped off 8/25 practice; held out 8/26 precaution; says he's fine, unlikely for preseason finale",
+    "sortAvg": 13.67
+  },
+  {
+    "name": "Nico Collins",
+    "pos": "WR",
+    "team": "HOU",
+    "avg": 14,
+    "ranks": {
+      "PPR": 13,
+      "HALF": 16,
+      "STD": 13
+    },
+    "nSources": 3,
+    "adj": 0,
     "sortAvg": 14
   },
   {
     "name": "Drake London",
     "pos": "WR",
     "team": "ATL",
-    "avg": 14.67,
+    "avg": 14.33,
     "ranks": {
       "PPR": 12,
       "HALF": 15,
-      "STD": 17
+      "STD": 16
     },
     "nSources": 3,
     "adj": 0,
-    "sortAvg": 14.67
-  },
-  {
-    "name": "Nico Collins",
-    "pos": "WR",
-    "team": "HOU",
-    "avg": 14.67,
-    "ranks": {
-      "PPR": 13,
-      "HALF": 18,
-      "STD": 13
-    },
-    "nSources": 3,
-    "adj": 0,
-    "sortAvg": 14.67
+    "sortAvg": 14.33
   },
   {
     "name": "Chase Brown",
     "pos": "RB",
     "team": "CIN",
-    "avg": 15,
+    "avg": 14.67,
     "ranks": {
-      "PPR": 15,
-      "HALF": 12,
-      "STD": 18
+      "PPR": 14,
+      "HALF": 13,
+      "STD": 17
     },
     "nSources": 3,
     "adj": 0,
-    "sortAvg": 15
+    "sortAvg": 14.67
   },
   {
     "name": "Puka Nacua",
@@ -214,13 +214,13 @@
     "sortAvg": 15.67
   },
   {
-    "name": "Brock Bowers",
-    "pos": "TE",
-    "team": "LV",
+    "name": "Saquon Barkley",
+    "pos": "RB",
+    "team": "PHI",
     "avg": 16,
     "ranks": {
-      "PPR": 17,
-      "HALF": 17,
+      "PPR": 20,
+      "HALF": 14,
       "STD": 14
     },
     "nSources": 3,
@@ -228,27 +228,13 @@
     "sortAvg": 16
   },
   {
-    "name": "Saquon Barkley",
-    "pos": "RB",
-    "team": "PHI",
-    "avg": 17,
-    "ranks": {
-      "PPR": 22,
-      "HALF": 14,
-      "STD": 15
-    },
-    "nSources": 3,
-    "adj": 0,
-    "sortAvg": 17
-  },
-  {
     "name": "De'Von Achane",
     "pos": "RB",
     "team": "MIA",
     "avg": 19.33,
     "ranks": {
-      "PPR": 20,
-      "HALF": 16,
+      "PPR": 19,
+      "HALF": 17,
       "STD": 22
     },
     "nSources": 3,
@@ -256,14 +242,42 @@
     "sortAvg": 19.33
   },
   {
+    "name": "Trey McBride",
+    "pos": "TE",
+    "team": "ARI",
+    "avg": 19.33,
+    "ranks": {
+      "PPR": 17,
+      "HALF": 21,
+      "STD": 20
+    },
+    "nSources": 3,
+    "adj": 0,
+    "sortAvg": 19.33
+  },
+  {
+    "name": "George Pickens",
+    "pos": "WR",
+    "team": "DAL",
+    "avg": 19.67,
+    "ranks": {
+      "PPR": 18,
+      "HALF": 23,
+      "STD": 18
+    },
+    "nSources": 3,
+    "adj": 0,
+    "sortAvg": 19.67
+  },
+  {
     "name": "Davante Adams",
     "pos": "WR",
     "team": "LAR",
     "avg": 47.67,
     "ranks": {
-      "PPR": 48,
+      "PPR": 49,
       "HALF": 47,
-      "STD": 48
+      "STD": 47
     },
     "nSources": 3,
     "adj": -28,
@@ -271,13 +285,13 @@
     "sortAvg": 19.67
   },
   {
-    "name": "George Pickens",
-    "pos": "WR",
-    "team": "DAL",
+    "name": "Kenneth Walker III",
+    "pos": "RB",
+    "team": "KC",
     "avg": 20,
     "ranks": {
-      "PPR": 18,
-      "HALF": 23,
+      "PPR": 23,
+      "HALF": 18,
       "STD": 19
     },
     "nSources": 3,
@@ -299,116 +313,102 @@
     "sortAvg": 20.33
   },
   {
-    "name": "Kenneth Walker III",
+    "name": "Derrick Henry",
     "pos": "RB",
-    "team": "KC",
-    "avg": 21,
+    "team": "BAL",
+    "avg": 22,
     "ranks": {
-      "PPR": 24,
+      "PPR": 32,
       "HALF": 19,
-      "STD": 20
+      "STD": 15
     },
     "nSources": 3,
     "adj": 0,
-    "sortAvg": 21
+    "sortAvg": 22
   },
   {
     "name": "Omarion Hampton",
     "pos": "RB",
     "team": "LAC",
-    "avg": 22.33,
+    "avg": 22,
     "ranks": {
-      "PPR": 26,
+      "PPR": 25,
       "HALF": 20,
       "STD": 21
     },
     "nSources": 3,
     "adj": 0,
-    "sortAvg": 22.33
-  },
-  {
-    "name": "Trey McBride",
-    "pos": "TE",
-    "team": "ARI",
-    "avg": 23,
-    "ranks": {
-      "PPR": 19,
-      "HALF": 25,
-      "STD": 25
-    },
-    "nSources": 3,
-    "adj": 0,
-    "sortAvg": 23
-  },
-  {
-    "name": "Derrick Henry",
-    "pos": "RB",
-    "team": "BAL",
-    "avg": 23.33,
-    "ranks": {
-      "PPR": 33,
-      "HALF": 21,
-      "STD": 16
-    },
-    "nSources": 3,
-    "adj": 0,
-    "sortAvg": 23.33
-  },
-  {
-    "name": "Malik Nabers",
-    "pos": "WR",
-    "team": "NYG",
-    "avg": 25,
-    "ranks": {
-      "PPR": 23,
-      "HALF": 26,
-      "STD": 26
-    },
-    "nSources": 3,
-    "adj": 0,
-    "sortAvg": 25
-  },
-  {
-    "name": "DeVonta Smith",
-    "pos": "WR",
-    "team": "PHI",
-    "avg": 25.67,
-    "ranks": {
-      "PPR": 21,
-      "HALF": 27,
-      "STD": 29
-    },
-    "nSources": 3,
-    "adj": 0,
-    "sortAvg": 25.67
+    "sortAvg": 22
   },
   {
     "name": "Josh Allen",
     "pos": "QB",
     "team": "BUF",
-    "avg": 25.67,
+    "avg": 24.33,
     "ranks": {
-      "PPR": 25,
-      "HALF": 28,
+      "PPR": 24,
+      "HALF": 25,
       "STD": 24
     },
     "nSources": 3,
     "adj": 0,
-    "sortAvg": 25.67
+    "sortAvg": 24.33
+  },
+  {
+    "name": "DeVonta Smith",
+    "pos": "WR",
+    "team": "PHI",
+    "avg": 24.67,
+    "ranks": {
+      "PPR": 21,
+      "HALF": 26,
+      "STD": 27
+    },
+    "nSources": 3,
+    "adj": 0,
+    "sortAvg": 24.67
+  },
+  {
+    "name": "Malik Nabers",
+    "pos": "WR",
+    "team": "NYG",
+    "avg": 24.67,
+    "ranks": {
+      "PPR": 22,
+      "HALF": 27,
+      "STD": 25
+    },
+    "nSources": 3,
+    "adj": 0,
+    "sortAvg": 24.67
   },
   {
     "name": "Rashee Rice",
     "pos": "WR",
     "team": "KC",
-    "avg": 30.67,
+    "avg": 30.33,
     "ranks": {
-      "PPR": 27,
-      "HALF": 30,
-      "STD": 35
+      "PPR": 26,
+      "HALF": 29,
+      "STD": 36
     },
     "nSources": 3,
     "adj": 0,
-    "sortAvg": 30.67
+    "sortAvg": 30.33
+  },
+  {
+    "name": "Colston Loveland",
+    "pos": "TE",
+    "team": "CHI",
+    "avg": 31,
+    "ranks": {
+      "PPR": 31,
+      "HALF": 32,
+      "STD": 30
+    },
+    "nSources": 3,
+    "adj": 0,
+    "sortAvg": 31
   },
   {
     "name": "Lamar Jackson",
@@ -416,41 +416,55 @@
     "team": "BAL",
     "avg": 31.33,
     "ranks": {
-      "PPR": 31,
-      "HALF": 36,
-      "STD": 27
+      "PPR": 30,
+      "HALF": 35,
+      "STD": 29
     },
     "nSources": 3,
     "adj": 0,
     "sortAvg": 31.33
   },
   {
-    "name": "Tee Higgins",
-    "pos": "WR",
-    "team": "CIN",
-    "avg": 34.33,
+    "name": "Javonte Williams",
+    "pos": "RB",
+    "team": "DAL",
+    "avg": 34,
     "ranks": {
-      "PPR": 37,
-      "HALF": 33,
+      "PPR": 41,
+      "HALF": 30,
+      "STD": 31
+    },
+    "nSources": 3,
+    "adj": 0,
+    "sortAvg": 34
+  },
+  {
+    "name": "Brock Bowers",
+    "pos": "TE",
+    "team": "LV",
+    "avg": 34.67,
+    "ranks": {
+      "PPR": 35,
+      "HALF": 36,
       "STD": 33
     },
     "nSources": 3,
     "adj": 0,
-    "sortAvg": 34.33
+    "sortAvg": 34.67
   },
   {
-    "name": "Javonte Williams",
-    "pos": "RB",
-    "team": "DAL",
-    "avg": 35,
+    "name": "Tee Higgins",
+    "pos": "WR",
+    "team": "CIN",
+    "avg": 34.67,
     "ranks": {
-      "PPR": 42,
-      "HALF": 31,
-      "STD": 32
+      "PPR": 37,
+      "HALF": 33,
+      "STD": 34
     },
     "nSources": 3,
     "adj": 0,
-    "sortAvg": 35
+    "sortAvg": 34.67
   },
   {
     "name": "Kyren Williams",
@@ -459,8 +473,8 @@
     "avg": 35.33,
     "ranks": {
       "PPR": 43,
-      "HALF": 32,
-      "STD": 31
+      "HALF": 31,
+      "STD": 32
     },
     "nSources": 3,
     "adj": 0,
@@ -470,25 +484,11 @@
     "name": "Jaylen Waddle",
     "pos": "WR",
     "team": "DEN",
-    "avg": 35.67,
-    "ranks": {
-      "PPR": 32,
-      "HALF": 35,
-      "STD": 40
-    },
-    "nSources": 3,
-    "adj": 0,
-    "sortAvg": 35.67
-  },
-  {
-    "name": "Colston Loveland",
-    "pos": "TE",
-    "team": "CHI",
     "avg": 36.67,
     "ranks": {
-      "PPR": 36,
-      "HALF": 38,
-      "STD": 36
+      "PPR": 33,
+      "HALF": 37,
+      "STD": 40
     },
     "nSources": 3,
     "adj": 0,
@@ -498,25 +498,11 @@
     "name": "Drake Maye",
     "pos": "QB",
     "team": "NE",
-    "avg": 37.67,
-    "ranks": {
-      "PPR": 35,
-      "HALF": 44,
-      "STD": 34
-    },
-    "nSources": 3,
-    "adj": 0,
-    "sortAvg": 37.67
-  },
-  {
-    "name": "Garrett Wilson",
-    "pos": "WR",
-    "team": "NYJ",
     "avg": 38,
     "ranks": {
-      "PPR": 30,
-      "HALF": 37,
-      "STD": 47
+      "PPR": 36,
+      "HALF": 43,
+      "STD": 35
     },
     "nSources": 3,
     "adj": 0,
@@ -526,11 +512,25 @@
     "name": "Ladd McConkey",
     "pos": "WR",
     "team": "LAC",
-    "avg": 38.33,
+    "avg": 38,
     "ranks": {
       "PPR": 34,
       "HALF": 39,
-      "STD": 42
+      "STD": 41
+    },
+    "nSources": 3,
+    "adj": 0,
+    "sortAvg": 38
+  },
+  {
+    "name": "Garrett Wilson",
+    "pos": "WR",
+    "team": "NYJ",
+    "avg": 38.33,
+    "ranks": {
+      "PPR": 29,
+      "HALF": 38,
+      "STD": 48
     },
     "nSources": 3,
     "adj": 0,
@@ -540,113 +540,115 @@
     "name": "Tetairoa McMillan",
     "pos": "WR",
     "team": "CAR",
-    "avg": 39,
+    "avg": 39.33,
     "ranks": {
       "PPR": 38,
       "HALF": 41,
-      "STD": 38
+      "STD": 39
     },
     "nSources": 3,
     "adj": 0,
-    "sortAvg": 39
+    "sortAvg": 39.33
   },
   {
     "name": "Zay Flowers",
     "pos": "WR",
     "team": "BAL",
-    "avg": 29,
+    "avg": 27.67,
     "ranks": {
-      "PPR": 28,
-      "HALF": 29,
-      "STD": 30
+      "PPR": 27,
+      "HALF": 28,
+      "STD": 28
     },
     "nSources": 3,
     "adj": 12,
     "healthStatus": "Q",
     "healthNote": "Undisclosed — held out of 8/26 practice precaution; expected ready for Week 1",
-    "sortAvg": 41
-  },
-  {
-    "name": "Joe Burrow",
-    "pos": "QB",
-    "team": "CIN",
-    "avg": 44.33,
-    "ranks": {
-      "PPR": 44,
-      "HALF": 48,
-      "STD": 41
-    },
-    "nSources": 3,
-    "adj": 0,
-    "sortAvg": 44.33
+    "sortAvg": 39.67
   },
   {
     "name": "Travis Etienne Jr.",
     "pos": "RB",
     "team": "NO",
-    "avg": 44.33,
+    "avg": 43.33,
     "ranks": {
-      "PPR": 46,
-      "HALF": 43,
-      "STD": 44
+      "PPR": 45,
+      "HALF": 42,
+      "STD": 43
     },
     "nSources": 3,
     "adj": 0,
-    "sortAvg": 44.33
+    "sortAvg": 43.33
+  },
+  {
+    "name": "Joe Burrow",
+    "pos": "QB",
+    "team": "CIN",
+    "avg": 44.67,
+    "ranks": {
+      "PPR": 44,
+      "HALF": 48,
+      "STD": 42
+    },
+    "nSources": 3,
+    "adj": 0,
+    "sortAvg": 44.67
   },
   {
     "name": "D'Andre Swift",
     "pos": "RB",
     "team": "CHI",
-    "avg": 46.67,
+    "avg": 47,
     "ranks": {
-      "PPR": 50,
+      "PPR": 51,
       "HALF": 45,
       "STD": 45
     },
     "nSources": 3,
     "adj": 0,
-    "sortAvg": 46.67
-  },
-  {
-    "name": "Luther Burden III",
-    "pos": "WR",
-    "team": "CHI",
-    "avg": 48,
-    "ranks": {
-      "PPR": 45,
-      "HALF": 46,
-      "STD": 53
-    },
-    "nSources": 3,
-    "adj": 0,
-    "sortAvg": 48
+    "sortAvg": 47
   },
   {
     "name": "Ashton Jeanty",
     "pos": "RB",
     "team": "LV",
-    "avg": 27,
+    "avg": 26,
     "ranks": {
-      "PPR": 29,
+      "PPR": 28,
       "HALF": 24,
-      "STD": 28
+      "STD": 26
     },
     "nSources": 3,
     "adj": 22,
     "healthStatus": "D",
     "healthNote": "Right knee — helped off practice 8/23, unable to bear weight; team paused practice; awaiting MRI",
+    "sortAvg": 48
+  },
+  {
+    "name": "Breece Hall",
+    "pos": "RB",
+    "team": "NYJ",
+    "avg": 37,
+    "ranks": {
+      "PPR": 39,
+      "HALF": 34,
+      "STD": 38
+    },
+    "nSources": 3,
+    "adj": 12,
+    "healthStatus": "Q",
+    "healthNote": "Groin — expected out 2–3 weeks; team hopeful for Week 1",
     "sortAvg": 49
   },
   {
-    "name": "Jameson Williams",
+    "name": "Luther Burden III",
     "pos": "WR",
-    "team": "DET",
+    "team": "CHI",
     "avg": 49,
     "ranks": {
-      "PPR": 51,
-      "HALF": 50,
-      "STD": 46
+      "PPR": 46,
+      "HALF": 46,
+      "STD": 55
     },
     "nSources": 3,
     "adj": 0,
@@ -656,198 +658,196 @@
     "name": "Terry McLaurin",
     "pos": "WR",
     "team": "WAS",
-    "avg": 49,
+    "avg": 49.33,
     "ranks": {
       "PPR": 47,
-      "HALF": 49,
+      "HALF": 50,
       "STD": 51
     },
     "nSources": 3,
     "adj": 0,
-    "sortAvg": 49
+    "sortAvg": 49.33
   },
   {
-    "name": "Breece Hall",
-    "pos": "RB",
-    "team": "NYJ",
-    "avg": 37.33,
+    "name": "Jameson Williams",
+    "pos": "WR",
+    "team": "DET",
+    "avg": 49.67,
     "ranks": {
-      "PPR": 39,
-      "HALF": 34,
-      "STD": 39
+      "PPR": 52,
+      "HALF": 51,
+      "STD": 46
     },
     "nSources": 3,
-    "adj": 12,
-    "healthStatus": "Q",
-    "healthNote": "Groin — expected out 2–3 weeks; team hopeful for Week 1",
-    "sortAvg": 49.33
+    "adj": 0,
+    "sortAvg": 49.67
   },
   {
     "name": "Bucky Irving",
     "pos": "RB",
     "team": "TB",
-    "avg": 51.67,
+    "avg": 52,
     "ranks": {
       "PPR": 54,
-      "HALF": 51,
+      "HALF": 52,
       "STD": 50
     },
     "nSources": 3,
     "adj": 0,
-    "sortAvg": 51.67
+    "sortAvg": 52
+  },
+  {
+    "name": "DJ Moore",
+    "pos": "WR",
+    "team": "BUF",
+    "avg": 52.67,
+    "ranks": {
+      "PPR": 48,
+      "HALF": 53,
+      "STD": 57
+    },
+    "nSources": 3,
+    "adj": 0,
+    "sortAvg": 52.67
   },
   {
     "name": "Emeka Egbuka",
     "pos": "WR",
     "team": "TB",
-    "avg": 40,
+    "avg": 41,
     "ranks": {
-      "PPR": 41,
-      "HALF": 42,
+      "PPR": 42,
+      "HALF": 44,
       "STD": 37
     },
     "nSources": 3,
     "adj": 12,
     "healthStatus": "Q",
     "healthNote": "Turf toe sprain — Week 1 availability in doubt",
-    "sortAvg": 52
+    "sortAvg": 53
   },
   {
     "name": "Jeremiyah Love",
     "pos": "RB",
     "team": "ARI",
-    "avg": 41,
+    "avg": 41.33,
     "ranks": {
       "PPR": 40,
       "HALF": 40,
-      "STD": 43
+      "STD": 44
     },
     "nSources": 3,
     "adj": 12,
     "healthStatus": "Q",
     "healthNote": "High-ankle sprain — light agility work 8/26; multi-week, Week 1 in doubt",
-    "sortAvg": 53
+    "sortAvg": 53.33
   },
   {
     "name": "Christian Watson",
     "pos": "WR",
     "team": "GB",
-    "avg": 53,
+    "avg": 53.67,
     "ranks": {
-      "PPR": 55,
-      "HALF": 55,
+      "PPR": 56,
+      "HALF": 56,
       "STD": 49
     },
     "nSources": 3,
     "adj": 0,
-    "sortAvg": 53
-  },
-  {
-    "name": "DJ Moore",
-    "pos": "WR",
-    "team": "BUF",
-    "avg": 53,
-    "ranks": {
-      "PPR": 49,
-      "HALF": 52,
-      "STD": 58
-    },
-    "nSources": 3,
-    "adj": 0,
-    "sortAvg": 53
-  },
-  {
-    "name": "Cam Skattebo",
-    "pos": "RB",
-    "team": "NYG",
-    "avg": 55,
-    "ranks": {
-      "PPR": 56,
-      "HALF": 53,
-      "STD": 56
-    },
-    "nSources": 3,
-    "adj": 0,
-    "sortAvg": 55
+    "sortAvg": 53.67
   },
   {
     "name": "Jalen Hurts",
     "pos": "QB",
     "team": "PHI",
-    "avg": 55,
+    "avg": 54.33,
     "ranks": {
       "PPR": 53,
-      "HALF": 60,
+      "HALF": 58,
       "STD": 52
     },
     "nSources": 3,
     "adj": 0,
-    "sortAvg": 55
+    "sortAvg": 54.33
+  },
+  {
+    "name": "Cam Skattebo",
+    "pos": "RB",
+    "team": "NYG",
+    "avg": 55.67,
+    "ranks": {
+      "PPR": 57,
+      "HALF": 54,
+      "STD": 56
+    },
+    "nSources": 3,
+    "adj": 0,
+    "sortAvg": 55.67
   },
   {
     "name": "David Montgomery",
     "pos": "RB",
     "team": "HOU",
-    "avg": 56.33,
+    "avg": 55.67,
     "ranks": {
       "PPR": 59,
-      "HALF": 56,
-      "STD": 54
+      "HALF": 55,
+      "STD": 53
     },
     "nSources": 3,
     "adj": 0,
-    "sortAvg": 56.33
+    "sortAvg": 55.67
   },
   {
     "name": "Quinshon Judkins",
     "pos": "RB",
     "team": "CLE",
-    "avg": 57.33,
+    "avg": 57,
     "ranks": {
       "PPR": 60,
       "HALF": 57,
-      "STD": 55
+      "STD": 54
     },
     "nSources": 3,
     "adj": 0,
-    "sortAvg": 57.33
+    "sortAvg": 57
   },
   {
     "name": "Jayden Daniels",
     "pos": "QB",
     "team": "WAS",
-    "avg": 59.33,
+    "avg": 60,
     "ranks": {
       "PPR": 58,
       "HALF": 63,
-      "STD": 57
+      "STD": 59
     },
     "nSources": 3,
     "adj": 0,
-    "sortAvg": 59.33
+    "sortAvg": 60
+  },
+  {
+    "name": "Parker Washington",
+    "pos": "WR",
+    "team": "JAC",
+    "avg": 60.67,
+    "ranks": {
+      "PPR": 55,
+      "HALF": 61,
+      "STD": 66
+    },
+    "nSources": 3,
+    "adj": 0,
+    "sortAvg": 60.67
   },
   {
     "name": "Rome Odunze",
     "pos": "WR",
     "team": "CHI",
-    "avg": 59.67,
-    "ranks": {
-      "PPR": 61,
-      "HALF": 59,
-      "STD": 59
-    },
-    "nSources": 3,
-    "adj": 0,
-    "sortAvg": 59.67
-  },
-  {
-    "name": "Jadarian Price",
-    "pos": "RB",
-    "team": "SEA",
     "avg": 60.67,
     "ranks": {
-      "PPR": 64,
-      "HALF": 58,
+      "PPR": 62,
+      "HALF": 60,
       "STD": 60
     },
     "nSources": 3,
@@ -855,46 +855,62 @@
     "sortAvg": 60.67
   },
   {
-    "name": "Parker Washington",
-    "pos": "WR",
-    "team": "JAC",
+    "name": "Jadarian Price",
+    "pos": "RB",
+    "team": "SEA",
     "avg": 61.33,
     "ranks": {
-      "PPR": 57,
-      "HALF": 61,
-      "STD": 66
+      "PPR": 64,
+      "HALF": 59,
+      "STD": 61
     },
     "nSources": 3,
     "adj": 0,
     "sortAvg": 61.33
   },
   {
-    "name": "Bhayshul Tuten",
-    "pos": "RB",
-    "team": "JAC",
-    "avg": 62.67,
-    "ranks": {
-      "PPR": 65,
-      "HALF": 62,
-      "STD": 61
-    },
-    "nSources": 3,
-    "adj": 0,
-    "sortAvg": 62.67
-  },
-  {
     "name": "Mike Evans",
     "pos": "WR",
     "team": "SF",
-    "avg": 63.33,
+    "avg": 63,
     "ranks": {
-      "PPR": 62,
+      "PPR": 61,
       "HALF": 64,
       "STD": 64
     },
     "nSources": 3,
     "adj": 0,
-    "sortAvg": 63.33
+    "sortAvg": 63
+  },
+  {
+    "name": "Bhayshul Tuten",
+    "pos": "RB",
+    "team": "JAC",
+    "avg": 63.67,
+    "ranks": {
+      "PPR": 66,
+      "HALF": 62,
+      "STD": 63
+    },
+    "nSources": 3,
+    "adj": 0,
+    "sortAvg": 63.67
+  },
+  {
+    "name": "Tyler Warren",
+    "pos": "TE",
+    "team": "IND",
+    "avg": 52.33,
+    "ranks": {
+      "PPR": 50,
+      "HALF": 49,
+      "STD": 58
+    },
+    "nSources": 3,
+    "adj": 12,
+    "healthStatus": "Q",
+    "healthNote": "Groin — expected out through this week; load-managed for Week 1",
+    "sortAvg": 64.33
   },
   {
     "name": "Caleb Williams",
@@ -914,148 +930,132 @@
     "name": "Rhamondre Stevenson",
     "pos": "RB",
     "team": "NE",
-    "avg": 67,
+    "avg": 66.67,
     "ranks": {
       "PPR": 68,
       "HALF": 65,
-      "STD": 68
-    },
-    "nSources": 3,
-    "adj": 0,
-    "sortAvg": 67
-  },
-  {
-    "name": "TreVeyon Henderson",
-    "pos": "RB",
-    "team": "NE",
-    "avg": 68,
-    "ranks": {
-      "PPR": 70,
-      "HALF": 67,
       "STD": 67
     },
     "nSources": 3,
     "adj": 0,
-    "sortAvg": 68
-  },
-  {
-    "name": "Tyler Warren",
-    "pos": "TE",
-    "team": "IND",
-    "avg": 56.33,
-    "ranks": {
-      "PPR": 52,
-      "HALF": 54,
-      "STD": 63
-    },
-    "nSources": 3,
-    "adj": 12,
-    "healthStatus": "Q",
-    "healthNote": "Groin — expected out through this week; load-managed for Week 1",
-    "sortAvg": 68.33
+    "sortAvg": 66.67
   },
   {
     "name": "Marvin Harrison Jr.",
     "pos": "WR",
     "team": "ARI",
-    "avg": 69,
+    "avg": 68.33,
     "ranks": {
-      "PPR": 66,
+      "PPR": 65,
       "HALF": 70,
-      "STD": 71
+      "STD": 70
     },
     "nSources": 3,
     "adj": 0,
-    "sortAvg": 69
+    "sortAvg": 68.33
   },
   {
     "name": "Justin Herbert",
     "pos": "QB",
     "team": "LAC",
-    "avg": 69.67,
+    "avg": 68.67,
     "ranks": {
       "PPR": 69,
-      "HALF": 71,
-      "STD": 69
+      "HALF": 69,
+      "STD": 68
     },
     "nSources": 3,
     "adj": 0,
-    "sortAvg": 69.67
+    "sortAvg": 68.67
   },
   {
     "name": "Jaylen Warren",
     "pos": "RB",
     "team": "PIT",
-    "avg": 71.33,
+    "avg": 70,
     "ranks": {
-      "PPR": 73,
-      "HALF": 68,
-      "STD": 73
+      "PPR": 71,
+      "HALF": 67,
+      "STD": 72
     },
     "nSources": 3,
     "adj": 0,
-    "sortAvg": 71.33
+    "sortAvg": 70
   },
   {
     "name": "Trevor Lawrence",
     "pos": "QB",
     "team": "JAC",
-    "avg": 71.33,
+    "avg": 70,
     "ranks": {
-      "PPR": 71,
-      "HALF": 73,
-      "STD": 70
+      "PPR": 70,
+      "HALF": 71,
+      "STD": 69
     },
     "nSources": 3,
     "adj": 0,
-    "sortAvg": 71.33
+    "sortAvg": 70
   },
   {
     "name": "Carnell Tate",
     "pos": "WR",
     "team": "TEN",
-    "avg": 72.67,
+    "avg": 73,
     "ranks": {
       "PPR": 67,
-      "HALF": 72,
+      "HALF": 73,
       "STD": 79
     },
     "nSources": 3,
     "adj": 0,
-    "sortAvg": 72.67
+    "sortAvg": 73
   },
   {
-    "name": "Dak Prescott",
-    "pos": "QB",
-    "team": "DAL",
+    "name": "TreVeyon Henderson",
+    "pos": "RB",
+    "team": "NE",
+    "avg": 73.33,
+    "ranks": {
+      "PPR": 77,
+      "HALF": 72,
+      "STD": 71
+    },
+    "nSources": 3,
+    "adj": 0,
+    "sortAvg": 73.33
+  },
+  {
+    "name": "DK Metcalf",
+    "pos": "WR",
+    "team": "PIT",
     "avg": 74.33,
     "ranks": {
-      "PPR": 74,
-      "HALF": 77,
-      "STD": 72
+      "PPR": 73,
+      "HALF": 76,
+      "STD": 74
     },
     "nSources": 3,
     "adj": 0,
     "sortAvg": 74.33
   },
   {
-    "name": "DK Metcalf",
-    "pos": "WR",
-    "team": "PIT",
-    "avg": 75,
+    "name": "Dak Prescott",
+    "pos": "QB",
+    "team": "DAL",
+    "avg": 74.67,
     "ranks": {
       "PPR": 76,
       "HALF": 75,
-      "STD": 74
+      "STD": 73
     },
     "nSources": 3,
     "adj": 0,
-    "sortAvg": 75
+    "sortAvg": 74.67
   },
   {
-    "name": "Tony Pollard",
+    "name": "Rico Dowdle",
     "pos": "RB",
-    "team": "TEN",
+    "team": "PIT",
     "avg": 77,
     "ranks": {
       "PPR": 81,
@@ -1070,111 +1070,111 @@
     "name": "Brian Thomas Jr.",
     "pos": "WR",
     "team": "JAC",
-    "avg": 77.33,
+    "avg": 78,
     "ranks": {
-      "PPR": 79,
-      "HALF": 78,
+      "PPR": 80,
+      "HALF": 79,
       "STD": 75
     },
     "nSources": 3,
     "adj": 0,
-    "sortAvg": 77.33
+    "sortAvg": 78
   },
   {
-    "name": "Rico Dowdle",
+    "name": "Tony Pollard",
     "pos": "RB",
-    "team": "PIT",
-    "avg": 78.33,
+    "team": "TEN",
+    "avg": 79,
     "ranks": {
-      "PPR": 82,
-      "HALF": 76,
+      "PPR": 83,
+      "HALF": 77,
       "STD": 77
     },
     "nSources": 3,
     "adj": 0,
-    "sortAvg": 78.33
+    "sortAvg": 79
   },
   {
     "name": "Chris Godwin Jr.",
     "pos": "WR",
     "team": "TB",
-    "avg": 79.33,
+    "avg": 80,
     "ranks": {
       "PPR": 72,
-      "HALF": 79,
-      "STD": 87
+      "HALF": 80,
+      "STD": 88
     },
     "nSources": 3,
     "adj": 0,
-    "sortAvg": 79.33
+    "sortAvg": 80
   },
   {
     "name": "Kyle Pitts Sr.",
     "pos": "TE",
     "team": "ATL",
-    "avg": 81.67,
+    "avg": 81,
     "ranks": {
       "PPR": 75,
-      "HALF": 82,
-      "STD": 88
+      "HALF": 81,
+      "STD": 87
     },
     "nSources": 3,
     "adj": 0,
-    "sortAvg": 81.67
+    "sortAvg": 81
   },
   {
     "name": "Tucker Kraft",
     "pos": "TE",
     "team": "GB",
-    "avg": 70.33,
+    "avg": 69.67,
     "ranks": {
-      "PPR": 80,
-      "HALF": 69,
+      "PPR": 79,
+      "HALF": 68,
       "STD": 62
     },
     "nSources": 3,
     "adj": 12,
     "healthStatus": "Q",
     "healthNote": "Knee — returned to team drills 8/26; still monitoring",
-    "sortAvg": 82.33
+    "sortAvg": 81.67
   },
   {
     "name": "Harold Fannin Jr.",
     "pos": "TE",
     "team": "CLE",
-    "avg": 82.67,
+    "avg": 81.67,
     "ranks": {
-      "PPR": 77,
-      "HALF": 81,
-      "STD": 90
+      "PPR": 74,
+      "HALF": 82,
+      "STD": 89
     },
     "nSources": 3,
     "adj": 0,
-    "sortAvg": 82.67
+    "sortAvg": 81.67
   },
   {
-    "name": "Jonathon Brooks",
-    "pos": "RB",
-    "team": "CAR",
+    "name": "Courtland Sutton",
+    "pos": "WR",
+    "team": "DEN",
     "avg": 85,
     "ranks": {
-      "PPR": 88,
-      "HALF": 83,
-      "STD": 84
+      "PPR": 86,
+      "HALF": 84,
+      "STD": 85
     },
     "nSources": 3,
     "adj": 0,
     "sortAvg": 85
   },
   {
-    "name": "Courtland Sutton",
-    "pos": "WR",
-    "team": "DEN",
+    "name": "Jonathon Brooks",
+    "pos": "RB",
+    "team": "CAR",
     "avg": 85.33,
     "ranks": {
       "PPR": 87,
-      "HALF": 84,
-      "STD": 85
+      "HALF": 83,
+      "STD": 86
     },
     "nSources": 3,
     "adj": 0,
@@ -1184,115 +1184,115 @@
     "name": "Quentin Johnston",
     "pos": "WR",
     "team": "LAC",
-    "avg": 85.67,
+    "avg": 85.33,
     "ranks": {
       "PPR": 89,
       "HALF": 85,
-      "STD": 83
+      "STD": 82
     },
     "nSources": 3,
     "adj": 0,
-    "sortAvg": 85.67
+    "sortAvg": 85.33
   },
   {
     "name": "J.K. Dobbins",
     "pos": "RB",
     "team": "DEN",
-    "avg": 89.33,
+    "avg": 89.67,
     "ranks": {
       "PPR": 102,
       "HALF": 86,
-      "STD": 80
+      "STD": 81
     },
     "nSources": 3,
     "adj": 0,
-    "sortAvg": 89.33
-  },
-  {
-    "name": "Alec Pierce",
-    "pos": "WR",
-    "team": "IND",
-    "avg": 90.33,
-    "ranks": {
-      "PPR": 97,
-      "HALF": 92,
-      "STD": 82
-    },
-    "nSources": 3,
-    "adj": 0,
-    "sortAvg": 90.33
+    "sortAvg": 89.67
   },
   {
     "name": "Michael Wilson",
     "pos": "WR",
     "team": "ARI",
+    "avg": 89.67,
+    "ranks": {
+      "PPR": 85,
+      "HALF": 88,
+      "STD": 96
+    },
+    "nSources": 3,
+    "adj": 0,
+    "sortAvg": 89.67
+  },
+  {
+    "name": "Alec Pierce",
+    "pos": "WR",
+    "team": "IND",
+    "avg": 90.67,
+    "ranks": {
+      "PPR": 97,
+      "HALF": 92,
+      "STD": 83
+    },
+    "nSources": 3,
+    "adj": 0,
+    "sortAvg": 90.67
+  },
+  {
+    "name": "Blake Corum",
+    "pos": "RB",
+    "team": "LAR",
     "avg": 91,
     "ranks": {
-      "PPR": 86,
-      "HALF": 90,
-      "STD": 97
+      "PPR": 106,
+      "HALF": 87,
+      "STD": 80
     },
     "nSources": 3,
     "adj": 0,
     "sortAvg": 91
   },
   {
-    "name": "Blake Corum",
-    "pos": "RB",
-    "team": "LAR",
-    "avg": 91.33,
-    "ranks": {
-      "PPR": 106,
-      "HALF": 87,
-      "STD": 81
-    },
-    "nSources": 3,
-    "adj": 0,
-    "sortAvg": 91.33
-  },
-  {
     "name": "Sam LaPorta",
     "pos": "TE",
     "team": "DET",
-    "avg": 80.33,
+    "avg": 79.33,
     "ranks": {
-      "PPR": 83,
-      "HALF": 80,
+      "PPR": 82,
+      "HALF": 78,
       "STD": 78
     },
     "nSources": 3,
     "adj": 12,
     "healthStatus": "Q",
     "healthNote": "Hip/undisclosed — missed recent practice",
-    "sortAvg": 92.33
-  },
-  {
-    "name": "Brock Purdy",
-    "pos": "QB",
-    "team": "SF",
-    "avg": 93.67,
-    "ranks": {
-      "PPR": 94,
-      "HALF": 95,
-      "STD": 92
-    },
-    "nSources": 3,
-    "adj": 0,
-    "sortAvg": 93.67
+    "sortAvg": 91.33
   },
   {
     "name": "Chuba Hubbard",
     "pos": "RB",
     "team": "CAR",
-    "avg": 93.67,
+    "avg": 93,
     "ranks": {
-      "PPR": 96,
-      "HALF": 91,
+      "PPR": 95,
+      "HALF": 90,
       "STD": 94
     },
     "nSources": 3,
     "adj": 0,
-    "sortAvg": 93.67
+    "sortAvg": 93
+  },
+  {
+    "name": "Brock Purdy",
+    "pos": "QB",
+    "team": "SF",
+    "avg": 93.33,
+    "ranks": {
+      "PPR": 94,
+      "HALF": 94,
+      "STD": 92
+    },
+    "nSources": 3,
+    "adj": 0,
+    "sortAvg": 93.33
   },
   {
     "name": "Bo Nix",
@@ -1300,8 +1300,8 @@
     "team": "DEN",
     "avg": 96,
     "ranks": {
-      "PPR": 95,
-      "HALF": 98,
+      "PPR": 96,
+      "HALF": 97,
       "STD": 95
     },
     "nSources": 3,
@@ -1312,29 +1312,15 @@
     "name": "Stefon Diggs",
     "pos": "WR",
     "team": "WAS",
-    "avg": 97,
+    "avg": 97.33,
     "ranks": {
       "PPR": 90,
-      "HALF": 94,
+      "HALF": 95,
       "STD": 107
     },
     "nSources": 3,
     "adj": 0,
-    "sortAvg": 97
-  },
-  {
-    "name": "Jaxson Dart",
-    "pos": "QB",
-    "team": "NYG",
-    "avg": 97.67,
-    "ranks": {
-      "PPR": 98,
-      "HALF": 99,
-      "STD": 96
-    },
-    "nSources": 3,
-    "adj": 0,
-    "sortAvg": 97.67
+    "sortAvg": 97.33
   },
   {
     "name": "MarShawn Lloyd",
@@ -1351,46 +1337,60 @@
     "sortAvg": 97.67
   },
   {
-    "name": "RJ Harvey",
-    "pos": "RB",
-    "team": "DEN",
-    "avg": 100,
-    "ranks": {
-      "PPR": 91,
-      "HALF": 101,
-      "STD": 108
-    },
-    "nSources": 3,
-    "adj": 0,
-    "sortAvg": 100
-  },
-  {
     "name": "Jordan Mason",
     "pos": "RB",
     "team": "MIN",
-    "avg": 100.33,
+    "avg": 99,
     "ranks": {
-      "PPR": 113,
-      "HALF": 97,
+      "PPR": 110,
+      "HALF": 96,
       "STD": 91
     },
     "nSources": 3,
     "adj": 0,
-    "sortAvg": 100.33
+    "sortAvg": 99
+  },
+  {
+    "name": "Jaxson Dart",
+    "pos": "QB",
+    "team": "NYG",
+    "avg": 99.33,
+    "ranks": {
+      "PPR": 100,
+      "HALF": 100,
+      "STD": 98
+    },
+    "nSources": 3,
+    "adj": 0,
+    "sortAvg": 99.33
+  },
+  {
+    "name": "RJ Harvey",
+    "pos": "RB",
+    "team": "DEN",
+    "avg": 99.33,
+    "ranks": {
+      "PPR": 91,
+      "HALF": 99,
+      "STD": 108
+    },
+    "nSources": 3,
+    "adj": 0,
+    "sortAvg": 99.33
   },
   {
     "name": "Jayden Reed",
     "pos": "WR",
     "team": "GB",
-    "avg": 100.67,
+    "avg": 100,
     "ranks": {
-      "PPR": 100,
+      "PPR": 99,
       "HALF": 102,
-      "STD": 100
+      "STD": 99
     },
     "nSources": 3,
     "adj": 0,
-    "sortAvg": 100.67
+    "sortAvg": 100
   },
   {
     "name": "George Kittle",
@@ -1399,8 +1399,8 @@
     "avg": 89.33,
     "ranks": {
       "PPR": 93,
-      "HALF": 89,
-      "STD": 86
+      "HALF": 91,
+      "STD": 84
     },
     "nSources": 3,
     "adj": 12,
@@ -1409,91 +1409,120 @@
     "sortAvg": 101.33
   },
   {
-    "name": "Jacory Croskey-Merritt",
-    "pos": "RB",
-    "team": "WAS",
-    "avg": 101.33,
-    "ranks": {
-      "PPR": 115,
-      "HALF": 100,
-      "STD": 89
-    },
-    "nSources": 3,
-    "adj": 0,
-    "sortAvg": 101.33
-  },
-  {
     "name": "Patrick Mahomes II",
     "pos": "QB",
     "team": "KC",
-    "avg": 102,
+    "avg": 101.67,
     "ranks": {
       "PPR": 101,
-      "HALF": 104,
+      "HALF": 103,
       "STD": 101
     },
     "nSources": 3,
     "adj": 0,
-    "sortAvg": 102
+    "sortAvg": 101.67
   },
   {
-    "name": "Michael Pittman Jr.",
-    "pos": "WR",
-    "team": "PIT",
-    "avg": 90.33,
+    "name": "Jacory Croskey-Merritt",
+    "pos": "RB",
+    "team": "WAS",
+    "avg": 102.33,
     "ranks": {
-      "PPR": 78,
-      "HALF": 88,
-      "STD": 105
+      "PPR": 116,
+      "HALF": 101,
+      "STD": 90
     },
     "nSources": 3,
-    "adj": 12,
-    "healthStatus": "Q",
-    "healthNote": "Hamstring — minor, expected ready Week 1",
+    "adj": 0,
     "sortAvg": 102.33
   },
   {
     "name": "Tyler Allgeier",
     "pos": "RB",
     "team": "ARI",
-    "avg": 131,
+    "avg": 130.33,
     "ranks": {
       "PPR": 133,
-      "HALF": 131,
+      "HALF": 129,
       "STD": 129
     },
     "nSources": 3,
     "adj": -28,
     "handcuffBoost": "Handcuff for Jeremiyah Love (Q)",
-    "sortAvg": 103
+    "sortAvg": 102.33000000000001
   },
   {
-    "name": "Jordan Addison",
+    "name": "Michael Pittman Jr.",
     "pos": "WR",
-    "team": "MIN",
-    "avg": 103.67,
+    "team": "PIT",
+    "avg": 90.67,
     "ranks": {
-      "PPR": 105,
-      "HALF": 107,
-      "STD": 99
+      "PPR": 78,
+      "HALF": 89,
+      "STD": 105
     },
     "nSources": 3,
-    "adj": 0,
-    "sortAvg": 103.67
+    "adj": 12,
+    "healthStatus": "Q",
+    "healthNote": "Hamstring — minor, expected ready Week 1",
+    "sortAvg": 102.67
   },
   {
     "name": "Travis Kelce",
     "pos": "TE",
     "team": "KC",
-    "avg": 103.67,
+    "avg": 102.67,
     "ranks": {
-      "PPR": 99,
-      "HALF": 106,
+      "PPR": 98,
+      "HALF": 104,
       "STD": 106
     },
     "nSources": 3,
     "adj": 0,
+    "sortAvg": 102.67
+  },
+  {
+    "name": "Mike Washington Jr.",
+    "pos": "RB",
+    "team": "LV",
+    "avg": 141,
+    "ranks": {
+      "PPR": 146,
+      "HALF": 139,
+      "STD": 138
+    },
+    "nSources": 3,
+    "adj": -38,
+    "handcuffBoost": "Handcuff for Ashton Jeanty (D)",
+    "sortAvg": 103
+  },
+  {
+    "name": "Jared Goff",
+    "pos": "QB",
+    "team": "DET",
+    "avg": 103.67,
+    "ranks": {
+      "PPR": 103,
+      "HALF": 106,
+      "STD": 102
+    },
+    "nSources": 3,
+    "adj": 0,
     "sortAvg": 103.67
+  },
+  {
+    "name": "Jordan Addison",
+    "pos": "WR",
+    "team": "MIN",
+    "avg": 104,
+    "ranks": {
+      "PPR": 105,
+      "HALF": 107,
+      "STD": 100
+    },
+    "nSources": 3,
+    "adj": 0,
+    "sortAvg": 104
   },
   {
     "name": "Kenny Gainwell",
@@ -1510,57 +1539,14 @@
     "sortAvg": 104
   },
   {
-    "name": "Mike Washington Jr.",
-    "pos": "RB",
-    "team": "LV",
-    "avg": 142,
-    "ranks": {
-      "PPR": 146,
-      "HALF": 139,
-      "STD": 141
-    },
-    "nSources": 3,
-    "adj": -38,
-    "handcuffBoost": "Handcuff for Ashton Jeanty (D)",
-    "sortAvg": 104
-  },
-  {
-    "name": "Jared Goff",
-    "pos": "QB",
-    "team": "DET",
-    "avg": 104.33,
-    "ranks": {
-      "PPR": 103,
-      "HALF": 108,
-      "STD": 102
-    },
-    "nSources": 3,
-    "adj": 0,
-    "sortAvg": 104.33
-  },
-  {
-    "name": "Wan'Dale Robinson",
-    "pos": "WR",
-    "team": "TEN",
-    "avg": 104.33,
-    "ranks": {
-      "PPR": 85,
-      "HALF": 103,
-      "STD": 125
-    },
-    "nSources": 3,
-    "adj": 0,
-    "sortAvg": 104.33
-  },
-  {
     "name": "Dalton Kincaid",
     "pos": "TE",
     "team": "BUF",
     "avg": 105.33,
     "ranks": {
       "PPR": 109,
-      "HALF": 109,
-      "STD": 98
+      "HALF": 110,
+      "STD": 97
     },
     "nSources": 3,
     "adj": 0,
@@ -1570,45 +1556,59 @@
     "name": "Matthew Stafford",
     "pos": "QB",
     "team": "LAR",
-    "avg": 105.67,
+    "avg": 105.33,
     "ranks": {
       "PPR": 104,
-      "HALF": 110,
+      "HALF": 109,
       "STD": 103
     },
     "nSources": 3,
     "adj": 0,
-    "sortAvg": 105.67
+    "sortAvg": 105.33
+  },
+  {
+    "name": "Wan'Dale Robinson",
+    "pos": "WR",
+    "team": "TEN",
+    "avg": 107.67,
+    "ranks": {
+      "PPR": 88,
+      "HALF": 108,
+      "STD": 127
+    },
+    "nSources": 3,
+    "adj": 0,
+    "sortAvg": 107.67
   },
   {
     "name": "Josh Downs",
     "pos": "WR",
     "team": "IND",
-    "avg": 97.33,
+    "avg": 97.67,
     "ranks": {
       "PPR": 84,
-      "HALF": 96,
-      "STD": 112
+      "HALF": 98,
+      "STD": 111
     },
     "nSources": 3,
     "adj": 12,
     "healthStatus": "Q",
     "healthNote": "Calf — minor; believes he'll resume practicing soon (8/26)",
-    "sortAvg": 109.33
+    "sortAvg": 109.67
   },
   {
     "name": "Kyler Murray",
     "pos": "QB",
     "team": "MIN",
-    "avg": 112,
+    "avg": 111,
     "ranks": {
-      "PPR": 110,
-      "HALF": 115,
-      "STD": 111
+      "PPR": 111,
+      "HALF": 112,
+      "STD": 110
     },
     "nSources": 3,
     "adj": 0,
-    "sortAvg": 112
+    "sortAvg": 111
   },
   {
     "name": "Rachaad White",
@@ -1617,8 +1617,8 @@
     "avg": 112.67,
     "ranks": {
       "PPR": 112,
-      "HALF": 112,
-      "STD": 114
+      "HALF": 113,
+      "STD": 113
     },
     "nSources": 3,
     "adj": 0,
@@ -1628,81 +1628,95 @@
     "name": "Dallas Goedert",
     "pos": "TE",
     "team": "PHI",
-    "avg": 114,
+    "avg": 113.67,
     "ranks": {
       "PPR": 117,
-      "HALF": 116,
+      "HALF": 115,
       "STD": 109
     },
     "nSources": 3,
     "adj": 0,
-    "sortAvg": 114
+    "sortAvg": 113.67
   },
   {
     "name": "Makai Lemon",
     "pos": "WR",
     "team": "PHI",
-    "avg": 114.33,
-    "ranks": {
-      "PPR": 114,
-      "HALF": 113,
-      "STD": 116
-    },
-    "nSources": 3,
-    "adj": 0,
-    "sortAvg": 114.33
-  },
-  {
-    "name": "KC Concepcion",
-    "pos": "WR",
-    "team": "CLE",
     "avg": 116,
     "ranks": {
-      "PPR": 108,
-      "HALF": 114,
-      "STD": 126
+      "PPR": 114,
+      "HALF": 117,
+      "STD": 117
     },
     "nSources": 3,
     "adj": 0,
     "sortAvg": 116
   },
   {
-    "name": "Isaiah Likely",
-    "pos": "TE",
-    "team": "NYG",
-    "avg": 116.67,
+    "name": "De'Zhaun Stribling",
+    "pos": "WR",
+    "team": "SF",
+    "avg": 116.33,
     "ranks": {
-      "PPR": 120,
-      "HALF": 117,
-      "STD": 113
+      "PPR": 119,
+      "HALF": 114,
+      "STD": 116
     },
     "nSources": 3,
     "adj": 0,
-    "sortAvg": 116.67
+    "sortAvg": 116.33
   },
   {
-    "name": "Jakobi Meyers",
+    "name": "KC Concepcion",
     "pos": "WR",
-    "team": "JAC",
-    "avg": 117.67,
+    "team": "CLE",
+    "avg": 116.33,
     "ranks": {
-      "PPR": 111,
-      "HALF": 118,
-      "STD": 124
+      "PPR": 108,
+      "HALF": 116,
+      "STD": 125
     },
     "nSources": 3,
     "adj": 0,
-    "sortAvg": 117.67
+    "sortAvg": 116.33
   },
   {
     "name": "Jordan Love",
     "pos": "QB",
     "team": "GB",
+    "avg": 118,
+    "ranks": {
+      "PPR": 115,
+      "HALF": 121,
+      "STD": 118
+    },
+    "nSources": 3,
+    "adj": 0,
+    "sortAvg": 118
+  },
+  {
+    "name": "Isaiah Likely",
+    "pos": "TE",
+    "team": "NYG",
     "avg": 118.33,
     "ranks": {
-      "PPR": 116,
-      "HALF": 122,
-      "STD": 117
+      "PPR": 122,
+      "HALF": 119,
+      "STD": 114
+    },
+    "nSources": 3,
+    "adj": 0,
+    "sortAvg": 118.33
+  },
+  {
+    "name": "Jakobi Meyers",
+    "pos": "WR",
+    "team": "JAC",
+    "avg": 118.33,
+    "ranks": {
+      "PPR": 113,
+      "HALF": 118,
+      "STD": 124
     },
     "nSources": 3,
     "adj": 0,
@@ -1712,25 +1726,11 @@
     "name": "Aaron Jones Sr.",
     "pos": "RB",
     "team": "MIN",
-    "avg": 120.33,
-    "ranks": {
-      "PPR": 119,
-      "HALF": 119,
-      "STD": 123
-    },
-    "nSources": 3,
-    "adj": 0,
-    "sortAvg": 120.33
-  },
-  {
-    "name": "Matthew Golden",
-    "pos": "WR",
-    "team": "GB",
     "avg": 120.67,
     "ranks": {
-      "PPR": 122,
-      "HALF": 121,
-      "STD": 119
+      "PPR": 120,
+      "HALF": 120,
+      "STD": 122
     },
     "nSources": 3,
     "adj": 0,
@@ -1740,151 +1740,151 @@
     "name": "Baker Mayfield",
     "pos": "QB",
     "team": "TB",
-    "avg": 121,
+    "avg": 120.67,
     "ranks": {
       "PPR": 118,
       "HALF": 124,
-      "STD": 121
-    },
-    "nSources": 3,
-    "adj": 0,
-    "sortAvg": 121
-  },
-  {
-    "name": "De'Zhaun Stribling",
-    "pos": "WR",
-    "team": "SF",
-    "avg": 121.33,
-    "ranks": {
-      "PPR": 124,
-      "HALF": 120,
       "STD": 120
     },
     "nSources": 3,
     "adj": 0,
-    "sortAvg": 121.33
+    "sortAvg": 120.67
+  },
+  {
+    "name": "Matthew Golden",
+    "pos": "WR",
+    "team": "GB",
+    "avg": 122,
+    "ranks": {
+      "PPR": 123,
+      "HALF": 122,
+      "STD": 121
+    },
+    "nSources": 3,
+    "adj": 0,
+    "sortAvg": 122
   },
   {
     "name": "Chris Rodriguez Jr.",
     "pos": "RB",
     "team": "JAC",
-    "avg": 122.33,
+    "avg": 123,
     "ranks": {
       "PPR": 134,
       "HALF": 123,
-      "STD": 110
+      "STD": 112
     },
     "nSources": 3,
     "adj": 0,
-    "sortAvg": 122.33
+    "sortAvg": 123
   },
   {
     "name": "Romeo Doubs",
     "pos": "WR",
     "team": "NE",
-    "avg": 126.33,
+    "avg": 126,
     "ranks": {
       "PPR": 127,
       "HALF": 125,
-      "STD": 127
+      "STD": 126
     },
     "nSources": 3,
     "adj": 0,
-    "sortAvg": 126.33
+    "sortAvg": 126
   },
   {
     "name": "Xavier Worthy",
     "pos": "WR",
     "team": "KC",
-    "avg": 126.33,
+    "avg": 127,
     "ranks": {
       "PPR": 131,
-      "HALF": 126,
-      "STD": 122
+      "HALF": 127,
+      "STD": 123
     },
     "nSources": 3,
     "adj": 0,
-    "sortAvg": 126.33
+    "sortAvg": 127
   },
   {
     "name": "Tyler Shough",
     "pos": "QB",
     "team": "NO",
-    "avg": 128.33,
+    "avg": 128,
     "ranks": {
       "PPR": 125,
-      "HALF": 132,
+      "HALF": 131,
       "STD": 128
     },
     "nSources": 3,
     "adj": 0,
-    "sortAvg": 128.33
+    "sortAvg": 128
   },
   {
-    "name": "Mark Andrews",
+    "name": "Juwan Johnson",
     "pos": "TE",
-    "team": "BAL",
+    "team": "NO",
     "avg": 128.67,
     "ranks": {
-      "PPR": 135,
-      "HALF": 133,
-      "STD": 118
+      "PPR": 128,
+      "HALF": 126,
+      "STD": 132
     },
     "nSources": 3,
     "adj": 0,
     "sortAvg": 128.67
   },
   {
+    "name": "Mark Andrews",
+    "pos": "TE",
+    "team": "BAL",
+    "avg": 129,
+    "ranks": {
+      "PPR": 135,
+      "HALF": 133,
+      "STD": 119
+    },
+    "nSources": 3,
+    "adj": 0,
+    "sortAvg": 129
+  },
+  {
     "name": "Jake Ferguson",
     "pos": "TE",
     "team": "DAL",
-    "avg": 129,
+    "avg": 130,
     "ranks": {
-      "PPR": 123,
-      "HALF": 128,
+      "PPR": 124,
+      "HALF": 130,
       "STD": 136
     },
     "nSources": 3,
     "adj": 0,
-    "sortAvg": 129
-  },
-  {
-    "name": "Juwan Johnson",
-    "pos": "TE",
-    "team": "NO",
-    "avg": 129,
-    "ranks": {
-      "PPR": 128,
-      "HALF": 127,
-      "STD": 132
-    },
-    "nSources": 3,
-    "adj": 0,
-    "sortAvg": 129
-  },
-  {
-    "name": "Jalen Coker",
-    "pos": "WR",
-    "team": "CAR",
-    "avg": 129.67,
-    "ranks": {
-      "PPR": 126,
-      "HALF": 130,
-      "STD": 133
-    },
-    "nSources": 3,
-    "adj": 0,
-    "sortAvg": 129.67
+    "sortAvg": 130
   },
   {
     "name": "Woody Marks",
     "pos": "RB",
     "team": "HOU",
-    "avg": 130.33,
+    "avg": 130,
     "ranks": {
       "PPR": 132,
-      "HALF": 129,
+      "HALF": 128,
       "STD": 130
+    },
+    "nSources": 3,
+    "adj": 0,
+    "sortAvg": 130
+  },
+  {
+    "name": "Jalen Coker",
+    "pos": "WR",
+    "team": "CAR",
+    "avg": 130.33,
+    "ranks": {
+      "PPR": 126,
+      "HALF": 132,
+      "STD": 133
     },
     "nSources": 3,
     "adj": 0,
@@ -1894,15 +1894,15 @@
     "name": "Malik Willis",
     "pos": "QB",
     "team": "MIA",
-    "avg": 132,
+    "avg": 131.67,
     "ranks": {
       "PPR": 130,
-      "HALF": 135,
+      "HALF": 134,
       "STD": 131
     },
     "nSources": 3,
     "adj": 0,
-    "sortAvg": 132
+    "sortAvg": 131.67
   },
   {
     "name": "Braelon Allen",
@@ -1939,100 +1939,100 @@
     "name": "Jalen McMillan",
     "pos": "WR",
     "team": "TB",
-    "avg": 163,
+    "avg": 163.33,
     "ranks": {
       "PPR": 162,
-      "HALF": 163,
+      "HALF": 164,
       "STD": 164
     },
     "nSources": 3,
     "adj": -28,
     "handcuffBoost": "Handcuff for Emeka Egbuka (Q)",
-    "sortAvg": 135
+    "sortAvg": 135.33
   },
   {
     "name": "Khalil Shakir",
     "pos": "WR",
     "team": "BUF",
-    "avg": 135.33,
+    "avg": 135.67,
     "ranks": {
       "PPR": 129,
-      "HALF": 134,
+      "HALF": 135,
       "STD": 143
     },
     "nSources": 3,
     "adj": 0,
-    "sortAvg": 135.33
+    "sortAvg": 135.67
   },
   {
-    "name": "Deebo Samuel Sr.",
+    "name": "Rashid Shaheed",
     "pos": "WR",
-    "team": "SF",
-    "avg": 138,
-    "ranks": {
-      "PPR": 139,
-      "HALF": 136,
-      "STD": 139
-    },
-    "nSources": 3,
-    "adj": 0,
-    "sortAvg": 138
-  },
-  {
-    "name": "Sam Darnold",
-    "pos": "QB",
     "team": "SEA",
     "avg": 138.33,
     "ranks": {
-      "PPR": 136,
-      "HALF": 141,
-      "STD": 138
+      "PPR": 141,
+      "HALF": 140,
+      "STD": 134
     },
     "nSources": 3,
     "adj": 0,
     "sortAvg": 138.33
   },
   {
-    "name": "Rashid Shaheed",
-    "pos": "WR",
-    "team": "SEA",
+    "name": "Jonah Coleman",
+    "pos": "RB",
+    "team": "DEN",
     "avg": 139,
     "ranks": {
       "PPR": 142,
-      "HALF": 140,
-      "STD": 135
+      "HALF": 138,
+      "STD": 137
     },
     "nSources": 3,
     "adj": 0,
     "sortAvg": 139
   },
   {
-    "name": "Jonah Coleman",
-    "pos": "RB",
-    "team": "DEN",
-    "avg": 139.33,
+    "name": "Sam Darnold",
+    "pos": "QB",
+    "team": "SEA",
+    "avg": 139,
     "ranks": {
-      "PPR": 143,
-      "HALF": 138,
-      "STD": 137
+      "PPR": 137,
+      "HALF": 141,
+      "STD": 139
     },
     "nSources": 3,
     "adj": 0,
-    "sortAvg": 139.33
+    "sortAvg": 139
   },
   {
     "name": "Tyjae Spears",
     "pos": "RB",
     "team": "TEN",
-    "avg": 139.67,
+    "avg": 139,
     "ranks": {
-      "PPR": 137,
-      "HALF": 137,
+      "PPR": 136,
+      "HALF": 136,
       "STD": 145
     },
     "nSources": 3,
     "adj": 0,
-    "sortAvg": 139.67
+    "sortAvg": 139
+  },
+  {
+    "name": "Deebo Samuel Sr.",
+    "pos": "WR",
+    "team": "SF",
+    "avg": 139.33,
+    "ranks": {
+      "PPR": 140,
+      "HALF": 137,
+      "STD": 141
+    },
+    "nSources": 3,
+    "adj": 0,
+    "sortAvg": 139.33
   },
   {
     "name": "C.J. Stroud",
@@ -2049,130 +2049,130 @@
     "sortAvg": 142
   },
   {
+    "name": "Daniel Jones",
+    "pos": "QB",
+    "team": "IND",
+    "avg": 143.33,
+    "ranks": {
+      "PPR": 139,
+      "HALF": 145,
+      "STD": 146
+    },
+    "nSources": 3,
+    "adj": 0,
+    "sortAvg": 143.33
+  },
+  {
     "name": "Keaton Mitchell",
     "pos": "RB",
     "team": "LAC",
-    "avg": 142.67,
+    "avg": 143.67,
     "ranks": {
-      "PPR": 145,
+      "PPR": 148,
       "HALF": 143,
       "STD": 140
     },
     "nSources": 3,
     "adj": 0,
-    "sortAvg": 142.67
+    "sortAvg": 143.67
   },
   {
-    "name": "Daniel Jones",
-    "pos": "QB",
-    "team": "IND",
+    "name": "Josh Jacobs",
+    "pos": "RB",
+    "team": "GB",
     "avg": 144,
     "ranks": {
-      "PPR": 140,
-      "HALF": 145,
-      "STD": 147
+      "PPR": 147,
+      "HALF": 150,
+      "STD": 135
     },
     "nSources": 3,
     "adj": 0,
     "sortAvg": 144
   },
   {
-    "name": "Josh Jacobs",
-    "pos": "RB",
-    "team": "GB",
-    "avg": 145.33,
-    "ranks": {
-      "PPR": 147,
-      "HALF": 155,
-      "STD": 134
-    },
-    "nSources": 3,
-    "adj": 0,
-    "sortAvg": 145.33
-  },
-  {
     "name": "Tank Bigsby",
     "pos": "RB",
     "team": "PHI",
-    "avg": 146.67,
+    "avg": 146.33,
     "ranks": {
-      "PPR": 156,
+      "PPR": 155,
       "HALF": 142,
       "STD": 142
     },
     "nSources": 3,
     "adj": 0,
-    "sortAvg": 146.67
+    "sortAvg": 146.33
   },
   {
     "name": "Denzel Boston",
     "pos": "WR",
     "team": "CLE",
+    "avg": 148.33,
+    "ranks": {
+      "PPR": 145,
+      "HALF": 147,
+      "STD": 153
+    },
+    "nSources": 3,
+    "adj": 0,
+    "sortAvg": 148.33
+  },
+  {
+    "name": "Tre Tucker",
+    "pos": "WR",
+    "team": "LV",
     "avg": 149,
     "ranks": {
-      "PPR": 148,
+      "PPR": 149,
       "HALF": 146,
-      "STD": 153
+      "STD": 152
     },
     "nSources": 3,
     "adj": 0,
     "sortAvg": 149
   },
   {
-    "name": "Tre Tucker",
-    "pos": "WR",
-    "team": "LV",
-    "avg": 149.33,
+    "name": "Brenton Strange",
+    "pos": "TE",
+    "team": "JAC",
+    "avg": 150,
     "ranks": {
-      "PPR": 149,
-      "HALF": 147,
-      "STD": 152
+      "PPR": 151,
+      "HALF": 149,
+      "STD": 150
     },
     "nSources": 3,
     "adj": 0,
-    "sortAvg": 149.33
+    "sortAvg": 150
   },
   {
     "name": "Dylan Sampson",
     "pos": "RB",
     "team": "CLE",
-    "avg": 150.67,
+    "avg": 150,
     "ranks": {
-      "PPR": 144,
-      "HALF": 152,
+      "PPR": 143,
+      "HALF": 151,
       "STD": 156
     },
     "nSources": 3,
     "adj": 0,
-    "sortAvg": 150.67
+    "sortAvg": 150
   },
   {
     "name": "Hunter Henry",
     "pos": "TE",
     "team": "NE",
-    "avg": 151.67,
+    "avg": 150.33,
     "ranks": {
-      "PPR": 158,
+      "PPR": 156,
       "HALF": 148,
-      "STD": 149
+      "STD": 147
     },
     "nSources": 3,
     "adj": 0,
-    "sortAvg": 151.67
-  },
-  {
-    "name": "Brenton Strange",
-    "pos": "TE",
-    "team": "JAC",
-    "avg": 152.33,
-    "ranks": {
-      "PPR": 153,
-      "HALF": 153,
-      "STD": 151
-    },
-    "nSources": 3,
-    "adj": 0,
-    "sortAvg": 152.33
+    "sortAvg": 150.33
   },
   {
     "name": "Chig Okonkwo",
@@ -2180,8 +2180,8 @@
     "team": "WAS",
     "avg": 155,
     "ranks": {
-      "PPR": 154,
-      "HALF": 151,
+      "PPR": 153,
+      "HALF": 152,
       "STD": 160
     },
     "nSources": 3,
@@ -2192,15 +2192,15 @@
     "name": "Cam Ward",
     "pos": "QB",
     "team": "TEN",
-    "avg": 155.33,
+    "avg": 156.33,
     "ranks": {
       "PPR": 152,
       "HALF": 156,
-      "STD": 158
+      "STD": 161
     },
     "nSources": 3,
     "adj": 0,
-    "sortAvg": 155.33
+    "sortAvg": 156.33
   },
   {
     "name": "Dalton Schultz",
@@ -2209,194 +2209,194 @@
     "avg": 157.33,
     "ranks": {
       "PPR": 150,
-      "HALF": 154,
-      "STD": 168
+      "HALF": 153,
+      "STD": 169
     },
     "nSources": 3,
     "adj": 0,
     "sortAvg": 157.33
   },
   {
-    "name": "Adonai Mitchell",
-    "pos": "WR",
-    "team": "NYJ",
-    "avg": 159,
-    "ranks": {
-      "PPR": 159,
-      "HALF": 157,
-      "STD": 161
-    },
-    "nSources": 3,
-    "adj": 0,
-    "sortAvg": 159
-  },
-  {
     "name": "Kayshon Boutte",
     "pos": "WR",
     "team": "HOU",
-    "avg": 159,
+    "avg": 157.67,
     "ranks": {
-      "PPR": 161,
-      "HALF": 159,
+      "PPR": 158,
+      "HALF": 158,
       "STD": 157
     },
     "nSources": 3,
     "adj": 0,
-    "sortAvg": 159
+    "sortAvg": 157.67
   },
   {
     "name": "Brian Robinson Jr.",
     "pos": "RB",
     "team": "ATL",
-    "avg": 160.33,
+    "avg": 158,
     "ranks": {
-      "PPR": 167,
-      "HALF": 164,
-      "STD": 150
+      "PPR": 164,
+      "HALF": 161,
+      "STD": 149
     },
     "nSources": 3,
     "adj": 0,
-    "sortAvg": 160.33
+    "sortAvg": 158
+  },
+  {
+    "name": "Adonai Mitchell",
+    "pos": "WR",
+    "team": "NYJ",
+    "avg": 159.33,
+    "ranks": {
+      "PPR": 161,
+      "HALF": 155,
+      "STD": 162
+    },
+    "nSources": 3,
+    "adj": 0,
+    "sortAvg": 159.33
   },
   {
     "name": "Emmett Johnson",
     "pos": "RB",
     "team": "KC",
-    "avg": 160.33,
+    "avg": 161,
     "ranks": {
-      "PPR": 164,
-      "HALF": 158,
-      "STD": 159
+      "PPR": 166,
+      "HALF": 159,
+      "STD": 158
     },
     "nSources": 3,
     "adj": 0,
-    "sortAvg": 160.33
-  },
-  {
-    "name": "Tyrone Tracy Jr.",
-    "pos": "RB",
-    "team": "NYG",
-    "avg": 167,
-    "ranks": {
-      "PPR": 171,
-      "HALF": 165,
-      "STD": 165
-    },
-    "nSources": 3,
-    "adj": 0,
-    "sortAvg": 167
+    "sortAvg": 161
   },
   {
     "name": "Dontayvion Wicks",
     "pos": "WR",
     "team": "PHI",
-    "avg": 167.67,
+    "avg": 166.67,
     "ranks": {
-      "PPR": 170,
-      "HALF": 161,
-      "STD": 172
+      "PPR": 167,
+      "HALF": 163,
+      "STD": 170
     },
     "nSources": 3,
     "adj": 0,
-    "sortAvg": 167.67
-  },
-  {
-    "name": "Jerry Jeudy",
-    "pos": "WR",
-    "team": "CLE",
-    "avg": 169.33,
-    "ranks": {
-      "PPR": 166,
-      "HALF": 171,
-      "STD": 171
-    },
-    "nSources": 3,
-    "adj": 0,
-    "sortAvg": 169.33
+    "sortAvg": 166.67
   },
   {
     "name": "Bryce Young",
     "pos": "QB",
     "team": "CAR",
-    "avg": 170.67,
+    "avg": 168.33,
     "ranks": {
       "PPR": 160,
-      "HALF": 176,
-      "STD": 176
+      "HALF": 172,
+      "STD": 173
     },
     "nSources": 3,
     "adj": 0,
-    "sortAvg": 170.67
+    "sortAvg": 168.33
   },
   {
     "name": "Jalen Nailor",
     "pos": "WR",
     "team": "LV",
-    "avg": 172,
+    "avg": 170,
     "ranks": {
-      "PPR": 176,
+      "PPR": 172,
       "HALF": 166,
-      "STD": 174
+      "STD": 172
     },
     "nSources": 3,
     "adj": 0,
-    "sortAvg": 172
+    "sortAvg": 170
   },
   {
-    "name": "Jauan Jennings",
-    "pos": "WR",
-    "team": "MIN",
-    "avg": 173,
+    "name": "Tyrone Tracy Jr.",
+    "pos": "RB",
+    "team": "NYG",
+    "avg": 170,
     "ranks": {
       "PPR": 173,
-      "HALF": 173,
-      "STD": 173
-    },
-    "nSources": 3,
-    "adj": 0,
-    "sortAvg": 173
-  },
-  {
-    "name": "Tre' Harris",
-    "pos": "WR",
-    "team": "LAC",
-    "avg": 173,
-    "ranks": {
-      "PPR": 174,
-      "HALF": 168,
-      "STD": 177
-    },
-    "nSources": 3,
-    "adj": 0,
-    "sortAvg": 173
-  },
-  {
-    "name": "Ray Davis",
-    "pos": "RB",
-    "team": "BUF",
-    "avg": 174,
-    "ranks": {
-      "PPR": 178,
       "HALF": 169,
-      "STD": 175
+      "STD": 168
     },
     "nSources": 3,
     "adj": 0,
-    "sortAvg": 174
+    "sortAvg": 170
   },
   {
     "name": "Terrance Ferguson",
     "pos": "TE",
     "team": "LAR",
-    "avg": 174.67,
+    "avg": 172.33,
     "ranks": {
-      "PPR": 194,
-      "HALF": 167,
-      "STD": 163
+      "PPR": 193,
+      "HALF": 165,
+      "STD": 159
     },
     "nSources": 3,
     "adj": 0,
-    "sortAvg": 174.67
+    "sortAvg": 172.33
+  },
+  {
+    "name": "Jauan Jennings",
+    "pos": "WR",
+    "team": "MIN",
+    "avg": 173.67,
+    "ranks": {
+      "PPR": 174,
+      "HALF": 173,
+      "STD": 174
+    },
+    "nSources": 3,
+    "adj": 0,
+    "sortAvg": 173.67
+  },
+  {
+    "name": "Ray Davis",
+    "pos": "RB",
+    "team": "BUF",
+    "avg": 173.67,
+    "ranks": {
+      "PPR": 179,
+      "HALF": 167,
+      "STD": 175
+    },
+    "nSources": 3,
+    "adj": 0,
+    "sortAvg": 173.67
+  },
+  {
+    "name": "Jerry Jeudy",
+    "pos": "WR",
+    "team": "CLE",
+    "avg": 174.33,
+    "ranks": {
+      "PPR": 170,
+      "HALF": 177,
+      "STD": 176
+    },
+    "nSources": 3,
+    "adj": 0,
+    "sortAvg": 174.33
+  },
+  {
+    "name": "Tre' Harris",
+    "pos": "WR",
+    "team": "LAC",
+    "avg": 174.33,
+    "ranks": {
+      "PPR": 175,
+      "HALF": 171,
+      "STD": 177
+    },
+    "nSources": 3,
+    "adj": 0,
+    "sortAvg": 174.33
   },
   {
     "name": "Ryan Flournoy",
@@ -2404,8 +2404,8 @@
     "team": "DAL",
     "avg": 179.33,
     "ranks": {
-      "PPR": 180,
-      "HALF": 174,
+      "PPR": 178,
+      "HALF": 176,
       "STD": 184
     },
     "nSources": 3,
@@ -2416,208 +2416,208 @@
     "name": "Keenan Allen",
     "pos": "WR",
     "team": "IND",
-    "avg": 180,
-    "ranks": {
-      "PPR": 175,
-      "HALF": 175,
-      "STD": 190
-    },
-    "nSources": 3,
-    "adj": 0,
-    "sortAvg": 180
-  },
-  {
-    "name": "AJ Barner",
-    "pos": "TE",
-    "team": "SEA",
     "avg": 180.33,
     "ranks": {
-      "PPR": 193,
-      "HALF": 170,
-      "STD": 178
+      "PPR": 176,
+      "HALF": 175,
+      "STD": 190
     },
     "nSources": 3,
     "adj": 0,
     "sortAvg": 180.33
   },
   {
-    "name": "Pat Bryant",
-    "pos": "WR",
-    "team": "DEN",
-    "avg": 181,
+    "name": "AJ Barner",
+    "pos": "TE",
+    "team": "SEA",
+    "avg": 181.33,
     "ranks": {
-      "PPR": 179,
-      "HALF": 177,
-      "STD": 187
+      "PPR": 192,
+      "HALF": 170,
+      "STD": 182
     },
     "nSources": 3,
     "adj": 0,
-    "sortAvg": 181
+    "sortAvg": 181.33
   },
   {
     "name": "T.J. Hockenson",
     "pos": "TE",
     "team": "MIN",
-    "avg": 182.33,
+    "avg": 182,
     "ranks": {
       "PPR": 177,
-      "HALF": 172,
-      "STD": 198
+      "HALF": 168,
+      "STD": 201
     },
     "nSources": 3,
     "adj": 0,
-    "sortAvg": 182.33
+    "sortAvg": 182
   },
   {
-    "name": "Omar Cooper Jr.",
+    "name": "Pat Bryant",
     "pos": "WR",
-    "team": "NYJ",
-    "avg": 183,
+    "team": "DEN",
+    "avg": 182.67,
     "ranks": {
-      "PPR": 181,
-      "HALF": 182,
-      "STD": 186
+      "PPR": 180,
+      "HALF": 174,
+      "STD": 194
     },
     "nSources": 3,
     "adj": 0,
-    "sortAvg": 183
+    "sortAvg": 182.67
   },
   {
     "name": "Brandon Aubrey",
     "pos": "K",
     "team": "DAL",
-    "avg": 184.33,
+    "avg": 183.33,
     "ranks": {
-      "PPR": 183,
-      "HALF": 191,
+      "PPR": 182,
+      "HALF": 189,
       "STD": 179
     },
     "nSources": 3,
     "adj": 0,
-    "sortAvg": 184.33
+    "sortAvg": 183.33
   },
   {
-    "name": "Zach Charbonnet",
-    "pos": "RB",
-    "team": "SEA",
-    "avg": 149.67,
+    "name": "Omar Cooper Jr.",
+    "pos": "WR",
+    "team": "NYJ",
+    "avg": 186.33,
     "ranks": {
-      "PPR": 151,
-      "HALF": 150,
-      "STD": 148
+      "PPR": 181,
+      "HALF": 185,
+      "STD": 193
     },
     "nSources": 3,
-    "adj": 35,
-    "healthStatus": "PUP",
-    "healthNote": "ACL recovery — has not returned to practice (active/PUP)",
-    "sortAvg": 184.67
+    "adj": 0,
+    "sortAvg": 186.33
   },
   {
     "name": "Malik Washington",
     "pos": "WR",
     "team": "MIA",
+    "avg": 188.33,
+    "ranks": {
+      "PPR": 183,
+      "HALF": 179,
+      "STD": 203
+    },
+    "nSources": 3,
+    "adj": 0,
+    "sortAvg": 188.33
+  },
+  {
+    "name": "Ja'Kobi Lane",
+    "pos": "WR",
+    "team": "BAL",
     "avg": 188.67,
     "ranks": {
-      "PPR": 182,
-      "HALF": 181,
-      "STD": 203
+      "PPR": 198,
+      "HALF": 180,
+      "STD": 188
     },
     "nSources": 3,
     "adj": 0,
     "sortAvg": 188.67
   },
   {
-    "name": "Kimani Vidal",
-    "pos": "RB",
-    "team": "LAC",
+    "name": "Ka'imi Fairbairn",
+    "pos": "K",
+    "team": "HOU",
     "avg": 189.67,
     "ranks": {
-      "PPR": 197,
-      "HALF": 187,
-      "STD": 185
+      "PPR": 189,
+      "HALF": 193,
+      "STD": 187
     },
     "nSources": 3,
     "adj": 0,
     "sortAvg": 189.67
   },
   {
+    "name": "Zach Charbonnet",
+    "pos": "RB",
+    "team": "SEA",
+    "avg": 155,
+    "ranks": {
+      "PPR": 157,
+      "HALF": 157,
+      "STD": 151
+    },
+    "nSources": 3,
+    "adj": 35,
+    "healthStatus": "PUP",
+    "healthNote": "ACL recovery — has not returned to practice (active/PUP)",
+    "sortAvg": 190
+  },
+  {
     "name": "Jacoby Brissett",
     "pos": "QB",
     "team": "ARI",
-    "avg": 192.33,
+    "avg": 190.67,
     "ranks": {
-      "PPR": 184,
-      "HALF": 186,
-      "STD": 207
+      "PPR": 185,
+      "HALF": 182,
+      "STD": 205
     },
     "nSources": 3,
     "adj": 0,
-    "sortAvg": 192.33
+    "sortAvg": 190.67
   },
   {
     "name": "Cameron Dicker",
     "pos": "K",
     "team": "LAC",
-    "avg": 193.33,
+    "avg": 191,
     "ranks": {
-      "PPR": 189,
-      "HALF": 200,
-      "STD": 191
+      "PPR": 190,
+      "HALF": 194,
+      "STD": 189
     },
     "nSources": 3,
     "adj": 0,
-    "sortAvg": 193.33
+    "sortAvg": 191
   },
   {
-    "name": "Calvin Ridley",
-    "pos": "WR",
-    "team": "TEN",
-    "avg": 193.67,
+    "name": "Kaelon Black",
+    "pos": "RB",
+    "team": "SF",
+    "avg": 193,
     "ranks": {
-      "PPR": 201,
+      "PPR": 206,
       "HALF": 188,
+      "STD": 185
+    },
+    "nSources": 3,
+    "adj": 0,
+    "sortAvg": 193
+  },
+  {
+    "name": "Kimani Vidal",
+    "pos": "RB",
+    "team": "LAC",
+    "avg": 194.33,
+    "ranks": {
+      "PPR": 199,
+      "HALF": 192,
       "STD": 192
     },
     "nSources": 3,
     "adj": 0,
-    "sortAvg": 193.67
+    "sortAvg": 194.33
   },
   {
-    "name": "Ka'imi Fairbairn",
+    "name": "Cam Little",
     "pos": "K",
-    "team": "HOU",
-    "avg": 196,
-    "ranks": {
-      "PPR": 190,
-      "HALF": 205,
-      "STD": 193
-    },
-    "nSources": 3,
-    "adj": 0,
-    "sortAvg": 196
-  },
-  {
-    "name": "Kenyon Sadiq",
-    "pos": "TE",
-    "team": "NYJ",
-    "avg": 197,
-    "ranks": {
-      "PPR": 205,
-      "HALF": 184,
-      "STD": 202
-    },
-    "nSources": 3,
-    "adj": 0,
-    "sortAvg": 197
-  },
-  {
-    "name": "Ja'Kobi Lane",
-    "pos": "WR",
-    "team": "BAL",
+    "team": "JAC",
     "avg": 197.67,
     "ranks": {
-      "PPR": 200,
-      "HALF": 198,
+      "PPR": 195,
+      "HALF": 203,
       "STD": 195
     },
     "nSources": 3,
@@ -2625,286 +2625,272 @@
     "sortAvg": 197.67
   },
   {
-    "name": "Kaelon Black",
-    "pos": "RB",
-    "team": "SF",
-    "avg": 197.67,
+    "name": "Calvin Ridley",
+    "pos": "WR",
+    "team": "TEN",
+    "avg": 198,
     "ranks": {
-      "PPR": 207,
+      "PPR": 201,
       "HALF": 197,
-      "STD": 189
+      "STD": 196
     },
     "nSources": 3,
     "adj": 0,
-    "sortAvg": 197.67
+    "sortAvg": 198
   },
   {
-    "name": "Sean Tucker",
-    "pos": "RB",
-    "team": "TB",
+    "name": "Kenyon Sadiq",
+    "pos": "TE",
+    "team": "NYJ",
     "avg": 198.33,
     "ranks": {
-      "PPR": 204,
-      "HALF": 194,
-      "STD": 197
+      "PPR": 207,
+      "HALF": 186,
+      "STD": 202
     },
     "nSources": 3,
     "adj": 0,
     "sortAvg": 198.33
   },
   {
-    "name": "Cam Little",
-    "pos": "K",
-    "team": "JAC",
+    "name": "Malik Davis",
+    "pos": "RB",
+    "team": "DAL",
     "avg": 199.67,
     "ranks": {
-      "PPR": 195,
-      "HALF": 208,
-      "STD": 196
+      "PPR": 212,
+      "HALF": 190,
+      "STD": 197
     },
     "nSources": 3,
     "adj": 0,
     "sortAvg": 199.67
   },
   {
-    "name": "Malik Davis",
-    "pos": "RB",
-    "team": "DAL",
-    "avg": 201.33,
+    "name": "Aaron Rodgers",
+    "pos": "QB",
+    "team": "PIT",
+    "avg": 200,
     "ranks": {
-      "PPR": 215,
-      "HALF": 189,
+      "PPR": 196,
+      "HALF": 191,
+      "STD": 213
+    },
+    "nSources": 3,
+    "adj": 0,
+    "sortAvg": 200
+  },
+  {
+    "name": "Sean Tucker",
+    "pos": "RB",
+    "team": "TB",
+    "avg": 200,
+    "ranks": {
+      "PPR": 205,
+      "HALF": 195,
       "STD": 200
     },
     "nSources": 3,
     "adj": 0,
-    "sortAvg": 201.33
-  },
-  {
-    "name": "Aaron Rodgers",
-    "pos": "QB",
-    "team": "PIT",
-    "avg": 201.67,
-    "ranks": {
-      "PPR": 198,
-      "HALF": 190,
-      "STD": 217
-    },
-    "nSources": 3,
-    "adj": 0,
-    "sortAvg": 201.67
+    "sortAvg": 200
   },
   {
     "name": "Jason Myers",
     "pos": "K",
     "team": "SEA",
-    "avg": 202.33,
+    "avg": 201,
     "ranks": {
-      "PPR": 196,
-      "HALF": 210,
-      "STD": 201
+      "PPR": 197,
+      "HALF": 207,
+      "STD": 199
     },
     "nSources": 3,
     "adj": 0,
-    "sortAvg": 202.33
+    "sortAvg": 201
+  },
+  {
+    "name": "Chris Bell",
+    "pos": "WR",
+    "team": "MIA",
+    "avg": 206,
+    "ranks": {
+      "PPR": 200,
+      "HALF": 204,
+      "STD": 214
+    },
+    "nSources": 3,
+    "adj": 0,
+    "sortAvg": 206
   },
   {
     "name": "Alvin Kamara",
     "pos": "RB",
     "team": "NO",
-    "avg": 160.33,
+    "avg": 161.33,
     "ranks": {
-      "PPR": 157,
+      "PPR": 159,
       "HALF": 162,
-      "STD": 162
+      "STD": 163
     },
     "nSources": 3,
     "adj": 45,
     "healthStatus": "OUT",
     "healthNote": "MCL sprain — expected out ~1 month",
-    "sortAvg": 205.33
-  },
-  {
-    "name": "Jaylin Noel",
-    "pos": "WR",
-    "team": "HOU",
-    "avg": 205.33,
-    "ranks": {
-      "PPR": 199,
-      "HALF": 204,
-      "STD": 213
-    },
-    "nSources": 3,
-    "adj": 0,
-    "sortAvg": 205.33
-  },
-  {
-    "name": "Oronde Gadsden II",
-    "pos": "TE",
-    "team": "LAC",
-    "avg": 208,
-    "ranks": {
-      "PPR": 220,
-      "HALF": 199,
-      "STD": 205
-    },
-    "nSources": 3,
-    "adj": 0,
-    "sortAvg": 208
+    "sortAvg": 206.33
   },
   {
     "name": "Nicholas Singleton",
     "pos": "RB",
     "team": "TEN",
-    "avg": 209.33,
+    "avg": 207.33,
     "ranks": {
-      "PPR": 217,
-      "HALF": 212,
-      "STD": 199
+      "PPR": 214,
+      "HALF": 210,
+      "STD": 198
     },
     "nSources": 3,
     "adj": 0,
-    "sortAvg": 209.33
-  },
-  {
-    "name": "Rashod Bateman",
-    "pos": "WR",
-    "team": "BAL",
-    "avg": 209.33,
-    "ranks": {
-      "PPR": 221,
-      "HALF": 201,
-      "STD": 206
-    },
-    "nSources": 3,
-    "adj": 0,
-    "sortAvg": 209.33
+    "sortAvg": 207.33
   },
   {
     "name": "Eddy Pineiro",
     "pos": "K",
     "team": "SF",
-    "avg": 210.67,
+    "avg": 208.67,
     "ranks": {
       "PPR": 202,
-      "HALF": 219,
-      "STD": 211
+      "HALF": 217,
+      "STD": 207
     },
     "nSources": 3,
     "adj": 0,
-    "sortAvg": 210.67
+    "sortAvg": 208.67
+  },
+  {
+    "name": "Jaylin Noel",
+    "pos": "WR",
+    "team": "HOU",
+    "avg": 210.33,
+    "ranks": {
+      "PPR": 204,
+      "HALF": 209,
+      "STD": 218
+    },
+    "nSources": 3,
+    "adj": 0,
+    "sortAvg": 210.33
+  },
+  {
+    "name": "Pat Freiermuth",
+    "pos": "TE",
+    "team": "PIT",
+    "avg": 212,
+    "ranks": {
+      "PPR": 217,
+      "HALF": 199,
+      "STD": 220
+    },
+    "nSources": 3,
+    "adj": 0,
+    "sortAvg": 212
   },
   {
     "name": "Travis Hunter",
     "pos": "WR",
     "team": "JAC",
-    "avg": 210.67,
+    "avg": 212.67,
     "ranks": {
-      "PPR": 206,
-      "HALF": 217,
-      "STD": 209
+      "PPR": 209,
+      "HALF": 219,
+      "STD": 210
     },
     "nSources": 3,
     "adj": 0,
-    "sortAvg": 210.67
+    "sortAvg": 212.67
   },
   {
-    "name": "Isiah Pacheco",
-    "pos": "RB",
-    "team": "DET",
-    "avg": 214,
-    "ranks": {
-      "PPR": 211,
-      "HALF": 227,
-      "STD": 204
-    },
-    "nSources": 3,
-    "adj": 0,
-    "sortAvg": 214
-  },
-  {
-    "name": "Tyler Loop",
-    "pos": "K",
+    "name": "Rashod Bateman",
+    "pos": "WR",
     "team": "BAL",
+    "avg": 213.33,
+    "ranks": {
+      "PPR": 223,
+      "HALF": 211,
+      "STD": 206
+    },
+    "nSources": 3,
+    "adj": 0,
+    "sortAvg": 213.33
+  },
+  {
+    "name": "Malachi Fields",
+    "pos": "WR",
+    "team": "NYG",
     "avg": 215.33,
     "ranks": {
-      "PPR": 208,
-      "HALF": 223,
-      "STD": 215
+      "PPR": 210,
+      "HALF": 215,
+      "STD": 221
     },
     "nSources": 3,
     "adj": 0,
     "sortAvg": 215.33
   },
   {
-    "name": "Chris Bell",
-    "pos": "WR",
-    "team": "MIA",
-    "avg": 215.67,
+    "name": "Oronde Gadsden II",
+    "pos": "TE",
+    "team": "LAC",
+    "avg": 215.33,
     "ranks": {
-      "PPR": 209,
-      "HALF": 218,
-      "STD": 220
+      "PPR": 231,
+      "HALF": 206,
+      "STD": 209
     },
     "nSources": 3,
     "adj": 0,
-    "sortAvg": 215.67
+    "sortAvg": 215.33
   },
   {
     "name": "Gunnar Helm",
     "pos": "TE",
     "team": "TEN",
-    "avg": 215.67,
+    "avg": 216.67,
     "ranks": {
-      "PPR": 214,
-      "HALF": 202,
-      "STD": 231
+      "PPR": 216,
+      "HALF": 201,
+      "STD": 233
     },
     "nSources": 3,
     "adj": 0,
-    "sortAvg": 215.67
+    "sortAvg": 216.67
   },
   {
-    "name": "Pat Freiermuth",
-    "pos": "TE",
-    "team": "PIT",
-    "avg": 216,
-    "ranks": {
-      "PPR": 223,
-      "HALF": 207,
-      "STD": 218
-    },
-    "nSources": 3,
-    "adj": 0,
-    "sortAvg": 216
-  },
-  {
-    "name": "Isaac TeSlaa",
-    "pos": "WR",
-    "team": "DET",
+    "name": "Tyler Loop",
+    "pos": "K",
+    "team": "BAL",
     "avg": 217,
     "ranks": {
-      "PPR": 219,
-      "HALF": 220,
-      "STD": 212
+      "PPR": 208,
+      "HALF": 227,
+      "STD": 216
     },
     "nSources": 3,
     "adj": 0,
     "sortAvg": 217
   },
   {
-    "name": "Malachi Fields",
-    "pos": "WR",
-    "team": "NYG",
-    "avg": 217.67,
+    "name": "Jake Bates",
+    "pos": "K",
+    "team": "DET",
+    "avg": 217.33,
     "ranks": {
       "PPR": 213,
-      "HALF": 215,
-      "STD": 225
+      "HALF": 220,
+      "STD": 219
     },
     "nSources": 3,
     "adj": 0,
-    "sortAvg": 217.67
+    "sortAvg": 217.33
   },
   {
     "name": "Kaytron Allen",
@@ -2912,9 +2898,9 @@
     "team": "WAS",
     "avg": 218.33,
     "ranks": {
-      "PPR": 234,
-      "HALF": 211,
-      "STD": 210
+      "PPR": 235,
+      "HALF": 212,
+      "STD": 208
     },
     "nSources": 3,
     "adj": 0,
@@ -2926,87 +2912,70 @@
     "team": "NYG",
     "avg": 219,
     "ranks": {
-      "PPR": 227,
+      "PPR": 229,
       "HALF": 216,
-      "STD": 214
+      "STD": 212
     },
     "nSources": 3,
     "adj": 0,
     "sortAvg": 219
   },
   {
-    "name": "Jake Bates",
-    "pos": "K",
-    "team": "DET",
+    "name": "Geno Smith",
+    "pos": "QB",
+    "team": "NYJ",
     "avg": 219.33,
     "ranks": {
-      "PPR": 212,
-      "HALF": 225,
-      "STD": 221
+      "PPR": 211,
+      "HALF": 208,
+      "STD": 239
     },
     "nSources": 3,
     "adj": 0,
     "sortAvg": 219.33
   },
   {
-    "name": "Geno Smith",
-    "pos": "QB",
-    "team": "NYJ",
-    "avg": 220.67,
-    "ranks": {
-      "PPR": 210,
-      "HALF": 214,
-      "STD": 238
-    },
-    "nSources": 3,
-    "adj": 0,
-    "sortAvg": 220.67
-  },
-  {
     "name": "Kendre Miller",
     "pos": "RB",
     "team": "NO",
-    "avg": 272,
+    "avg": 270,
     "ranks": {
-      "PPR": 278,
-      "HALF": 273,
-      "STD": 265
+      "PPR": 277,
+      "HALF": 269,
+      "STD": 264
     },
     "nSources": 3,
     "adj": -50,
     "handcuffBoost": "Handcuff for Alvin Kamara (OUT)",
-    "sortAvg": 222
+    "sortAvg": 220
   },
   {
-    "name": "Zachariah Branch",
+    "name": "Isaac TeSlaa",
     "pos": "WR",
-    "team": "ATL",
-    "avg": 225,
+    "team": "DET",
+    "avg": 222,
     "ranks": {
       "PPR": 225,
-      "HALF": 221,
-      "STD": 229
+      "HALF": 226,
+      "STD": 215
     },
     "nSources": 3,
     "adj": 0,
-    "sortAvg": 225
+    "sortAvg": 222
   },
   {
-    "name": "James Conner",
+    "name": "Justice Hill",
     "pos": "RB",
-    "team": "ARI",
-    "avg": 241,
+    "team": "BAL",
+    "avg": 224.33,
     "ranks": {
-      "PPR": 242,
-      "HALF": 238,
-      "STD": 243
+      "PPR": 218,
+      "HALF": 221,
+      "STD": 234
     },
     "nSources": 3,
-    "adj": -16,
-    "handcuffBoost": "Handcuff for Jeremiyah Love (Q)",
-    "healthStatus": "Q",
-    "healthNote": "Foot — coach says too early to tell on Week 1 availability (8/26)",
-    "sortAvg": 225
+    "adj": 0,
+    "sortAvg": 224.33
   },
   {
     "name": "Cade Otton",
@@ -3014,296 +2983,311 @@
     "team": "TB",
     "avg": 225.67,
     "ranks": {
-      "PPR": 231,
-      "HALF": 209,
-      "STD": 237
+      "PPR": 228,
+      "HALF": 213,
+      "STD": 236
     },
     "nSources": 3,
     "adj": 0,
     "sortAvg": 225.67
   },
   {
-    "name": "Cooper Kupp",
-    "pos": "WR",
+    "name": "George Holani",
+    "pos": "RB",
     "team": "SEA",
-    "avg": 227,
+    "avg": 226,
     "ranks": {
-      "PPR": 222,
-      "HALF": 224,
-      "STD": 235
+      "PPR": 232,
+      "HALF": 223,
+      "STD": 223
     },
     "nSources": 3,
     "adj": 0,
-    "sortAvg": 227
+    "sortAvg": 226
   },
   {
-    "name": "Evan McPherson",
-    "pos": "K",
-    "team": "CIN",
+    "name": "Cooper Kupp",
+    "pos": "WR",
+    "team": "SEA",
+    "avg": 226.67,
+    "ranks": {
+      "PPR": 220,
+      "HALF": 222,
+      "STD": 238
+    },
+    "nSources": 3,
+    "adj": 0,
+    "sortAvg": 226.67
+  },
+  {
+    "name": "Zachariah Branch",
+    "pos": "WR",
+    "team": "ATL",
     "avg": 227.67,
     "ranks": {
-      "PPR": 218,
-      "HALF": 241,
-      "STD": 224
+      "PPR": 227,
+      "HALF": 224,
+      "STD": 232
     },
     "nSources": 3,
     "adj": 0,
     "sortAvg": 227.67
   },
   {
-    "name": "Darnell Mooney",
-    "pos": "WR",
-    "team": "NYG",
-    "avg": 228,
-    "ranks": {
-      "PPR": 229,
-      "HALF": 229,
-      "STD": 226
-    },
-    "nSources": 3,
-    "adj": 0,
-    "sortAvg": 228
-  },
-  {
     "name": "Cairo Santos",
     "pos": "K",
     "team": "CHI",
-    "avg": 228.67,
+    "avg": 228.33,
     "ranks": {
       "PPR": 224,
-      "HALF": 232,
+      "HALF": 231,
       "STD": 230
     },
     "nSources": 3,
     "adj": 0,
-    "sortAvg": 228.67
+    "sortAvg": 228.33
   },
   {
-    "name": "George Holani",
-    "pos": "RB",
-    "team": "SEA",
-    "avg": 228.67,
+    "name": "Darnell Mooney",
+    "pos": "WR",
+    "team": "NYG",
+    "avg": 228.33,
     "ranks": {
-      "PPR": 238,
-      "HALF": 226,
-      "STD": 222
+      "PPR": 230,
+      "HALF": 228,
+      "STD": 227
     },
     "nSources": 3,
     "adj": 0,
-    "sortAvg": 228.67
+    "sortAvg": 228.33
   },
   {
-    "name": "Jaylen Wright",
+    "name": "Evan McPherson",
+    "pos": "K",
+    "team": "CIN",
+    "avg": 228.33,
+    "ranks": {
+      "PPR": 219,
+      "HALF": 241,
+      "STD": 225
+    },
+    "nSources": 3,
+    "adj": 0,
+    "sortAvg": 228.33
+  },
+  {
+    "name": "James Conner",
     "pos": "RB",
-    "team": "MIA",
-    "avg": 229.33,
+    "team": "ARI",
+    "avg": 245,
     "ranks": {
       "PPR": 243,
-      "HALF": 222,
-      "STD": 223
+      "HALF": 247,
+      "STD": 245
     },
     "nSources": 3,
-    "adj": 0,
-    "sortAvg": 229.33
-  },
-  {
-    "name": "Justice Hill",
-    "pos": "RB",
-    "team": "BAL",
-    "avg": 231.33,
-    "ranks": {
-      "PPR": 226,
-      "HALF": 228,
-      "STD": 240
-    },
-    "nSources": 3,
-    "adj": 0,
-    "sortAvg": 231.33
-  },
-  {
-    "name": "Kaleb Johnson",
-    "pos": "RB",
-    "team": "GB",
-    "avg": 232.67,
-    "ranks": {
-      "PPR": 245,
-      "HALF": 234,
-      "STD": 219
-    },
-    "nSources": 3,
-    "adj": 0,
-    "sortAvg": 232.67
+    "adj": -16,
+    "handcuffBoost": "Handcuff for Jeremiyah Love (Q)",
+    "healthStatus": "Q",
+    "healthNote": "Foot — coach says too early to tell on Week 1 availability (8/26)",
+    "sortAvg": 229
   },
   {
     "name": "Chase McLaughlin",
     "pos": "K",
     "team": "TB",
-    "avg": 234.33,
+    "avg": 229.67,
     "ranks": {
-      "PPR": 230,
-      "HALF": 240,
-      "STD": 233
+      "PPR": 226,
+      "HALF": 234,
+      "STD": 229
     },
     "nSources": 3,
     "adj": 0,
-    "sortAvg": 234.33
+    "sortAvg": 229.67
   },
   {
-    "name": "Andy Borregales",
+    "name": "Isiah Pacheco",
+    "pos": "RB",
+    "team": "DET",
+    "avg": 230.33,
+    "ranks": {
+      "PPR": 238,
+      "HALF": 242,
+      "STD": 211
+    },
+    "nSources": 3,
+    "adj": 0,
+    "sortAvg": 230.33
+  },
+  {
+    "name": "Jaylen Wright",
+    "pos": "RB",
+    "team": "MIA",
+    "avg": 230.67,
+    "ranks": {
+      "PPR": 241,
+      "HALF": 225,
+      "STD": 226
+    },
+    "nSources": 3,
+    "adj": 0,
+    "sortAvg": 230.67
+  },
+  {
+    "name": "Harrison Mevis",
     "pos": "K",
-    "team": "NE",
+    "team": "LAR",
+    "avg": 234,
+    "ranks": {
+      "PPR": 236,
+      "HALF": 229,
+      "STD": 237
+    },
+    "nSources": 3,
+    "adj": 0,
+    "sortAvg": 234
+  },
+  {
+    "name": "Kaleb Johnson",
+    "pos": "RB",
+    "team": "GB",
+    "avg": 234,
+    "ranks": {
+      "PPR": 244,
+      "HALF": 236,
+      "STD": 222
+    },
+    "nSources": 3,
+    "adj": 0,
+    "sortAvg": 234
+  },
+  {
+    "name": "Caleb Douglas",
+    "pos": "WR",
+    "team": "MIA",
+    "avg": 235,
+    "ranks": {
+      "PPR": 221,
+      "HALF": 249,
+      "STD": 235
+    },
+    "nSources": 3,
+    "adj": 0,
+    "sortAvg": 235
+  },
+  {
+    "name": "Devaughn Vele",
+    "pos": "WR",
+    "team": "NO",
+    "avg": 235.33,
+    "ranks": {
+      "PPR": 233,
+      "HALF": 230,
+      "STD": 243
+    },
+    "nSources": 3,
+    "adj": 0,
+    "sortAvg": 235.33
+  },
+  {
+    "name": "Greg Dulcich",
+    "pos": "TE",
+    "team": "MIA",
     "avg": 236,
     "ranks": {
-      "PPR": 228,
-      "HALF": 244,
-      "STD": 236
+      "PPR": 239,
+      "HALF": 238,
+      "STD": 231
     },
     "nSources": 3,
     "adj": 0,
     "sortAvg": 236
   },
   {
-    "name": "Harrison Mevis",
-    "pos": "K",
-    "team": "LAR",
-    "avg": 236.33,
+    "name": "Germie Bernard",
+    "pos": "WR",
+    "team": "PIT",
+    "avg": 238.67,
     "ranks": {
       "PPR": 237,
-      "HALF": 233,
-      "STD": 239
+      "HALF": 235,
+      "STD": 244
     },
     "nSources": 3,
     "adj": 0,
-    "sortAvg": 236.33
-  },
-  {
-    "name": "Greg Dulcich",
-    "pos": "TE",
-    "team": "MIA",
-    "avg": 238.33,
-    "ranks": {
-      "PPR": 236,
-      "HALF": 245,
-      "STD": 234
-    },
-    "nSources": 3,
-    "adj": 0,
-    "sortAvg": 238.33
+    "sortAvg": 238.67
   },
   {
     "name": "Isaiah Davis",
     "pos": "RB",
     "team": "NYJ",
-    "avg": 268.67,
+    "avg": 268,
     "ranks": {
-      "PPR": 266,
-      "HALF": 270,
-      "STD": 270
+      "PPR": 264,
+      "HALF": 268,
+      "STD": 272
     },
     "nSources": 3,
     "adj": -28,
     "handcuffBoost": "Handcuff for Breece Hall (Q)",
-    "sortAvg": 240.67000000000002
+    "sortAvg": 240
   },
   {
-    "name": "Devaughn Vele",
-    "pos": "WR",
-    "team": "NO",
-    "avg": 241,
+    "name": "Andy Borregales",
+    "pos": "K",
+    "team": "NE",
+    "avg": 241.33,
     "ranks": {
       "PPR": 240,
-      "HALF": 237,
-      "STD": 246
+      "HALF": 243,
+      "STD": 241
     },
     "nSources": 3,
     "adj": 0,
-    "sortAvg": 241
-  },
-  {
-    "name": "Germie Bernard",
-    "pos": "WR",
-    "team": "PIT",
-    "avg": 242,
-    "ranks": {
-      "PPR": 239,
-      "HALF": 242,
-      "STD": 245
-    },
-    "nSources": 3,
-    "adj": 0,
-    "sortAvg": 242
+    "sortAvg": 241.33
   },
   {
     "name": "Samaje Perine",
     "pos": "RB",
     "team": "CIN",
-    "avg": 242.33,
+    "avg": 244,
     "ranks": {
-      "PPR": 248,
-      "HALF": 231,
-      "STD": 248
+      "PPR": 249,
+      "HALF": 237,
+      "STD": 246
     },
     "nSources": 3,
     "adj": 0,
-    "sortAvg": 242.33
+    "sortAvg": 244
   },
   {
     "name": "Emanuel Wilson",
     "pos": "RB",
     "team": "SEA",
-    "avg": 244.67,
+    "avg": 245.67,
     "ranks": {
-      "PPR": 254,
-      "HALF": 248,
-      "STD": 232
+      "PPR": 252,
+      "HALF": 245,
+      "STD": 240
     },
     "nSources": 3,
     "adj": 0,
-    "sortAvg": 244.67
+    "sortAvg": 245.67
   },
   {
-    "name": "Troy Franklin",
+    "name": "Ted Hurst III",
     "pos": "WR",
-    "team": "DEN",
-    "avg": 244.67,
+    "team": "TB",
+    "avg": 247,
     "ranks": {
-      "PPR": 241,
-      "HALF": 249,
-      "STD": 244
+      "PPR": 246,
+      "HALF": 246,
+      "STD": 249
     },
     "nSources": 3,
     "adj": 0,
-    "sortAvg": 244.67
-  },
-  {
-    "name": "Jordyn Tyson",
-    "pos": "WR",
-    "team": "NO",
-    "avg": 145.33,
-    "ranks": {
-      "PPR": 141,
-      "HALF": 149,
-      "STD": 146
-    },
-    "nSources": 3,
-    "adj": 100,
-    "healthStatus": "IR",
-    "healthNote": "Hamstring — expected ~2 months, may start on IR",
-    "sortAvg": 245.33
-  },
-  {
-    "name": "Caleb Douglas",
-    "pos": "WR",
-    "team": "MIA",
-    "avg": 246,
-    "ranks": {
-      "PPR": 235,
-      "HALF": 261,
-      "STD": 242
-    },
-    "nSources": 3,
-    "adj": 0,
-    "sortAvg": 246
+    "sortAvg": 247
   },
   {
     "name": "Evan Engram",
@@ -3311,760 +3295,790 @@
     "team": "DEN",
     "avg": 248,
     "ranks": {
-      "PPR": 247,
+      "PPR": 248,
       "HALF": 239,
-      "STD": 258
+      "STD": 257
     },
     "nSources": 3,
     "adj": 0,
     "sortAvg": 248
   },
   {
+    "name": "Troy Franklin",
+    "pos": "WR",
+    "team": "DEN",
+    "avg": 248,
+    "ranks": {
+      "PPR": 242,
+      "HALF": 252,
+      "STD": 250
+    },
+    "nSources": 3,
+    "adj": 0,
+    "sortAvg": 248
+  },
+  {
+    "name": "Jordyn Tyson",
+    "pos": "WR",
+    "team": "NO",
+    "avg": 148.67,
+    "ranks": {
+      "PPR": 144,
+      "HALF": 154,
+      "STD": 148
+    },
+    "nSources": 3,
+    "adj": 100,
+    "healthStatus": "IR",
+    "healthNote": "Hamstring — expected ~2 months, may start on IR",
+    "sortAvg": 248.67
+  },
+  {
     "name": "Chris Brooks",
     "pos": "RB",
     "team": "GB",
-    "avg": 250.33,
+    "avg": 248.67,
     "ranks": {
       "PPR": 255,
-      "HALF": 247,
-      "STD": 249
+      "HALF": 244,
+      "STD": 247
     },
     "nSources": 3,
     "adj": 0,
-    "sortAvg": 250.33
-  },
-  {
-    "name": "Demond Claiborne",
-    "pos": "RB",
-    "team": "MIN",
-    "avg": 252,
-    "ranks": {
-      "PPR": 260,
-      "HALF": 243,
-      "STD": 253
-    },
-    "nSources": 3,
-    "adj": 0,
-    "sortAvg": 252
-  },
-  {
-    "name": "Ted Hurst III",
-    "pos": "WR",
-    "team": "TB",
-    "avg": 252,
-    "ranks": {
-      "PPR": 249,
-      "HALF": 253,
-      "STD": 254
-    },
-    "nSources": 3,
-    "adj": 0,
-    "sortAvg": 252
-  },
-  {
-    "name": "Harrison Butker",
-    "pos": "K",
-    "team": "KC",
-    "avg": 252.33,
-    "ranks": {
-      "PPR": 250,
-      "HALF": 251,
-      "STD": 256
-    },
-    "nSources": 3,
-    "adj": 0,
-    "sortAvg": 252.33
-  },
-  {
-    "name": "Chris Boswell",
-    "pos": "K",
-    "team": "PIT",
-    "avg": 253.33,
-    "ranks": {
-      "PPR": 251,
-      "HALF": 254,
-      "STD": 255
-    },
-    "nSources": 3,
-    "adj": 0,
-    "sortAvg": 253.33
+    "sortAvg": 248.67
   },
   {
     "name": "Fernando Mendoza",
     "pos": "QB",
     "team": "LV",
-    "avg": 253.67,
+    "avg": 251,
     "ranks": {
-      "PPR": 256,
-      "HALF": 236,
-      "STD": 269
+      "PPR": 253,
+      "HALF": 233,
+      "STD": 267
     },
     "nSources": 3,
     "adj": 0,
-    "sortAvg": 253.67
+    "sortAvg": 251
   },
   {
-    "name": "David Njoku",
-    "pos": "TE",
-    "team": "LAC",
+    "name": "Harrison Butker",
+    "pos": "K",
+    "team": "KC",
+    "avg": 251,
+    "ranks": {
+      "PPR": 250,
+      "HALF": 251,
+      "STD": 252
+    },
+    "nSources": 3,
+    "adj": 0,
+    "sortAvg": 251
+  },
+  {
+    "name": "Demond Claiborne",
+    "pos": "RB",
+    "team": "MIN",
     "avg": 254,
     "ranks": {
-      "PPR": 258,
-      "HALF": 252,
-      "STD": 252
+      "PPR": 259,
+      "HALF": 248,
+      "STD": 255
     },
     "nSources": 3,
     "adj": 0,
     "sortAvg": 254
   },
   {
-    "name": "Ollie Gordon II",
-    "pos": "RB",
-    "team": "MIA",
-    "avg": 256.33,
+    "name": "Chris Boswell",
+    "pos": "K",
+    "team": "PIT",
+    "avg": 254.33,
     "ranks": {
-      "PPR": 261,
-      "HALF": 257,
-      "STD": 251
+      "PPR": 251,
+      "HALF": 258,
+      "STD": 254
     },
     "nSources": 3,
     "adj": 0,
-    "sortAvg": 256.33
+    "sortAvg": 254.33
+  },
+  {
+    "name": "David Njoku",
+    "pos": "TE",
+    "team": "LAC",
+    "avg": 254.67,
+    "ranks": {
+      "PPR": 258,
+      "HALF": 253,
+      "STD": 253
+    },
+    "nSources": 3,
+    "adj": 0,
+    "sortAvg": 254.67
+  },
+  {
+    "name": "Ollie Gordon II",
+    "pos": "RB",
+    "team": "MIA",
+    "avg": 258,
+    "ranks": {
+      "PPR": 261,
+      "HALF": 257,
+      "STD": 256
+    },
+    "nSources": 3,
+    "adj": 0,
+    "sortAvg": 258
   },
   {
     "name": "Jack Bech",
     "pos": "WR",
     "team": "LV",
-    "avg": 259.33,
-    "ranks": {
-      "PPR": 253,
-      "HALF": 258,
-      "STD": 267
-    },
-    "nSources": 3,
-    "adj": 0,
-    "sortAvg": 259.33
-  },
-  {
-    "name": "Devin Neal",
-    "pos": "RB",
-    "team": "FA",
-    "avg": 310,
-    "ranks": {
-      "PPR": 310,
-      "HALF": 312,
-      "STD": 308
-    },
-    "nSources": 3,
-    "adj": -50,
-    "handcuffBoost": "Handcuff for Alvin Kamara (OUT)",
-    "sortAvg": 260
-  },
-  {
-    "name": "Colby Parkinson",
-    "pos": "TE",
-    "team": "LAR",
     "avg": 260.67,
     "ranks": {
-      "PPR": 262,
+      "PPR": 254,
       "HALF": 260,
-      "STD": 260
+      "STD": 268
     },
     "nSources": 3,
     "adj": 0,
     "sortAvg": 260.67
   },
   {
-    "name": "Tank Dell",
-    "pos": "WR",
-    "team": "HOU",
-    "avg": 262,
-    "ranks": {
-      "PPR": 252,
-      "HALF": 275,
-      "STD": 259
-    },
-    "nSources": 3,
-    "adj": 0,
-    "sortAvg": 262
-  },
-  {
-    "name": "Seth McGowan",
-    "pos": "RB",
-    "team": "IND",
-    "avg": 263,
+    "name": "Colby Parkinson",
+    "pos": "TE",
+    "team": "LAR",
+    "avg": 263.33,
     "ranks": {
       "PPR": 263,
-      "HALF": 269,
-      "STD": 257
+      "HALF": 266,
+      "STD": 261
     },
     "nSources": 3,
     "adj": 0,
-    "sortAvg": 263
+    "sortAvg": 263.33
   },
   {
     "name": "Tyquan Thornton",
     "pos": "WR",
     "team": "KC",
-    "avg": 264.33,
+    "avg": 264,
     "ranks": {
-      "PPR": 268,
-      "HALF": 264,
-      "STD": 261
+      "PPR": 266,
+      "HALF": 267,
+      "STD": 259
     },
     "nSources": 3,
     "adj": 0,
-    "sortAvg": 264.33
+    "sortAvg": 264
   },
   {
-    "name": "Jordan James",
-    "pos": "RB",
-    "team": "SF",
+    "name": "Will Reichard",
+    "pos": "K",
+    "team": "MIN",
+    "avg": 264,
+    "ranks": {
+      "PPR": 260,
+      "HALF": 270,
+      "STD": 262
+    },
+    "nSources": 3,
+    "adj": 0,
+    "sortAvg": 264
+  },
+  {
+    "name": "Cyrus Allen",
+    "pos": "WR",
+    "team": "KC",
     "avg": 265,
     "ranks": {
-      "PPR": 270,
-      "HALF": 262,
-      "STD": 263
+      "PPR": 257,
+      "HALF": 278,
+      "STD": 260
     },
     "nSources": 3,
     "adj": 0,
     "sortAvg": 265
   },
   {
+    "name": "Seth McGowan",
+    "pos": "RB",
+    "team": "IND",
+    "avg": 265.33,
+    "ranks": {
+      "PPR": 265,
+      "HALF": 273,
+      "STD": 258
+    },
+    "nSources": 3,
+    "adj": 0,
+    "sortAvg": 265.33
+  },
+  {
     "name": "Keon Coleman",
     "pos": "WR",
     "team": "BUF",
-    "avg": 254,
+    "avg": 253.67,
     "ranks": {
-      "PPR": 257,
-      "HALF": 255,
-      "STD": 250
+      "PPR": 256,
+      "HALF": 254,
+      "STD": 251
     },
     "nSources": 3,
     "adj": 12,
     "healthStatus": "Q",
     "healthNote": "Sprained foot/toe — injured in Bills preseason opener",
-    "sortAvg": 266
+    "sortAvg": 265.66999999999996
   },
   {
-    "name": "Elic Ayomanor",
-    "pos": "WR",
-    "team": "TEN",
-    "avg": 266.67,
+    "name": "Jordan James",
+    "pos": "RB",
+    "team": "SF",
+    "avg": 266,
     "ranks": {
-      "PPR": 264,
-      "HALF": 272,
-      "STD": 264
+      "PPR": 272,
+      "HALF": 263,
+      "STD": 263
     },
     "nSources": 3,
     "adj": 0,
-    "sortAvg": 266.67
+    "sortAvg": 266
   },
   {
-    "name": "Cyrus Allen",
-    "pos": "WR",
-    "team": "KC",
+    "name": "Devin Neal",
+    "pos": "RB",
+    "team": "FA",
+    "avg": 316.33,
+    "ranks": {
+      "PPR": 316,
+      "HALF": 318,
+      "STD": 315
+    },
+    "nSources": 3,
+    "adj": -50,
+    "handcuffBoost": "Handcuff for Alvin Kamara (OUT)",
+    "sortAvg": 266.33
+  },
+  {
+    "name": "Ty Johnson",
+    "pos": "RB",
+    "team": "BUF",
+    "avg": 267,
+    "ranks": {
+      "PPR": 267,
+      "HALF": 265,
+      "STD": 269
+    },
+    "nSources": 3,
+    "adj": 0,
+    "sortAvg": 267
+  },
+  {
+    "name": "Wil Lutz",
+    "pos": "K",
+    "team": "DEN",
     "avg": 267.33,
     "ranks": {
-      "PPR": 259,
-      "HALF": 281,
-      "STD": 262
+      "PPR": 268,
+      "HALF": 264,
+      "STD": 270
     },
     "nSources": 3,
     "adj": 0,
     "sortAvg": 267.33
   },
   {
-    "name": "Tory Horton",
+    "name": "Tank Dell",
     "pos": "WR",
-    "team": "SEA",
-    "avg": 268,
+    "team": "HOU",
+    "avg": 269.67,
     "ranks": {
-      "PPR": 271,
-      "HALF": 265,
-      "STD": 268
+      "PPR": 262,
+      "HALF": 282,
+      "STD": 265
     },
     "nSources": 3,
     "adj": 0,
-    "sortAvg": 268
-  },
-  {
-    "name": "Will Reichard",
-    "pos": "K",
-    "team": "MIN",
-    "avg": 268.33,
-    "ranks": {
-      "PPR": 265,
-      "HALF": 274,
-      "STD": 266
-    },
-    "nSources": 3,
-    "adj": 0,
-    "sortAvg": 268.33
+    "sortAvg": 269.67
   },
   {
     "name": "Tua Tagovailoa",
     "pos": "QB",
     "team": "ATL",
-    "avg": 270,
+    "avg": 270.33,
     "ranks": {
       "PPR": 275,
       "HALF": 256,
-      "STD": 279
+      "STD": 280
     },
     "nSources": 3,
     "adj": 0,
-    "sortAvg": 270
+    "sortAvg": 270.33
   },
   {
-    "name": "Wil Lutz",
-    "pos": "K",
-    "team": "DEN",
-    "avg": 270,
+    "name": "Elic Ayomanor",
+    "pos": "WR",
+    "team": "TEN",
+    "avg": 271.33,
     "ranks": {
-      "PPR": 272,
-      "HALF": 266,
-      "STD": 272
+      "PPR": 271,
+      "HALF": 277,
+      "STD": 266
     },
     "nSources": 3,
     "adj": 0,
-    "sortAvg": 270
+    "sortAvg": 271.33
   },
   {
-    "name": "LeQuint Allen Jr.",
-    "pos": "RB",
-    "team": "JAC",
+    "name": "Tory Horton",
+    "pos": "WR",
+    "team": "SEA",
     "avg": 271.67,
     "ranks": {
-      "PPR": 267,
-      "HALF": 268,
-      "STD": 280
+      "PPR": 273,
+      "HALF": 271,
+      "STD": 271
     },
     "nSources": 3,
     "adj": 0,
     "sortAvg": 271.67
   },
   {
-    "name": "Chimere Dike",
+    "name": "Xavier Legette",
     "pos": "WR",
-    "team": "TEN",
+    "team": "CAR",
     "avg": 272.33,
     "ranks": {
       "PPR": 269,
-      "HALF": 277,
-      "STD": 271
+      "HALF": 274,
+      "STD": 274
     },
     "nSources": 3,
     "adj": 0,
     "sortAvg": 272.33
   },
   {
-    "name": "Ty Johnson",
+    "name": "LeQuint Allen Jr.",
     "pos": "RB",
-    "team": "BUF",
-    "avg": 272.67,
+    "team": "JAC",
+    "avg": 273.67,
     "ranks": {
-      "PPR": 274,
-      "HALF": 271,
-      "STD": 273
+      "PPR": 270,
+      "HALF": 272,
+      "STD": 279
     },
     "nSources": 3,
     "adj": 0,
-    "sortAvg": 272.67
-  },
-  {
-    "name": "Xavier Legette",
-    "pos": "WR",
-    "team": "CAR",
-    "avg": 274.33,
-    "ranks": {
-      "PPR": 273,
-      "HALF": 276,
-      "STD": 274
-    },
-    "nSources": 3,
-    "adj": 0,
-    "sortAvg": 274.33
+    "sortAvg": 273.67
   },
   {
     "name": "Kirk Cousins",
     "pos": "QB",
     "team": "LV",
-    "avg": 277.67,
+    "avg": 275,
     "ranks": {
-      "PPR": 280,
-      "HALF": 267,
-      "STD": 286
+      "PPR": 279,
+      "HALF": 262,
+      "STD": 284
     },
     "nSources": 3,
     "adj": 0,
-    "sortAvg": 277.67
+    "sortAvg": 275
+  },
+  {
+    "name": "Chimere Dike",
+    "pos": "WR",
+    "team": "TEN",
+    "avg": 275.67,
+    "ranks": {
+      "PPR": 274,
+      "HALF": 280,
+      "STD": 273
+    },
+    "nSources": 3,
+    "adj": 0,
+    "sortAvg": 275.67
   },
   {
     "name": "Mason Taylor",
     "pos": "TE",
     "team": "NYJ",
-    "avg": 278.67,
+    "avg": 278,
     "ranks": {
-      "PPR": 277,
-      "HALF": 284,
+      "PPR": 278,
+      "HALF": 281,
       "STD": 275
     },
     "nSources": 3,
     "adj": 0,
-    "sortAvg": 278.67
+    "sortAvg": 278
   },
   {
     "name": "Marvin Mims Jr.",
     "pos": "WR",
     "team": "DEN",
-    "avg": 279.67,
+    "avg": 280.33,
     "ranks": {
-      "PPR": 279,
-      "HALF": 283,
+      "PPR": 280,
+      "HALF": 284,
       "STD": 277
     },
     "nSources": 3,
     "adj": 0,
-    "sortAvg": 279.67
-  },
-  {
-    "name": "Kyle Williams",
-    "pos": "WR",
-    "team": "NE",
-    "avg": 282,
-    "ranks": {
-      "PPR": 283,
-      "HALF": 285,
-      "STD": 278
-    },
-    "nSources": 3,
-    "adj": 0,
-    "sortAvg": 282
+    "sortAvg": 280.33
   },
   {
     "name": "Deshaun Watson",
     "pos": "QB",
     "team": "CLE",
-    "avg": 282.67,
+    "avg": 281.33,
     "ranks": {
       "PPR": 281,
-      "HALF": 279,
-      "STD": 288
+      "HALF": 276,
+      "STD": 287
     },
     "nSources": 3,
     "adj": 0,
-    "sortAvg": 282.67
+    "sortAvg": 281.33
   },
   {
-    "name": "Elijah Sarratt",
+    "name": "Kyle Williams",
     "pos": "WR",
-    "team": "BAL",
-    "avg": 283.67,
+    "team": "NE",
+    "avg": 281.67,
     "ranks": {
-      "PPR": 282,
-      "HALF": 287,
-      "STD": 282
-    },
-    "nSources": 3,
-    "adj": 0,
-    "sortAvg": 283.67
-  },
-  {
-    "name": "DJ Giddens",
-    "pos": "RB",
-    "team": "IND",
-    "avg": 284,
-    "ranks": {
-      "PPR": 288,
-      "HALF": 280,
-      "STD": 284
-    },
-    "nSources": 3,
-    "adj": 0,
-    "sortAvg": 284
-  },
-  {
-    "name": "Theo Johnson",
-    "pos": "TE",
-    "team": "NYG",
-    "avg": 285,
-    "ranks": {
-      "PPR": 285,
-      "HALF": 294,
+      "PPR": 284,
+      "HALF": 285,
       "STD": 276
     },
     "nSources": 3,
     "adj": 0,
-    "sortAvg": 285
-  },
-  {
-    "name": "Michael Penix Jr.",
-    "pos": "QB",
-    "team": "ATL",
-    "avg": 273.33,
-    "ranks": {
-      "PPR": 276,
-      "HALF": 263,
-      "STD": 281
-    },
-    "nSources": 3,
-    "adj": 12,
-    "healthStatus": "Q",
-    "healthNote": "Knee — won't play preseason finale; hopeful for Week 1 at Pittsburgh",
-    "sortAvg": 285.33
+    "sortAvg": 281.67
   },
   {
     "name": "Brashard Smith",
     "pos": "RB",
     "team": "KC",
-    "avg": 287,
+    "avg": 283.33,
     "ranks": {
-      "PPR": 287,
-      "HALF": 282,
-      "STD": 292
+      "PPR": 283,
+      "HALF": 279,
+      "STD": 288
     },
     "nSources": 3,
     "adj": 0,
-    "sortAvg": 287
+    "sortAvg": 283.33
+  },
+  {
+    "name": "Michael Penix Jr.",
+    "pos": "QB",
+    "team": "ATL",
+    "avg": 271.67,
+    "ranks": {
+      "PPR": 276,
+      "HALF": 261,
+      "STD": 278
+    },
+    "nSources": 3,
+    "adj": 12,
+    "healthStatus": "Q",
+    "healthNote": "Knee — won't play preseason finale; hopeful for Week 1 at Pittsburgh",
+    "sortAvg": 283.67
+  },
+  {
+    "name": "Elijah Sarratt",
+    "pos": "WR",
+    "team": "BAL",
+    "avg": 286,
+    "ranks": {
+      "PPR": 285,
+      "HALF": 290,
+      "STD": 283
+    },
+    "nSources": 3,
+    "adj": 0,
+    "sortAvg": 286
+  },
+  {
+    "name": "DJ Giddens",
+    "pos": "RB",
+    "team": "IND",
+    "avg": 286.33,
+    "ranks": {
+      "PPR": 290,
+      "HALF": 283,
+      "STD": 286
+    },
+    "nSources": 3,
+    "adj": 0,
+    "sortAvg": 286.33
   },
   {
     "name": "Shedeur Sanders",
     "pos": "QB",
     "team": "CLE",
-    "avg": 288.33,
+    "avg": 286.67,
     "ranks": {
-      "PPR": 291,
-      "HALF": 278,
+      "PPR": 289,
+      "HALF": 275,
       "STD": 296
     },
     "nSources": 3,
     "adj": 0,
-    "sortAvg": 288.33
+    "sortAvg": 286.67
   },
   {
-    "name": "Darius Slayton",
-    "pos": "WR",
-    "team": "FA",
-    "avg": 289.67,
+    "name": "Theo Johnson",
+    "pos": "TE",
+    "team": "NYG",
+    "avg": 286.67,
     "ranks": {
-      "PPR": 289,
-      "HALF": 291,
-      "STD": 289
+      "PPR": 287,
+      "HALF": 292,
+      "STD": 281
     },
     "nSources": 3,
     "adj": 0,
-    "sortAvg": 289.67
+    "sortAvg": 286.67
   },
   {
     "name": "Devin Singletary",
     "pos": "RB",
     "team": "NYG",
-    "avg": 291.67,
+    "avg": 290.33,
     "ranks": {
-      "PPR": 290,
-      "HALF": 288,
+      "PPR": 288,
+      "HALF": 286,
       "STD": 297
     },
     "nSources": 3,
     "adj": 0,
-    "sortAvg": 291.67
+    "sortAvg": 290.33
   },
   {
-    "name": "Christian Kirk",
+    "name": "Hollywood Brown",
     "pos": "WR",
-    "team": "SF",
+    "team": "PHI",
     "avg": 292.67,
     "ranks": {
-      "PPR": 292,
-      "HALF": 295,
-      "STD": 291
+      "PPR": 293,
+      "HALF": 293,
+      "STD": 292
     },
     "nSources": 3,
     "adj": 0,
     "sortAvg": 292.67
   },
   {
+    "name": "Andrei Iosivas",
+    "pos": "WR",
+    "team": "CIN",
+    "avg": 293,
+    "ranks": {
+      "PPR": 292,
+      "HALF": 298,
+      "STD": 289
+    },
+    "nSources": 3,
+    "adj": 0,
+    "sortAvg": 293
+  },
+  {
     "name": "Adam Randall",
     "pos": "RB",
     "team": "BAL",
-    "avg": 293,
+    "avg": 294,
     "ranks": {
-      "PPR": 299,
-      "HALF": 290,
+      "PPR": 303,
+      "HALF": 289,
       "STD": 290
     },
     "nSources": 3,
     "adj": 0,
-    "sortAvg": 293
+    "sortAvg": 294
   },
   {
-    "name": "Eli Stowers",
-    "pos": "TE",
-    "team": "PHI",
-    "avg": 293,
-    "ranks": {
-      "PPR": 293,
-      "HALF": 299,
-      "STD": 287
-    },
-    "nSources": 3,
-    "adj": 0,
-    "sortAvg": 293
-  },
-  {
-    "name": "Hollywood Brown",
+    "name": "Christian Kirk",
     "pos": "WR",
-    "team": "PHI",
-    "avg": 295,
+    "team": "SF",
+    "avg": 296.33,
     "ranks": {
-      "PPR": 294,
-      "HALF": 297,
-      "STD": 294
+      "PPR": 291,
+      "HALF": 300,
+      "STD": 298
     },
     "nSources": 3,
     "adj": 0,
-    "sortAvg": 295
+    "sortAvg": 296.33
+  },
+  {
+    "name": "Darius Slayton",
+    "pos": "WR",
+    "team": "FA",
+    "avg": 296.67,
+    "ranks": {
+      "PPR": 295,
+      "HALF": 296,
+      "STD": 299
+    },
+    "nSources": 3,
+    "adj": 0,
+    "sortAvg": 296.67
   },
   {
     "name": "Emari Demercado",
     "pos": "RB",
     "team": "DAL",
-    "avg": 297.67,
+    "avg": 297,
     "ranks": {
-      "PPR": 305,
-      "HALF": 293,
-      "STD": 295
+      "PPR": 306,
+      "HALF": 291,
+      "STD": 294
     },
     "nSources": 3,
     "adj": 0,
-    "sortAvg": 297.67
+    "sortAvg": 297
   },
   {
-    "name": "Skyler Bell",
-    "pos": "WR",
-    "team": "BUF",
+    "name": "Mike Gesicki",
+    "pos": "TE",
+    "team": "CIN",
+    "avg": 298.33,
+    "ranks": {
+      "PPR": 301,
+      "HALF": 303,
+      "STD": 291
+    },
+    "nSources": 3,
+    "adj": 0,
+    "sortAvg": 298.33
+  },
+  {
+    "name": "Eli Stowers",
+    "pos": "TE",
+    "team": "PHI",
     "avg": 298.67,
     "ranks": {
-      "PPR": 297,
-      "HALF": 300,
-      "STD": 299
+      "PPR": 298,
+      "HALF": 305,
+      "STD": 293
     },
     "nSources": 3,
     "adj": 0,
     "sortAvg": 298.67
   },
   {
-    "name": "Mike Gesicki",
-    "pos": "TE",
-    "team": "CIN",
-    "avg": 299.33,
-    "ranks": {
-      "PPR": 302,
-      "HALF": 303,
-      "STD": 293
-    },
-    "nSources": 3,
-    "adj": 0,
-    "sortAvg": 299.33
-  },
-  {
     "name": "Mack Hollins",
     "pos": "WR",
     "team": "NE",
-    "avg": 299.67,
+    "avg": 298.67,
     "ranks": {
-      "PPR": 298,
-      "HALF": 298,
-      "STD": 303
+      "PPR": 297,
+      "HALF": 295,
+      "STD": 304
     },
     "nSources": 3,
     "adj": 0,
-    "sortAvg": 299.67
+    "sortAvg": 298.67
   },
   {
-    "name": "Andrei Iosivas",
+    "name": "Skyler Bell",
     "pos": "WR",
-    "team": "CIN",
-    "avg": 301.67,
+    "team": "BUF",
+    "avg": 300,
     "ranks": {
-      "PPR": 300,
-      "HALF": 305,
-      "STD": 300
+      "PPR": 299,
+      "HALF": 299,
+      "STD": 302
     },
     "nSources": 3,
     "adj": 0,
-    "sortAvg": 301.67
+    "sortAvg": 300
   },
   {
     "name": "DeMario Douglas",
     "pos": "WR",
     "team": "NE",
-    "avg": 302,
+    "avg": 300.33,
     "ranks": {
       "PPR": 296,
-      "HALF": 306,
-      "STD": 304
+      "HALF": 304,
+      "STD": 301
     },
     "nSources": 3,
     "adj": 0,
-    "sortAvg": 302
-  },
-  {
-    "name": "Isaiah Bond",
-    "pos": "WR",
-    "team": "CLE",
-    "avg": 303.67,
-    "ranks": {
-      "PPR": 303,
-      "HALF": 302,
-      "STD": 306
-    },
-    "nSources": 3,
-    "adj": 0,
-    "sortAvg": 303.67
-  },
-  {
-    "name": "Jaydon Blue",
-    "pos": "RB",
-    "team": "PHI",
-    "avg": 305.33,
-    "ranks": {
-      "PPR": 307,
-      "HALF": 307,
-      "STD": 302
-    },
-    "nSources": 3,
-    "adj": 0,
-    "sortAvg": 305.33
+    "sortAvg": 300.33
   },
   {
     "name": "Darren Waller",
     "pos": "TE",
     "team": "CAR",
-    "avg": 305.67,
+    "avg": 303,
     "ranks": {
-      "PPR": 304,
-      "HALF": 308,
-      "STD": 305
+      "PPR": 302,
+      "HALF": 307,
+      "STD": 300
     },
     "nSources": 3,
     "adj": 0,
-    "sortAvg": 305.67
+    "sortAvg": 303
+  },
+  {
+    "name": "Michael Mayer",
+    "pos": "TE",
+    "team": "LV",
+    "avg": 305,
+    "ranks": {
+      "PPR": 300,
+      "HALF": 309,
+      "STD": 306
+    },
+    "nSources": 3,
+    "adj": 0,
+    "sortAvg": 305
   },
   {
     "name": "Tahj Brooks",
     "pos": "RB",
     "team": "CIN",
-    "avg": 308.33,
+    "avg": 306,
     "ranks": {
-      "PPR": 312,
-      "HALF": 301,
-      "STD": 312
+      "PPR": 311,
+      "HALF": 297,
+      "STD": 310
     },
     "nSources": 3,
     "adj": 0,
-    "sortAvg": 308.33
+    "sortAvg": 306
+  },
+  {
+    "name": "Isaiah Bond",
+    "pos": "WR",
+    "team": "CLE",
+    "avg": 306.33,
+    "ranks": {
+      "PPR": 305,
+      "HALF": 306,
+      "STD": 308
+    },
+    "nSources": 3,
+    "adj": 0,
+    "sortAvg": 306.33
+  },
+  {
+    "name": "Jaydon Blue",
+    "pos": "RB",
+    "team": "PHI",
+    "avg": 307,
+    "ranks": {
+      "PPR": 310,
+      "HALF": 308,
+      "STD": 303
+    },
+    "nSources": 3,
+    "adj": 0,
+    "sortAvg": 307
   },
   {
     "name": "Charlie Kolar",
@@ -4072,8 +4086,8 @@
     "team": "LAC",
     "avg": 309,
     "ranks": {
-      "PPR": 306,
-      "HALF": 314,
+      "PPR": 307,
+      "HALF": 313,
       "STD": 307
     },
     "nSources": 3,
@@ -4081,127 +4095,113 @@
     "sortAvg": 309
   },
   {
-    "name": "Trevor Etienne",
-    "pos": "RB",
-    "team": "CAR",
-    "avg": 309.33,
+    "name": "Jahan Dotson",
+    "pos": "WR",
+    "team": "ATL",
+    "avg": 309.67,
     "ranks": {
-      "PPR": 309,
-      "HALF": 304,
-      "STD": 315
-    },
-    "nSources": 3,
-    "adj": 0,
-    "sortAvg": 309.33
-  },
-  {
-    "name": "Audric Estime",
-    "pos": "RB",
-    "team": "NO",
-    "avg": 311,
-    "ranks": {
-      "PPR": 314,
-      "HALF": 309,
-      "STD": 310
-    },
-    "nSources": 3,
-    "adj": 0,
-    "sortAvg": 311
-  },
-  {
-    "name": "Jake Tonges",
-    "pos": "TE",
-    "team": "SF",
-    "avg": 311.67,
-    "ranks": {
-      "PPR": 313,
-      "HALF": 313,
+      "PPR": 308,
+      "HALF": 312,
       "STD": 309
     },
     "nSources": 3,
     "adj": 0,
-    "sortAvg": 311.67
+    "sortAvg": 309.67
+  },
+  {
+    "name": "Trevor Etienne",
+    "pos": "RB",
+    "team": "CAR",
+    "avg": 310.67,
+    "ranks": {
+      "PPR": 313,
+      "HALF": 302,
+      "STD": 317
+    },
+    "nSources": 3,
+    "adj": 0,
+    "sortAvg": 310.67
   },
   {
     "name": "Will Shipley",
     "pos": "RB",
     "team": "PHI",
-    "avg": 311.67,
+    "avg": 312,
     "ranks": {
-      "PPR": 308,
-      "HALF": 310,
-      "STD": 317
-    },
-    "nSources": 3,
-    "adj": 0,
-    "sortAvg": 311.67
-  },
-  {
-    "name": "Tez Johnson",
-    "pos": "WR",
-    "team": "TB",
-    "avg": 340,
-    "ranks": {
-      "PPR": 342,
-      "HALF": 340,
-      "STD": 338
-    },
-    "nSources": 3,
-    "adj": -28,
-    "handcuffBoost": "Handcuff for Emeka Egbuka (Q)",
-    "sortAvg": 312
-  },
-  {
-    "name": "Jahan Dotson",
-    "pos": "WR",
-    "team": "ATL",
-    "avg": 313,
-    "ranks": {
-      "PPR": 311,
-      "HALF": 315,
-      "STD": 313
-    },
-    "nSources": 3,
-    "adj": 0,
-    "sortAvg": 313
-  },
-  {
-    "name": "Isaac Guerendo",
-    "pos": "RB",
-    "team": "SF",
-    "avg": 314.67,
-    "ranks": {
-      "PPR": 317,
+      "PPR": 309,
       "HALF": 311,
       "STD": 316
     },
     "nSources": 3,
     "adj": 0,
-    "sortAvg": 314.67
+    "sortAvg": 312
   },
   {
-    "name": "Michael Mayer",
-    "pos": "TE",
-    "team": "LV",
-    "avg": 317.33,
+    "name": "Audric Estime",
+    "pos": "RB",
+    "team": "NO",
+    "avg": 312.33,
     "ranks": {
-      "PPR": 315,
-      "HALF": 319,
-      "STD": 318
+      "PPR": 314,
+      "HALF": 310,
+      "STD": 313
     },
     "nSources": 3,
     "adj": 0,
-    "sortAvg": 317.33
+    "sortAvg": 312.33
   },
   {
-    "name": "Darnell Washington",
+    "name": "Tez Johnson",
+    "pos": "WR",
+    "team": "TB",
+    "avg": 341.33,
+    "ranks": {
+      "PPR": 343,
+      "HALF": 341,
+      "STD": 340
+    },
+    "nSources": 3,
+    "adj": -28,
+    "handcuffBoost": "Handcuff for Emeka Egbuka (Q)",
+    "sortAvg": 313.33
+  },
+  {
+    "name": "Jake Tonges",
     "pos": "TE",
-    "team": "PIT",
+    "team": "SF",
+    "avg": 315.33,
+    "ranks": {
+      "PPR": 315,
+      "HALF": 319,
+      "STD": 312
+    },
+    "nSources": 3,
+    "adj": 0,
+    "sortAvg": 315.33
+  },
+  {
+    "name": "Jacob Saylors",
+    "pos": "RB",
+    "team": "DET",
+    "avg": 316.67,
+    "ranks": {
+      "PPR": 320,
+      "HALF": 316,
+      "STD": 314
+    },
+    "nSources": 3,
+    "adj": 0,
+    "sortAvg": 316.67
+  },
+  {
+    "name": "Isaac Guerendo",
+    "pos": "RB",
+    "team": "SF",
     "avg": 317.67,
     "ranks": {
       "PPR": 318,
-      "HALF": 321,
-      "STD": 314
+      "HALF": 314,
+      "STD": 321
     },
     "nSources": 3,
     "adj": 0,
@@ -4211,206 +4211,164 @@
     "name": "Jaleel McLaughlin",
     "pos": "RB",
     "team": "CLE",
-    "avg": 318.67,
+    "avg": 317.67,
     "ranks": {
-      "PPR": 320,
-      "HALF": 316,
-      "STD": 320
+      "PPR": 319,
+      "HALF": 315,
+      "STD": 319
     },
     "nSources": 3,
     "adj": 0,
-    "sortAvg": 318.67
+    "sortAvg": 317.67
   },
   {
-    "name": "Jacob Saylors",
-    "pos": "RB",
-    "team": "DET",
+    "name": "Darnell Washington",
+    "pos": "TE",
+    "team": "PIT",
+    "avg": 319,
+    "ranks": {
+      "PPR": 317,
+      "HALF": 322,
+      "STD": 318
+    },
+    "nSources": 3,
+    "adj": 0,
+    "sortAvg": 319
+  },
+  {
+    "name": "Elijah Arroyo",
+    "pos": "TE",
+    "team": "SEA",
     "avg": 322.33,
     "ranks": {
-      "PPR": 328,
-      "HALF": 320,
-      "STD": 319
+      "PPR": 323,
+      "HALF": 324,
+      "STD": 320
     },
     "nSources": 3,
     "adj": 0,
     "sortAvg": 322.33
   },
   {
-    "name": "Brandon Aiyuk",
-    "pos": "WR",
-    "team": "SF",
-    "avg": 322.67,
-    "ranks": {
-      "PPR": 321,
-      "HALF": 326,
-      "STD": 321
-    },
-    "nSources": 3,
-    "adj": 0,
-    "sortAvg": 322.67
-  },
-  {
     "name": "Xavier Hutchinson",
     "pos": "WR",
     "team": "HOU",
-    "avg": 323.67,
+    "avg": 323,
     "ranks": {
       "PPR": 322,
-      "HALF": 325,
+      "HALF": 323,
       "STD": 324
+    },
+    "nSources": 3,
+    "adj": 0,
+    "sortAvg": 323
+  },
+  {
+    "name": "Kareem Hunt",
+    "pos": "RB",
+    "team": "FA",
+    "avg": 323.67,
+    "ranks": {
+      "PPR": 321,
+      "HALF": 321,
+      "STD": 329
     },
     "nSources": 3,
     "adj": 0,
     "sortAvg": 323.67
   },
   {
-    "name": "Jarquez Hunter",
-    "pos": "RB",
-    "team": "FA",
-    "avg": 324.67,
+    "name": "Bryce Lance",
+    "pos": "WR",
+    "team": "NO",
+    "avg": 326,
     "ranks": {
-      "PPR": 323,
-      "HALF": 322,
-      "STD": 329
+      "PPR": 325,
+      "HALF": 327,
+      "STD": 326
     },
     "nSources": 3,
     "adj": 0,
-    "sortAvg": 324.67
+    "sortAvg": 326
   },
   {
-    "name": "Kareem Hunt",
+    "name": "Jarquez Hunter",
     "pos": "RB",
-    "team": "FA",
-    "avg": 325,
+    "team": "MIA",
+    "avg": 327.33,
     "ranks": {
-      "PPR": 324,
-      "HALF": 323,
+      "PPR": 329,
+      "HALF": 325,
       "STD": 328
     },
     "nSources": 3,
     "adj": 0,
-    "sortAvg": 325
-  },
-  {
-    "name": "Elijah Arroyo",
-    "pos": "TE",
-    "team": "SEA",
-    "avg": 325.67,
-    "ranks": {
-      "PPR": 327,
-      "HALF": 327,
-      "STD": 323
-    },
-    "nSources": 3,
-    "adj": 0,
-    "sortAvg": 325.67
+    "sortAvg": 327.33
   },
   {
     "name": "Oscar Delp",
     "pos": "TE",
     "team": "NO",
-    "avg": 326.33,
+    "avg": 327.33,
     "ranks": {
-      "PPR": 325,
-      "HALF": 329,
+      "PPR": 327,
+      "HALF": 330,
       "STD": 325
     },
     "nSources": 3,
     "adj": 0,
-    "sortAvg": 326.33
-  },
-  {
-    "name": "Bryce Lance",
-    "pos": "WR",
-    "team": "NO",
-    "avg": 328,
-    "ranks": {
-      "PPR": 326,
-      "HALF": 328,
-      "STD": 330
-    },
-    "nSources": 3,
-    "adj": 0,
-    "sortAvg": 328
-  },
-  {
-    "name": "Jerome Ford",
-    "pos": "RB",
-    "team": "WAS",
-    "avg": 330,
-    "ranks": {
-      "PPR": 333,
-      "HALF": 324,
-      "STD": 333
-    },
-    "nSources": 3,
-    "adj": 0,
-    "sortAvg": 330
+    "sortAvg": 327.33
   },
   {
     "name": "Jalen Tolbert",
     "pos": "WR",
     "team": "MIA",
-    "avg": 330.33,
+    "avg": 327.67,
     "ranks": {
-      "PPR": 329,
-      "HALF": 331,
-      "STD": 331
+      "PPR": 328,
+      "HALF": 328,
+      "STD": 327
     },
     "nSources": 3,
     "adj": 0,
-    "sortAvg": 330.33
-  },
-  {
-    "name": "Tyreek Hill",
-    "pos": "WR",
-    "team": "FA",
-    "avg": 331,
-    "ranks": {
-      "PPR": 331,
-      "HALF": 336,
-      "STD": 326
-    },
-    "nSources": 3,
-    "adj": 0,
-    "sortAvg": 331
-  },
-  {
-    "name": "Charlie Smyth",
-    "pos": "K",
-    "team": "NO",
-    "avg": 333,
-    "ranks": {
-      "PPR": 332,
-      "HALF": 335,
-      "STD": 332
-    },
-    "nSources": 3,
-    "adj": 0,
-    "sortAvg": 333
-  },
-  {
-    "name": "Carson Beck",
-    "pos": "QB",
-    "team": "ARI",
-    "avg": 333.67,
-    "ranks": {
-      "PPR": 334,
-      "HALF": 332,
-      "STD": 335
-    },
-    "nSources": 3,
-    "adj": 0,
-    "sortAvg": 333.67
+    "sortAvg": 327.67
   },
   {
     "name": "Jake Elliott",
     "pos": "K",
     "team": "PHI",
+    "avg": 329,
+    "ranks": {
+      "PPR": 330,
+      "HALF": 326,
+      "STD": 331
+    },
+    "nSources": 3,
+    "adj": 0,
+    "sortAvg": 329
+  },
+  {
+    "name": "Kendrick Bourne",
+    "pos": "WR",
+    "team": "ARI",
+    "avg": 332.33,
+    "ranks": {
+      "PPR": 331,
+      "HALF": 331,
+      "STD": 335
+    },
+    "nSources": 3,
+    "adj": 0,
+    "sortAvg": 332.33
+  },
+  {
+    "name": "Carson Beck",
+    "pos": "QB",
+    "team": "ARI",
     "avg": 334,
     "ranks": {
-      "PPR": 335,
-      "HALF": 330,
+      "PPR": 332,
+      "HALF": 333,
       "STD": 337
     },
     "nSources": 3,
@@ -4418,69 +4376,97 @@
     "sortAvg": 334
   },
   {
+    "name": "Jerome Ford",
+    "pos": "RB",
+    "team": "FA",
+    "avg": 334.67,
+    "ranks": {
+      "PPR": 333,
+      "HALF": 329,
+      "STD": 342
+    },
+    "nSources": 3,
+    "adj": 0,
+    "sortAvg": 334.67
+  },
+  {
     "name": "Cole Kmet",
     "pos": "TE",
     "team": "CHI",
-    "avg": 337,
+    "avg": 335.33,
     "ranks": {
-      "PPR": 336,
-      "HALF": 341,
+      "PPR": 335,
+      "HALF": 337,
       "STD": 334
     },
     "nSources": 3,
     "adj": 0,
-    "sortAvg": 337
+    "sortAvg": 335.33
   },
   {
     "name": "Dawson Knox",
     "pos": "TE",
     "team": "BUF",
-    "avg": 338,
+    "avg": 336.33,
     "ranks": {
-      "PPR": 340,
-      "HALF": 338,
-      "STD": 336
+      "PPR": 341,
+      "HALF": 335,
+      "STD": 333
     },
     "nSources": 3,
     "adj": 0,
-    "sortAvg": 338
+    "sortAvg": 336.33
   },
   {
-    "name": "Kendrick Bourne",
+    "name": "Brandon Aiyuk",
     "pos": "WR",
-    "team": "ARI",
-    "avg": 338.67,
+    "team": "SF",
+    "avg": 336.67,
     "ranks": {
-      "PPR": 337,
-      "HALF": 339,
-      "STD": 340
+      "PPR": 334,
+      "HALF": 346,
+      "STD": 330
     },
     "nSources": 3,
     "adj": 0,
-    "sortAvg": 338.67
+    "sortAvg": 336.67
   },
   {
-    "name": "Erick All Jr.",
-    "pos": "TE",
-    "team": "CIN",
+    "name": "Joshua Palmer",
+    "pos": "WR",
+    "team": "BUF",
+    "avg": 337.33,
+    "ranks": {
+      "PPR": 338,
+      "HALF": 336,
+      "STD": 338
+    },
+    "nSources": 3,
+    "adj": 0,
+    "sortAvg": 337.33
+  },
+  {
+    "name": "Charlie Smyth",
+    "pos": "K",
+    "team": "NO",
     "avg": 339,
     "ranks": {
-      "PPR": 339,
-      "HALF": 333,
-      "STD": 345
+      "PPR": 336,
+      "HALF": 345,
+      "STD": 336
     },
     "nSources": 3,
     "adj": 0,
     "sortAvg": 339
   },
   {
-    "name": "Joshua Palmer",
-    "pos": "WR",
-    "team": "BUF",
+    "name": "Roschon Johnson",
+    "pos": "RB",
+    "team": "CHI",
     "avg": 340,
     "ranks": {
-      "PPR": 338,
-      "HALF": 343,
+      "PPR": 342,
+      "HALF": 339,
       "STD": 339
     },
     "nSources": 3,
@@ -4488,326 +4474,354 @@
     "sortAvg": 340
   },
   {
+    "name": "Tyreek Hill",
+    "pos": "WR",
+    "team": "FA",
+    "avg": 340,
+    "ranks": {
+      "PPR": 340,
+      "HALF": 348,
+      "STD": 332
+    },
+    "nSources": 3,
+    "adj": 0,
+    "sortAvg": 340
+  },
+  {
+    "name": "Erick All Jr.",
+    "pos": "TE",
+    "team": "CIN",
+    "avg": 340.33,
+    "ranks": {
+      "PPR": 339,
+      "HALF": 334,
+      "STD": 348
+    },
+    "nSources": 3,
+    "adj": 0,
+    "sortAvg": 340.33
+  },
+  {
     "name": "Eli Raridon",
     "pos": "TE",
     "team": "NE",
-    "avg": 340.67,
-    "ranks": {
-      "PPR": 343,
-      "HALF": 337,
-      "STD": 342
-    },
-    "nSources": 3,
-    "adj": 0,
-    "sortAvg": 340.67
-  },
-  {
-    "name": "Bam Knight",
-    "pos": "RB",
-    "team": "ARI",
-    "avg": 343.33,
+    "avg": 341.67,
     "ranks": {
       "PPR": 344,
-      "HALF": 342,
-      "STD": 344
+      "HALF": 338,
+      "STD": 343
     },
     "nSources": 3,
     "adj": 0,
-    "sortAvg": 343.33
-  },
-  {
-    "name": "Tyler Higbee",
-    "pos": "TE",
-    "team": "LAR",
-    "avg": 345.33,
-    "ranks": {
-      "PPR": 347,
-      "HALF": 348,
-      "STD": 341
-    },
-    "nSources": 3,
-    "adj": 0,
-    "sortAvg": 345.33
-  },
-  {
-    "name": "Roschon Johnson",
-    "pos": "RB",
-    "team": "CHI",
-    "avg": 346,
-    "ranks": {
-      "PPR": 346,
-      "HALF": 346,
-      "STD": 346
-    },
-    "nSources": 3,
-    "adj": 0,
-    "sortAvg": 346
-  },
-  {
-    "name": "Malik Benson",
-    "pos": "WR",
-    "team": "LV",
-    "avg": 347.33,
-    "ranks": {
-      "PPR": 345,
-      "HALF": 345,
-      "STD": 352
-    },
-    "nSources": 3,
-    "adj": 0,
-    "sortAvg": 347.33
+    "sortAvg": 341.67
   },
   {
     "name": "Olamide Zaccheaus",
     "pos": "WR",
     "team": "ATL",
-    "avg": 347.67,
+    "avg": 342.33,
     "ranks": {
-      "PPR": 341,
-      "HALF": 351,
-      "STD": 351
+      "PPR": 337,
+      "HALF": 343,
+      "STD": 347
     },
     "nSources": 3,
     "adj": 0,
-    "sortAvg": 347.67
+    "sortAvg": 342.33
   },
   {
-    "name": "Luke McCaffrey",
+    "name": "Bam Knight",
+    "pos": "RB",
+    "team": "ARI",
+    "avg": 343.67,
+    "ranks": {
+      "PPR": 346,
+      "HALF": 344,
+      "STD": 341
+    },
+    "nSources": 3,
+    "adj": 0,
+    "sortAvg": 343.67
+  },
+  {
+    "name": "Malik Benson",
     "pos": "WR",
-    "team": "WAS",
+    "team": "LV",
+    "avg": 346.33,
+    "ranks": {
+      "PPR": 345,
+      "HALF": 342,
+      "STD": 352
+    },
+    "nSources": 3,
+    "adj": 0,
+    "sortAvg": 346.33
+  },
+  {
+    "name": "Tyler Higbee",
+    "pos": "TE",
+    "team": "LAR",
+    "avg": 346.67,
+    "ranks": {
+      "PPR": 347,
+      "HALF": 349,
+      "STD": 344
+    },
+    "nSources": 3,
+    "adj": 0,
+    "sortAvg": 346.67
+  },
+  {
+    "name": "Zavion Thomas",
+    "pos": "WR",
+    "team": "CHI",
+    "avg": 348,
+    "ranks": {
+      "PPR": 351,
+      "HALF": 340,
+      "STD": 353
+    },
+    "nSources": 3,
+    "adj": 0,
+    "sortAvg": 348
+  },
+  {
+    "name": "Brenen Thompson",
+    "pos": "WR",
+    "team": "LAC",
     "avg": 348.33,
     "ranks": {
-      "PPR": 354,
-      "HALF": 344,
-      "STD": 347
+      "PPR": 353,
+      "HALF": 347,
+      "STD": 345
     },
     "nSources": 3,
     "adj": 0,
     "sortAvg": 348.33
   },
   {
-    "name": "Noah Gray",
-    "pos": "TE",
-    "team": "KC",
-    "avg": 350.67,
-    "ranks": {
-      "PPR": 353,
-      "HALF": 349,
-      "STD": 350
-    },
-    "nSources": 3,
-    "adj": 0,
-    "sortAvg": 350.67
-  },
-  {
     "name": "Tyler Bass",
     "pos": "K",
     "team": "BUF",
-    "avg": 351.67,
+    "avg": 350,
     "ranks": {
       "PPR": 348,
-      "HALF": 359,
-      "STD": 348
-    },
-    "nSources": 3,
-    "adj": 0,
-    "sortAvg": 351.67
-  },
-  {
-    "name": "Zavion Thomas",
-    "pos": "WR",
-    "team": "CHI",
-    "avg": 351.67,
-    "ranks": {
-      "PPR": 355,
-      "HALF": 347,
-      "STD": 353
-    },
-    "nSources": 3,
-    "adj": 0,
-    "sortAvg": 351.67
-  },
-  {
-    "name": "Brenen Thompson",
-    "pos": "WR",
-    "team": "LAC",
-    "avg": 352.33,
-    "ranks": {
-      "PPR": 358,
-      "HALF": 350,
+      "HALF": 353,
       "STD": 349
     },
     "nSources": 3,
     "adj": 0,
-    "sortAvg": 352.33
-  },
-  {
-    "name": "Jalen Royals",
-    "pos": "WR",
-    "team": "KC",
-    "avg": 353.67,
-    "ranks": {
-      "PPR": 350,
-      "HALF": 354,
-      "STD": 357
-    },
-    "nSources": 3,
-    "adj": 0,
-    "sortAvg": 353.67
-  },
-  {
-    "name": "J.J. McCarthy",
-    "pos": "QB",
-    "team": "MIN",
-    "avg": 355.67,
-    "ranks": {
-      "PPR": 351,
-      "HALF": 356,
-      "STD": 360
-    },
-    "nSources": 3,
-    "adj": 0,
-    "sortAvg": 355.67
-  },
-  {
-    "name": "Mac Jones",
-    "pos": "QB",
-    "team": "SF",
-    "avg": 356.33,
-    "ranks": {
-      "PPR": 352,
-      "HALF": 352,
-      "STD": 365
-    },
-    "nSources": 3,
-    "adj": 0,
-    "sortAvg": 356.33
-  },
-  {
-    "name": "Konata Mumpfield",
-    "pos": "WR",
-    "team": "LAR",
-    "avg": 356.67,
-    "ranks": {
-      "PPR": 357,
-      "HALF": 358,
-      "STD": 355
-    },
-    "nSources": 3,
-    "adj": 0,
-    "sortAvg": 356.67
-  },
-  {
-    "name": "Max Klare",
-    "pos": "TE",
-    "team": "LAR",
-    "avg": 359,
-    "ranks": {
-      "PPR": 363,
-      "HALF": 360,
-      "STD": 354
-    },
-    "nSources": 3,
-    "adj": 0,
-    "sortAvg": 359
+    "sortAvg": 350
   },
   {
     "name": "Treylon Burks",
     "pos": "WR",
     "team": "WAS",
-    "avg": 359,
+    "avg": 351.33,
     "ranks": {
-      "PPR": 362,
-      "HALF": 353,
-      "STD": 362
+      "PPR": 352,
+      "HALF": 351,
+      "STD": 351
     },
     "nSources": 3,
     "adj": 0,
-    "sortAvg": 359
-  },
-  {
-    "name": "Roman Wilson",
-    "pos": "WR",
-    "team": "PIT",
-    "avg": 359.67,
-    "ranks": {
-      "PPR": 356,
-      "HALF": 357,
-      "STD": 366
-    },
-    "nSources": 3,
-    "adj": 0,
-    "sortAvg": 359.67
+    "sortAvg": 351.33
   },
   {
     "name": "Trey Smack",
     "pos": "K",
     "team": "GB",
-    "avg": 363,
+    "avg": 353.33,
     "ranks": {
-      "PPR": 361,
-      "HALF": 372,
-      "STD": 356
+      "PPR": 350,
+      "HALF": 360,
+      "STD": 350
     },
     "nSources": 3,
     "adj": 0,
-    "sortAvg": 363
+    "sortAvg": 353.33
   },
   {
-    "name": "Ja'Tavion Sanders",
-    "pos": "TE",
-    "team": "CAR",
-    "avg": 363.33,
+    "name": "Roman Wilson",
+    "pos": "WR",
+    "team": "PIT",
+    "avg": 354.33,
     "ranks": {
-      "PPR": 368,
-      "HALF": 355,
-      "STD": 367
+      "PPR": 354,
+      "HALF": 350,
+      "STD": 359
     },
     "nSources": 3,
     "adj": 0,
-    "sortAvg": 363.33
+    "sortAvg": 354.33
+  },
+  {
+    "name": "Noah Gray",
+    "pos": "TE",
+    "team": "KC",
+    "avg": 355,
+    "ranks": {
+      "PPR": 356,
+      "HALF": 354,
+      "STD": 355
+    },
+    "nSources": 3,
+    "adj": 0,
+    "sortAvg": 355
+  },
+  {
+    "name": "Luke McCaffrey",
+    "pos": "WR",
+    "team": "WAS",
+    "avg": 357.33,
+    "ranks": {
+      "PPR": 362,
+      "HALF": 352,
+      "STD": 358
+    },
+    "nSources": 3,
+    "adj": 0,
+    "sortAvg": 357.33
   },
   {
     "name": "KaVontae Turpin",
     "pos": "WR",
     "team": "DAL",
-    "avg": 364,
+    "avg": 357.67,
     "ranks": {
-      "PPR": 369,
-      "HALF": 362,
-      "STD": 361
+      "PPR": 364,
+      "HALF": 355,
+      "STD": 354
     },
     "nSources": 3,
     "adj": 0,
-    "sortAvg": 364
+    "sortAvg": 357.67
   },
   {
-    "name": "Cedric Tillman",
+    "name": "Jalen Royals",
     "pos": "WR",
-    "team": "NO",
-    "avg": 365,
+    "team": "KC",
+    "avg": 359.33,
     "ranks": {
-      "PPR": 359,
-      "HALF": 373,
-      "STD": 363
+      "PPR": 355,
+      "HALF": 363,
+      "STD": 360
     },
     "nSources": 3,
     "adj": 0,
-    "sortAvg": 365
+    "sortAvg": 359.33
   },
   {
     "name": "Kalif Raymond",
     "pos": "WR",
     "team": "CHI",
-    "avg": 365,
+    "avg": 360,
     "ranks": {
-      "PPR": 364,
-      "HALF": 363,
+      "PPR": 361,
+      "HALF": 357,
+      "STD": 362
+    },
+    "nSources": 3,
+    "adj": 0,
+    "sortAvg": 360
+  },
+  {
+    "name": "Mac Jones",
+    "pos": "QB",
+    "team": "SF",
+    "avg": 360.67,
+    "ranks": {
+      "PPR": 358,
+      "HALF": 356,
       "STD": 368
     },
     "nSources": 3,
     "adj": 0,
-    "sortAvg": 365
+    "sortAvg": 360.67
+  },
+  {
+    "name": "J.J. McCarthy",
+    "pos": "QB",
+    "team": "MIN",
+    "avg": 361.33,
+    "ranks": {
+      "PPR": 359,
+      "HALF": 359,
+      "STD": 366
+    },
+    "nSources": 3,
+    "adj": 0,
+    "sortAvg": 361.33
+  },
+  {
+    "name": "Sione Vaki",
+    "pos": "RB",
+    "team": "DET",
+    "avg": 363.67,
+    "ranks": {
+      "PPR": 372,
+      "HALF": 358,
+      "STD": 361
+    },
+    "nSources": 3,
+    "adj": 0,
+    "sortAvg": 363.67
+  },
+  {
+    "name": "Konata Mumpfield",
+    "pos": "WR",
+    "team": "LAR",
+    "avg": 365.67,
+    "ranks": {
+      "PPR": 367,
+      "HALF": 365,
+      "STD": 365
+    },
+    "nSources": 3,
+    "adj": 0,
+    "sortAvg": 365.67
+  },
+  {
+    "name": "Odell Beckham Jr.",
+    "pos": "WR",
+    "team": "NYG",
+    "avg": 366,
+    "ranks": {
+      "PPR": 365,
+      "HALF": 364,
+      "STD": 369
+    },
+    "nSources": 3,
+    "adj": 0,
+    "sortAvg": 366
+  },
+  {
+    "name": "Max Klare",
+    "pos": "TE",
+    "team": "LAR",
+    "avg": 366.33,
+    "ranks": {
+      "PPR": 369,
+      "HALF": 366,
+      "STD": 364
+    },
+    "nSources": 3,
+    "adj": 0,
+    "sortAvg": 366.33
+  },
+  {
+    "name": "Raheim Sanders",
+    "pos": "RB",
+    "team": "CLE",
+    "avg": 366.33,
+    "ranks": {
+      "PPR": 375,
+      "HALF": 368,
+      "STD": 356
+    },
+    "nSources": 3,
+    "adj": 0,
+    "sortAvg": 366.33
   },
   {
     "name": "Eli Heidenreich",
@@ -4815,139 +4829,125 @@
     "team": "PIT",
     "avg": 366.67,
     "ranks": {
-      "PPR": 366,
-      "HALF": 361,
-      "STD": 373
+      "PPR": 360,
+      "HALF": 369,
+      "STD": 371
     },
     "nSources": 3,
     "adj": 0,
     "sortAvg": 366.67
   },
   {
-    "name": "Raheim Sanders",
-    "pos": "RB",
-    "team": "CLE",
-    "avg": 366.67,
+    "name": "Ja'Tavion Sanders",
+    "pos": "TE",
+    "team": "CAR",
+    "avg": 368,
     "ranks": {
-      "PPR": 375,
-      "HALF": 367,
-      "STD": 358
+      "PPR": 373,
+      "HALF": 361,
+      "STD": 370
     },
     "nSources": 3,
     "adj": 0,
-    "sortAvg": 366.67
+    "sortAvg": 368
   },
   {
-    "name": "Odell Beckham Jr.",
+    "name": "Cedric Tillman",
     "pos": "WR",
-    "team": "NYG",
+    "team": "NO",
     "avg": 368.33,
     "ranks": {
-      "PPR": 370,
-      "HALF": 364,
-      "STD": 371
+      "PPR": 363,
+      "HALF": 375,
+      "STD": 367
     },
     "nSources": 3,
     "adj": 0,
     "sortAvg": 368.33
   },
   {
-    "name": "Sione Vaki",
-    "pos": "RB",
-    "team": "DET",
-    "avg": 368.67,
-    "ranks": {
-      "PPR": 371,
-      "HALF": 366,
-      "STD": 369
-    },
-    "nSources": 3,
-    "adj": 0,
-    "sortAvg": 368.67
-  },
-  {
     "name": "Justin Fields",
     "pos": "QB",
     "team": "KC",
-    "avg": 369.33,
+    "avg": 371.33,
     "ranks": {
-      "PPR": 367,
-      "HALF": 369,
-      "STD": 372
+      "PPR": 368,
+      "HALF": 373,
+      "STD": 373
     },
     "nSources": 3,
     "adj": 0,
-    "sortAvg": 369.33
+    "sortAvg": 371.33
+  },
+  {
+    "name": "Rasheen Ali",
+    "pos": "RB",
+    "team": "BAL",
+    "avg": 371.67,
+    "ranks": {
+      "PPR": 370,
+      "HALF": 370,
+      "STD": 375
+    },
+    "nSources": 3,
+    "adj": 0,
+    "sortAvg": 371.67
   },
   {
     "name": "Jordan Whittington",
     "pos": "WR",
     "team": "LAR",
-    "avg": 400.33,
+    "avg": 401.33,
     "ranks": {
-      "PPR": 405,
-      "HALF": 394,
-      "STD": 402
+      "PPR": 408,
+      "HALF": 392,
+      "STD": 404
     },
     "nSources": 3,
     "adj": -28,
     "handcuffBoost": "Handcuff for Puka Nacua (Q)",
-    "sortAvg": 372.33
-  },
-  {
-    "name": "Joe Mixon",
-    "pos": "RB",
-    "team": "FA",
-    "avg": 372.67,
-    "ranks": {
-      "PPR": 373,
-      "HALF": 375,
-      "STD": 370
-    },
-    "nSources": 3,
-    "adj": 0,
-    "sortAvg": 372.67
-  },
-  {
-    "name": "Colbie Young",
-    "pos": "WR",
-    "team": "CIN",
-    "avg": 374.33,
-    "ranks": {
-      "PPR": 376,
-      "HALF": 370,
-      "STD": 377
-    },
-    "nSources": 3,
-    "adj": 0,
-    "sortAvg": 374.33
+    "sortAvg": 373.33
   },
   {
     "name": "Kevin Coleman Jr.",
     "pos": "WR",
     "team": "MIA",
-    "avg": 374.67,
+    "avg": 375.67,
     "ranks": {
-      "PPR": 374,
-      "HALF": 376,
-      "STD": 374
+      "PPR": 376,
+      "HALF": 374,
+      "STD": 377
     },
     "nSources": 3,
     "adj": 0,
-    "sortAvg": 374.67
+    "sortAvg": 375.67
   },
   {
-    "name": "Ty Simpson",
-    "pos": "QB",
-    "team": "LAR",
-    "avg": 374.67,
+    "name": "Joe Mixon",
+    "pos": "RB",
+    "team": "FA",
+    "avg": 376,
     "ranks": {
-      "PPR": 372,
-      "HALF": 371,
+      "PPR": 378,
+      "HALF": 378,
+      "STD": 372
+    },
+    "nSources": 3,
+    "adj": 0,
+    "sortAvg": 376
+  },
+  {
+    "name": "Noah Fant",
+    "pos": "TE",
+    "team": "NO",
+    "avg": 376.67,
+    "ranks": {
+      "PPR": 377,
+      "HALF": 372,
       "STD": 381
     },
     "nSources": 3,
     "adj": 0,
-    "sortAvg": 374.67
+    "sortAvg": 376.67
   }
 ]
