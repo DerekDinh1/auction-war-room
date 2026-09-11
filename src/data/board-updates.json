@@ -1,106 +1,13 @@
 {
-  "generatedAt": "2026-09-10T17:30:04.891Z",
-  "previousGeneratedAt": "2026-09-09T17:36:50.993Z",
-  "summary": "Top-350 re-ranked from FantasyPros · 264 rank moves · 2 in · 2 out",
-  "rankChanges": 264,
-  "enteredCount": 2,
-  "exitedCount": 2,
+  "generatedAt": "2026-09-11T17:34:30.595Z",
+  "previousGeneratedAt": "2026-09-10T17:30:04.891Z",
+  "summary": "Top-350 re-ranked from FantasyPros · 0 rank moves · 0 in · 0 out",
+  "rankChanges": 0,
+  "enteredCount": 0,
+  "exitedCount": 0,
   "injuryAdjustments": 30,
   "count": 350,
-  "highlights": [
-    {
-      "type": "drop",
-      "name": "Isiah Pacheco",
-      "pos": "RB",
-      "team": "DET",
-      "from": 199,
-      "to": 220
-    },
-    {
-      "type": "drop",
-      "name": "Brock Bowers",
-      "pos": "TE",
-      "team": "LV",
-      "from": 16,
-      "to": 32
-    },
-    {
-      "type": "drop",
-      "name": "Brandon Aiyuk",
-      "pos": "WR",
-      "team": "SF",
-      "from": 300,
-      "to": 313
-    },
-    {
-      "type": "rise",
-      "name": "Michael Mayer",
-      "pos": "TE",
-      "team": "LV",
-      "from": 296,
-      "to": 285
-    },
-    {
-      "type": "rise",
-      "name": "Justice Hill",
-      "pos": "RB",
-      "team": "BAL",
-      "from": 220,
-      "to": 210
-    },
-    {
-      "type": "rise",
-      "name": "Chris Bell",
-      "pos": "WR",
-      "team": "MIA",
-      "from": 201,
-      "to": 192
-    },
-    {
-      "type": "rise",
-      "name": "Caleb Douglas",
-      "pos": "WR",
-      "team": "MIA",
-      "from": 233,
-      "to": 224
-    },
-    {
-      "type": "drop",
-      "name": "Tank Dell",
-      "pos": "WR",
-      "team": "HOU",
-      "from": 246,
-      "to": 254
-    },
-    {
-      "type": "entered",
-      "name": "Rasheen Ali",
-      "pos": "RB",
-      "team": "BAL",
-      "rank": 346
-    },
-    {
-      "type": "entered",
-      "name": "Noah Fant",
-      "pos": "TE",
-      "team": "NO",
-      "rank": 350
-    },
-    {
-      "type": "exited",
-      "name": "Colbie Young",
-      "pos": "WR",
-      "team": "CIN",
-      "rank": 348
-    },
-    {
-      "type": "exited",
-      "name": "Ty Simpson",
-      "pos": "QB",
-      "team": "LAR",
-      "rank": 350
-    }
-  ],
+  "highlights": [],
   "injuryHighlights": [],
   "injuryWatch": [
     {
