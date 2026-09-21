@@ -1,13 +1,78 @@
 {
-  "generatedAt": "2026-09-20T17:18:46.954Z",
-  "previousGeneratedAt": "2026-09-19T17:01:13.583Z",
-  "summary": "Top-350 re-ranked from FantasyPros · 0 rank moves · 0 in · 0 out",
-  "rankChanges": 0,
+  "generatedAt": "2026-09-21T19:05:42.377Z",
+  "previousGeneratedAt": "2026-09-20T17:18:46.954Z",
+  "summary": "Top-350 re-ranked from FantasyPros · 113 rank moves · 0 in · 0 out",
+  "rankChanges": 113,
   "enteredCount": 0,
   "exitedCount": 0,
   "injuryAdjustments": 30,
   "count": 350,
-  "highlights": [],
+  "highlights": [
+    {
+      "type": "drop",
+      "name": "Ja'Kobi Lane",
+      "pos": "WR",
+      "team": "BAL",
+      "from": 178,
+      "to": 182
+    },
+    {
+      "type": "drop",
+      "name": "Zachariah Branch",
+      "pos": "WR",
+      "team": "ATL",
+      "from": 214,
+      "to": 218
+    },
+    {
+      "type": "rise",
+      "name": "Darnell Mooney",
+      "pos": "WR",
+      "team": "NYG",
+      "from": 216,
+      "to": 213
+    },
+    {
+      "type": "rise",
+      "name": "Isiah Pacheco",
+      "pos": "RB",
+      "team": "DET",
+      "from": 220,
+      "to": 217
+    },
+    {
+      "type": "drop",
+      "name": "Harrison Mevis",
+      "pos": "K",
+      "team": "LAR",
+      "from": 222,
+      "to": 225
+    },
+    {
+      "type": "drop",
+      "name": "Kaleb Johnson",
+      "pos": "RB",
+      "team": "GB",
+      "from": 223,
+      "to": 226
+    },
+    {
+      "type": "rise",
+      "name": "Devaughn Vele",
+      "pos": "WR",
+      "team": "NO",
+      "from": 225,
+      "to": 222
+    },
+    {
+      "type": "drop",
+      "name": "Roschon Johnson",
+      "pos": "RB",
+      "team": "CHI",
+      "from": 316,
+      "to": 319
+    }
+  ],
   "injuryHighlights": [],
   "injuryWatch": [
     {
