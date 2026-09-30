@@ -3,7 +3,7 @@ import { TEAMS, TEAM_BYES } from "../lib/league.js";
 
 // Built-in player list — Top 350 overall (FantasyPros multi-format avg + injury/handcuff adj)
 // Average of FantasyPros expert consensus rank_ave across PPR, Half-PPR, and Standard draft rankings
-// Generated 2026-09-29T19:07:49.056Z · 350 players · ordered by adjusted consensus rank
+// Generated 2026-09-30T18:50:39.037Z · 350 players · ordered by adjusted consensus rank
 export const RAW_DB = [
   ["Jahmyr Gibbs","RB","DET"], // 1 · avg 1.33
   ["Bijan Robinson","RB","ATL"], // 2 · avg 3.33
@@ -256,7 +256,7 @@ export const RAW_DB = [
   ["Seth McGowan","RB","IND"], // 249 · avg 265.67
   ["Ty Johnson","RB","BUF"], // 250 · avg 266.00
   ["Jordan James","RB","SF"], // 251 · avg 266.67
-  ["Devin Neal","RB","FA"], // 252 · avg 316.67 · adj -50
+  ["Devin Neal","RB","MIN"], // 252 · avg 316.67 · adj -50
   ["Tank Dell","WR","HOU"], // 253 · avg 268.00
   ["Wil Lutz","K","DEN"], // 254 · avg 268.00
   ["Tua Tagovailoa","QB","ATL"], // 255 · avg 270.33
@@ -296,7 +296,7 @@ export const RAW_DB = [
   ["Charlie Kolar","TE","LAC"], // 289 · avg 309.33
   ["Jahan Dotson","WR","ATL"], // 290 · avg 309.33
   ["Trevor Etienne","RB","CAR"], // 291 · avg 311.33
-  ["Audric Estime","RB","FA"], // 292 · avg 312.33
+  ["Audric Estime","RB","MIN"], // 292 · avg 312.33
   ["Will Shipley","RB","PHI"], // 293 · avg 312.33
   ["Tez Johnson","WR","TB"], // 294 · avg 341.67 · adj -28
   ["Jake Tonges","TE","SF"], // 295 · avg 315.33
@@ -314,7 +314,7 @@ export const RAW_DB = [
   ["Jake Elliott","K","PHI"], // 307 · avg 329.00
   ["Kendrick Bourne","WR","ARI"], // 308 · avg 332.67
   ["Carson Beck","QB","ARI"], // 309 · avg 334.00
-  ["Jerome Ford","RB","MIN"], // 310 · avg 335.00
+  ["Jerome Ford","RB","FA"], // 310 · avg 335.00
   ["Cole Kmet","TE","CHI"], // 311 · avg 335.67
   ["Dawson Knox","TE","BUF"], // 312 · avg 336.33
   ["Brandon Aiyuk","WR","SF"], // 313 · avg 336.67
