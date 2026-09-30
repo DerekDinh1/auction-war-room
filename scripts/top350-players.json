@@ -3562,7 +3562,7 @@
   {
     "name": "Devin Neal",
     "pos": "RB",
-    "team": "FA",
+    "team": "MIN",
     "avg": 316.67,
     "ranks": {
       "PPR": 317,
@@ -4125,7 +4125,7 @@
   {
     "name": "Audric Estime",
     "pos": "RB",
-    "team": "FA",
+    "team": "MIN",
     "avg": 312.33,
     "ranks": {
       "PPR": 314,
@@ -4378,7 +4378,7 @@
   {
     "name": "Jerome Ford",
     "pos": "RB",
-    "team": "MIN",
+    "team": "FA",
     "avg": 335,
     "ranks": {
       "PPR": 333,
