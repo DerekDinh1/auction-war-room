@@ -3,7 +3,7 @@ import { TEAMS, TEAM_BYES } from "../lib/league.js";
 
 // Built-in player list — Top 350 overall (FantasyPros multi-format avg + injury/handcuff adj)
 // Average of FantasyPros expert consensus rank_ave across PPR, Half-PPR, and Standard draft rankings
-// Generated 2026-10-06T19:19:08.426Z · 350 players · ordered by adjusted consensus rank
+// Generated 2026-10-07T19:45:43.243Z · 350 players · ordered by adjusted consensus rank
 export const RAW_DB = [
   ["Jahmyr Gibbs","RB","DET"], // 1 · avg 1.33
   ["Bijan Robinson","RB","ATL"], // 2 · avg 3.33
@@ -256,7 +256,7 @@ export const RAW_DB = [
   ["Seth McGowan","RB","IND"], // 249 · avg 265.67
   ["Ty Johnson","RB","BUF"], // 250 · avg 266.00
   ["Jordan James","RB","SF"], // 251 · avg 266.67
-  ["Devin Neal","RB","MIN"], // 252 · avg 316.67 · adj -50
+  ["Devin Neal","RB","FA"], // 252 · avg 316.67 · adj -50
   ["Tank Dell","WR","HOU"], // 253 · avg 268.00
   ["Wil Lutz","K","DEN"], // 254 · avg 268.00
   ["Tua Tagovailoa","QB","ATL"], // 255 · avg 270.33
@@ -343,7 +343,7 @@ export const RAW_DB = [
   ["J.J. McCarthy","QB","NYG"], // 336 · avg 361.33
   ["Sione Vaki","RB","DET"], // 337 · avg 363.67
   ["Konata Mumpfield","WR","LAR"], // 338 · avg 365.67
-  ["Odell Beckham Jr.","WR","FA"], // 339 · avg 366.00
+  ["Odell Beckham Jr.","WR","MIN"], // 339 · avg 366.00
   ["Max Klare","TE","LAR"], // 340 · avg 366.33
   ["Raheim Sanders","RB","CLE"], // 341 · avg 366.33
   ["Eli Heidenreich","RB","PIT"], // 342 · avg 366.67
@@ -353,7 +353,7 @@ export const RAW_DB = [
   ["Rasheen Ali","RB","BAL"], // 346 · avg 371.67
   ["Jordan Whittington","WR","LAR"], // 347 · avg 401.33 · adj -28
   ["Kevin Coleman Jr.","WR","MIA"], // 348 · avg 375.67
-  ["Joe Mixon","RB","SEA"], // 349 · avg 376.00
+  ["Joe Mixon","RB","FA"], // 349 · avg 376.00
   ["Noah Fant","TE","NO"], // 350 · avg 376.67
 ];
 
