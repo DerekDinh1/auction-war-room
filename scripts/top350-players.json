@@ -3562,7 +3562,7 @@
   {
     "name": "Devin Neal",
     "pos": "RB",
-    "team": "MIN",
+    "team": "FA",
     "avg": 316.67,
     "ranks": {
       "PPR": 317,
@@ -4784,7 +4784,7 @@
   {
     "name": "Odell Beckham Jr.",
     "pos": "WR",
-    "team": "FA",
+    "team": "MIN",
     "avg": 366,
     "ranks": {
       "PPR": 365,
@@ -4925,7 +4925,7 @@
   {
     "name": "Joe Mixon",
     "pos": "RB",
-    "team": "SEA",
+    "team": "FA",
     "avg": 376,
     "ranks": {
       "PPR": 378,
