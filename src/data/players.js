@@ -3,7 +3,7 @@ import { TEAMS, TEAM_BYES } from "../lib/league.js";
 
 // Built-in player list — Top 350 overall (FantasyPros multi-format avg + injury/handcuff adj)
 // Average of FantasyPros expert consensus rank_ave across PPR, Half-PPR, and Standard draft rankings
-// Generated 2026-10-07T19:45:43.243Z · 350 players · ordered by adjusted consensus rank
+// Generated 2026-10-08T19:41:07.309Z · 350 players · ordered by adjusted consensus rank
 export const RAW_DB = [
   ["Jahmyr Gibbs","RB","DET"], // 1 · avg 1.33
   ["Bijan Robinson","RB","ATL"], // 2 · avg 3.33
@@ -283,7 +283,7 @@ export const RAW_DB = [
   ["Christian Kirk","WR","SF"], // 276 · avg 296.00
   ["Darius Slayton","WR","IND"], // 277 · avg 296.00
   ["Mike Gesicki","TE","CIN"], // 278 · avg 297.00
-  ["Emari Demercado","RB","DAL"], // 279 · avg 297.33
+  ["Emari Demercado","RB","FA"], // 279 · avg 297.33
   ["Eli Stowers","TE","PHI"], // 280 · avg 299.33
   ["Mack Hollins","WR","NE"], // 281 · avg 299.33
   ["DeMario Douglas","WR","NE"], // 282 · avg 300.33
