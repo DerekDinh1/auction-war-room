@@ -3,7 +3,7 @@ import { TEAMS, TEAM_BYES } from "../lib/league.js";
 
 // Built-in player list — Top 350 overall (FantasyPros multi-format avg + injury/handcuff adj)
 // Average of FantasyPros expert consensus rank_ave across PPR, Half-PPR, and Standard draft rankings
-// Generated 2026-10-12T21:58:54.100Z · 350 players · ordered by adjusted consensus rank
+// Generated 2026-10-13T20:06:08.449Z · 350 players · ordered by adjusted consensus rank
 export const RAW_DB = [
   ["Jahmyr Gibbs","RB","DET"], // 1 · avg 1.33
   ["Bijan Robinson","RB","ATL"], // 2 · avg 3.33
@@ -229,7 +229,7 @@ export const RAW_DB = [
   ["Devaughn Vele","WR","NO"], // 222 · avg 233.67
   ["Caleb Douglas","WR","MIA"], // 223 · avg 234.00
   ["Greg Dulcich","TE","MIA"], // 224 · avg 234.00
-  ["Harrison Mevis","K","LAR"], // 225 · avg 235.00
+  ["Harrison Mevis","K","FA"], // 225 · avg 235.00
   ["Kaleb Johnson","RB","GB"], // 226 · avg 235.67
   ["Isaiah Davis","RB","NYJ"], // 227 · avg 268.33 · adj -28
   ["Germie Bernard","WR","PIT"], // 228 · avg 240.33
@@ -256,7 +256,7 @@ export const RAW_DB = [
   ["Seth McGowan","RB","IND"], // 249 · avg 265.67
   ["Ty Johnson","RB","BUF"], // 250 · avg 266.00
   ["Jordan James","RB","SF"], // 251 · avg 266.67
-  ["Devin Neal","RB","FA"], // 252 · avg 316.67 · adj -50
+  ["Devin Neal","RB","WAS"], // 252 · avg 316.67 · adj -50
   ["Tank Dell","WR","HOU"], // 253 · avg 268.00
   ["Wil Lutz","K","DEN"], // 254 · avg 268.00
   ["Tua Tagovailoa","QB","ATL"], // 255 · avg 270.33
@@ -283,7 +283,7 @@ export const RAW_DB = [
   ["Christian Kirk","WR","SF"], // 276 · avg 296.00
   ["Darius Slayton","WR","IND"], // 277 · avg 296.00
   ["Mike Gesicki","TE","CIN"], // 278 · avg 297.00
-  ["Emari Demercado","RB","FA"], // 279 · avg 297.33
+  ["Emari Demercado","RB","DAL"], // 279 · avg 297.33
   ["Eli Stowers","TE","PHI"], // 280 · avg 299.33
   ["Mack Hollins","WR","NE"], // 281 · avg 299.33
   ["DeMario Douglas","WR","NE"], // 282 · avg 300.33
@@ -296,7 +296,7 @@ export const RAW_DB = [
   ["Charlie Kolar","TE","LAC"], // 289 · avg 309.33
   ["Jahan Dotson","WR","ATL"], // 290 · avg 309.33
   ["Trevor Etienne","RB","CAR"], // 291 · avg 311.33
-  ["Audric Estime","RB","MIN"], // 292 · avg 312.33
+  ["Audric Estime","RB","CLE"], // 292 · avg 312.33
   ["Will Shipley","RB","PHI"], // 293 · avg 312.33
   ["Tez Johnson","WR","TB"], // 294 · avg 341.67 · adj -28
   ["Jake Tonges","TE","SF"], // 295 · avg 315.33
@@ -309,7 +309,7 @@ export const RAW_DB = [
   ["Kareem Hunt","RB","FA"], // 302 · avg 324.00
   ["Bryce Lance","WR","NO"], // 303 · avg 326.33
   ["Jalen Tolbert","WR","MIA"], // 304 · avg 327.00
-  ["Jarquez Hunter","RB","MIA"], // 305 · avg 327.33
+  ["Jarquez Hunter","RB","FA"], // 305 · avg 327.33
   ["Oscar Delp","TE","NO"], // 306 · avg 327.67
   ["Jake Elliott","K","PHI"], // 307 · avg 329.00
   ["Kendrick Bourne","WR","ARI"], // 308 · avg 332.67
