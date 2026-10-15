@@ -3,7 +3,7 @@ import { TEAMS, TEAM_BYES } from "../lib/league.js";
 
 // Built-in player list — Top 350 overall (FantasyPros multi-format avg + injury/handcuff adj)
 // Average of FantasyPros expert consensus rank_ave across PPR, Half-PPR, and Standard draft rankings
-// Generated 2026-10-14T18:19:33.172Z · 350 players · ordered by adjusted consensus rank
+// Generated 2026-10-15T18:02:04.436Z · 350 players · ordered by adjusted consensus rank
 export const RAW_DB = [
   ["Jahmyr Gibbs","RB","DET"], // 1 · avg 1.33
   ["Bijan Robinson","RB","ATL"], // 2 · avg 3.33
@@ -309,12 +309,12 @@ export const RAW_DB = [
   ["Kareem Hunt","RB","FA"], // 302 · avg 324.00
   ["Bryce Lance","WR","NO"], // 303 · avg 326.33
   ["Jalen Tolbert","WR","MIA"], // 304 · avg 327.00
-  ["Jarquez Hunter","RB","FA"], // 305 · avg 327.33
+  ["Jarquez Hunter","RB","NO"], // 305 · avg 327.33
   ["Oscar Delp","TE","NO"], // 306 · avg 327.67
   ["Jake Elliott","K","PHI"], // 307 · avg 329.00
   ["Kendrick Bourne","WR","ARI"], // 308 · avg 332.67
   ["Carson Beck","QB","ARI"], // 309 · avg 334.00
-  ["Jerome Ford","RB","FA"], // 310 · avg 335.00
+  ["Jerome Ford","RB","ARI"], // 310 · avg 335.00
   ["Cole Kmet","TE","CHI"], // 311 · avg 335.67
   ["Dawson Knox","TE","BUF"], // 312 · avg 336.33
   ["Brandon Aiyuk","WR","SF"], // 313 · avg 336.67
