@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-30T18:59:47.940Z",
+  "generatedAt": "2026-10-31T18:14:10.471Z",
   "method": "Average of FantasyPros PPR + Half-PPR + Standard; injury/handcuff rank adjustments from player-health.json",
   "rankingSources": [
     {
@@ -24,7 +24,7 @@
     "ESPN (8/25–26)",
     "CBS / NFL Network (8/26)"
   ],
-  "healthUpdatedAt": "2026-10-30T18:59:47.940Z",
+  "healthUpdatedAt": "2026-10-31T18:14:10.471Z",
   "injuryAdjustments": 30,
   "count": 350
 }
