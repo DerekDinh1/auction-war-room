@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-11-09T23:17:08.916Z",
-  "previousGeneratedAt": "2026-11-08T18:40:40.970Z",
+  "generatedAt": "2026-11-10T20:43:01.588Z",
+  "previousGeneratedAt": "2026-11-09T23:17:08.916Z",
   "summary": "Top-350 re-ranked from FantasyPros · 85 rank moves · 0 in · 0 out",
   "rankChanges": 85,
   "enteredCount": 0,
@@ -9,68 +9,68 @@
   "count": 350,
   "highlights": [
     {
-      "type": "drop",
+      "type": "rise",
       "name": "Konata Mumpfield",
       "pos": "WR",
       "team": "LAR",
-      "from": 338,
-      "to": 342
+      "from": 342,
+      "to": 338
     },
     {
       "type": "drop",
-      "name": "Trey McBride",
-      "pos": "TE",
-      "team": "ARI",
+      "name": "Chris Olave",
+      "pos": "WR",
+      "team": "NO",
       "from": 18,
       "to": 21
     },
     {
       "type": "rise",
-      "name": "Chris Olave",
-      "pos": "WR",
-      "team": "NO",
+      "name": "Trey McBride",
+      "pos": "TE",
+      "team": "ARI",
       "from": 21,
       "to": 18
     },
     {
       "type": "drop",
-      "name": "Tyjae Spears",
-      "pos": "RB",
-      "team": "TEN",
+      "name": "Deebo Samuel Sr.",
+      "pos": "WR",
+      "team": "SF",
       "from": 140,
       "to": 143
     },
     {
       "type": "rise",
-      "name": "Deebo Samuel Sr.",
-      "pos": "WR",
-      "team": "SF",
+      "name": "Tyjae Spears",
+      "pos": "RB",
+      "team": "TEN",
       "from": 143,
       "to": 140
     },
     {
       "type": "drop",
-      "name": "Ka'imi Fairbairn",
-      "pos": "K",
-      "team": "HOU",
-      "from": 178,
-      "to": 181
-    },
-    {
-      "type": "rise",
       "name": "Ja'Kobi Lane",
       "pos": "WR",
       "team": "BAL",
-      "from": 182,
-      "to": 179
+      "from": 179,
+      "to": 182
+    },
+    {
+      "type": "rise",
+      "name": "Ka'imi Fairbairn",
+      "pos": "K",
+      "team": "HOU",
+      "from": 181,
+      "to": 178
     },
     {
       "type": "drop",
-      "name": "Cairo Santos",
-      "pos": "K",
-      "team": "CHI",
-      "from": 216,
-      "to": 219
+      "name": "Zachariah Branch",
+      "pos": "WR",
+      "team": "ATL",
+      "from": 215,
+      "to": 218
     }
   ],
   "injuryHighlights": [],
