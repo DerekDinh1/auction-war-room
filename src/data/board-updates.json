@@ -1,78 +1,13 @@
 {
-  "generatedAt": "2026-11-10T20:43:01.588Z",
-  "previousGeneratedAt": "2026-11-09T23:17:08.916Z",
-  "summary": "Top-350 re-ranked from FantasyPros · 85 rank moves · 0 in · 0 out",
-  "rankChanges": 85,
+  "generatedAt": "2026-11-11T21:04:50.058Z",
+  "previousGeneratedAt": "2026-11-10T20:43:01.588Z",
+  "summary": "Top-350 re-ranked from FantasyPros · 0 rank moves · 0 in · 0 out",
+  "rankChanges": 0,
   "enteredCount": 0,
   "exitedCount": 0,
   "injuryAdjustments": 30,
   "count": 350,
-  "highlights": [
-    {
-      "type": "rise",
-      "name": "Konata Mumpfield",
-      "pos": "WR",
-      "team": "LAR",
-      "from": 342,
-      "to": 338
-    },
-    {
-      "type": "drop",
-      "name": "Chris Olave",
-      "pos": "WR",
-      "team": "NO",
-      "from": 18,
-      "to": 21
-    },
-    {
-      "type": "rise",
-      "name": "Trey McBride",
-      "pos": "TE",
-      "team": "ARI",
-      "from": 21,
-      "to": 18
-    },
-    {
-      "type": "drop",
-      "name": "Deebo Samuel Sr.",
-      "pos": "WR",
-      "team": "SF",
-      "from": 140,
-      "to": 143
-    },
-    {
-      "type": "rise",
-      "name": "Tyjae Spears",
-      "pos": "RB",
-      "team": "TEN",
-      "from": 143,
-      "to": 140
-    },
-    {
-      "type": "drop",
-      "name": "Ja'Kobi Lane",
-      "pos": "WR",
-      "team": "BAL",
-      "from": 179,
-      "to": 182
-    },
-    {
-      "type": "rise",
-      "name": "Ka'imi Fairbairn",
-      "pos": "K",
-      "team": "HOU",
-      "from": 181,
-      "to": 178
-    },
-    {
-      "type": "drop",
-      "name": "Zachariah Branch",
-      "pos": "WR",
-      "team": "ATL",
-      "from": 215,
-      "to": 218
-    }
-  ],
+  "highlights": [],
   "injuryHighlights": [],
   "injuryWatch": [
     {
@@ -234,7 +169,7 @@
       "status": "Q",
       "note": "Calf — minor; believes he'll resume practicing soon (8/26)",
       "pos": "WR",
-      "team": "IND"
+      "team": "KC"
     },
     {
       "name": "Tucker Kraft",
