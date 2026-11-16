@@ -1,13 +1,78 @@
 {
-  "generatedAt": "2026-11-15T19:34:24.531Z",
-  "previousGeneratedAt": "2026-11-14T18:57:22.415Z",
-  "summary": "Top-350 re-ranked from FantasyPros · 0 rank moves · 0 in · 0 out",
-  "rankChanges": 0,
+  "generatedAt": "2026-11-16T23:13:59.952Z",
+  "previousGeneratedAt": "2026-11-15T19:34:24.531Z",
+  "summary": "Top-350 re-ranked from FantasyPros · 65 rank moves · 0 in · 0 out",
+  "rankChanges": 65,
   "enteredCount": 0,
   "exitedCount": 0,
   "injuryAdjustments": 30,
   "count": 350,
-  "highlights": [],
+  "highlights": [
+    {
+      "type": "drop",
+      "name": "Konata Mumpfield",
+      "pos": "WR",
+      "team": "LAR",
+      "from": 338,
+      "to": 342
+    },
+    {
+      "type": "drop",
+      "name": "Trey McBride",
+      "pos": "TE",
+      "team": "ARI",
+      "from": 18,
+      "to": 21
+    },
+    {
+      "type": "rise",
+      "name": "Chris Olave",
+      "pos": "WR",
+      "team": "NO",
+      "from": 21,
+      "to": 18
+    },
+    {
+      "type": "drop",
+      "name": "Tyjae Spears",
+      "pos": "RB",
+      "team": "TEN",
+      "from": 140,
+      "to": 143
+    },
+    {
+      "type": "rise",
+      "name": "Deebo Samuel Sr.",
+      "pos": "WR",
+      "team": "SF",
+      "from": 143,
+      "to": 140
+    },
+    {
+      "type": "rise",
+      "name": "Zachariah Branch",
+      "pos": "WR",
+      "team": "ATL",
+      "from": 218,
+      "to": 215
+    },
+    {
+      "type": "rise",
+      "name": "Seth McGowan",
+      "pos": "RB",
+      "team": "IND",
+      "from": 249,
+      "to": 246
+    },
+    {
+      "type": "rise",
+      "name": "Tre' Harris",
+      "pos": "WR",
+      "team": "LAC",
+      "from": 169,
+      "to": 167
+    }
+  ],
   "injuryHighlights": [],
   "injuryWatch": [
     {
