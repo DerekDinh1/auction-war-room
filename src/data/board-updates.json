@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-11-16T23:13:59.952Z",
-  "previousGeneratedAt": "2026-11-15T19:34:24.531Z",
+  "generatedAt": "2026-11-17T22:03:21.750Z",
+  "previousGeneratedAt": "2026-11-16T23:13:59.952Z",
   "summary": "Top-350 re-ranked from FantasyPros · 65 rank moves · 0 in · 0 out",
   "rankChanges": 65,
   "enteredCount": 0,
@@ -9,68 +9,68 @@
   "count": 350,
   "highlights": [
     {
-      "type": "drop",
+      "type": "rise",
       "name": "Konata Mumpfield",
       "pos": "WR",
       "team": "LAR",
-      "from": 338,
-      "to": 342
+      "from": 342,
+      "to": 338
     },
     {
       "type": "drop",
-      "name": "Trey McBride",
-      "pos": "TE",
-      "team": "ARI",
+      "name": "Chris Olave",
+      "pos": "WR",
+      "team": "NO",
       "from": 18,
       "to": 21
     },
     {
       "type": "rise",
-      "name": "Chris Olave",
-      "pos": "WR",
-      "team": "NO",
+      "name": "Trey McBride",
+      "pos": "TE",
+      "team": "ARI",
       "from": 21,
       "to": 18
     },
     {
       "type": "drop",
-      "name": "Tyjae Spears",
-      "pos": "RB",
-      "team": "TEN",
+      "name": "Deebo Samuel Sr.",
+      "pos": "WR",
+      "team": "SF",
       "from": 140,
       "to": 143
     },
     {
       "type": "rise",
-      "name": "Deebo Samuel Sr.",
-      "pos": "WR",
-      "team": "SF",
+      "name": "Tyjae Spears",
+      "pos": "RB",
+      "team": "TEN",
       "from": 143,
       "to": 140
     },
     {
-      "type": "rise",
+      "type": "drop",
       "name": "Zachariah Branch",
       "pos": "WR",
       "team": "ATL",
-      "from": 218,
-      "to": 215
+      "from": 215,
+      "to": 218
     },
     {
-      "type": "rise",
+      "type": "drop",
       "name": "Seth McGowan",
       "pos": "RB",
       "team": "IND",
-      "from": 249,
-      "to": 246
+      "from": 246,
+      "to": 249
     },
     {
-      "type": "rise",
+      "type": "drop",
       "name": "Tre' Harris",
       "pos": "WR",
       "team": "LAC",
-      "from": 169,
-      "to": 167
+      "from": 167,
+      "to": 169
     }
   ],
   "injuryHighlights": [],
