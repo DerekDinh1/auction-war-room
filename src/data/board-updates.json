@@ -1,13 +1,78 @@
 {
-  "generatedAt": "2026-11-22T20:35:47.354Z",
-  "previousGeneratedAt": "2026-11-21T20:22:56.073Z",
-  "summary": "Top-350 re-ranked from FantasyPros · 0 rank moves · 0 in · 0 out",
-  "rankChanges": 0,
+  "generatedAt": "2026-11-24T01:29:32.696Z",
+  "previousGeneratedAt": "2026-11-22T20:35:47.354Z",
+  "summary": "Top-350 re-ranked from FantasyPros · 155 rank moves · 0 in · 0 out",
+  "rankChanges": 155,
   "enteredCount": 0,
   "exitedCount": 0,
   "injuryAdjustments": 30,
   "count": 350,
-  "highlights": [],
+  "highlights": [
+    {
+      "type": "drop",
+      "name": "Travis Hunter",
+      "pos": "WR",
+      "team": "JAC",
+      "from": 199,
+      "to": 203
+    },
+    {
+      "type": "rise",
+      "name": "Kaleb Johnson",
+      "pos": "RB",
+      "team": "GB",
+      "from": 226,
+      "to": 222
+    },
+    {
+      "type": "rise",
+      "name": "Jerry Jeudy",
+      "pos": "WR",
+      "team": "CLE",
+      "from": 168,
+      "to": 165
+    },
+    {
+      "type": "drop",
+      "name": "Cam Little",
+      "pos": "K",
+      "team": "JAC",
+      "from": 186,
+      "to": 189
+    },
+    {
+      "type": "rise",
+      "name": "Kaytron Allen",
+      "pos": "RB",
+      "team": "MIA",
+      "from": 204,
+      "to": 201
+    },
+    {
+      "type": "rise",
+      "name": "Isiah Pacheco",
+      "pos": "RB",
+      "team": "DET",
+      "from": 217,
+      "to": 214
+    },
+    {
+      "type": "drop",
+      "name": "Jordyn Tyson",
+      "pos": "WR",
+      "team": "NO",
+      "from": 234,
+      "to": 237
+    },
+    {
+      "type": "drop",
+      "name": "Jacob Saylors",
+      "pos": "RB",
+      "team": "DET",
+      "from": 296,
+      "to": 299
+    }
+  ],
   "injuryHighlights": [],
   "injuryWatch": [
     {
