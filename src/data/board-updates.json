@@ -1,8 +1,8 @@
 {
-  "generatedAt": "2026-11-24T01:29:32.696Z",
-  "previousGeneratedAt": "2026-11-22T20:35:47.354Z",
-  "summary": "Top-350 re-ranked from FantasyPros · 155 rank moves · 0 in · 0 out",
-  "rankChanges": 155,
+  "generatedAt": "2026-11-24T23:23:22.653Z",
+  "previousGeneratedAt": "2026-11-24T01:29:32.696Z",
+  "summary": "Top-350 re-ranked from FantasyPros · 168 rank moves · 0 in · 0 out",
+  "rankChanges": 168,
   "enteredCount": 0,
   "exitedCount": 0,
   "injuryAdjustments": 30,
@@ -10,67 +10,67 @@
   "highlights": [
     {
       "type": "drop",
-      "name": "Travis Hunter",
-      "pos": "WR",
-      "team": "JAC",
-      "from": 199,
-      "to": 203
-    },
-    {
-      "type": "rise",
-      "name": "Kaleb Johnson",
-      "pos": "RB",
-      "team": "GB",
-      "from": 226,
-      "to": 222
-    },
-    {
-      "type": "rise",
       "name": "Jerry Jeudy",
       "pos": "WR",
       "team": "CLE",
-      "from": 168,
-      "to": 165
+      "from": 165,
+      "to": 169
     },
     {
-      "type": "drop",
-      "name": "Cam Little",
-      "pos": "K",
+      "type": "rise",
+      "name": "Travis Hunter",
+      "pos": "WR",
       "team": "JAC",
-      "from": 186,
-      "to": 189
+      "from": 203,
+      "to": 199
     },
     {
       "type": "rise",
-      "name": "Kaytron Allen",
-      "pos": "RB",
-      "team": "MIA",
-      "from": 204,
-      "to": 201
-    },
-    {
-      "type": "rise",
-      "name": "Isiah Pacheco",
-      "pos": "RB",
-      "team": "DET",
-      "from": 217,
-      "to": 214
+      "name": "Zachariah Branch",
+      "pos": "WR",
+      "team": "ATL",
+      "from": 219,
+      "to": 215
     },
     {
       "type": "drop",
-      "name": "Jordyn Tyson",
+      "name": "Kaleb Johnson",
+      "pos": "RB",
+      "team": "GB",
+      "from": 222,
+      "to": 226
+    },
+    {
+      "type": "rise",
+      "name": "KaVontae Turpin",
+      "pos": "WR",
+      "team": "DAL",
+      "from": 335,
+      "to": 331
+    },
+    {
+      "type": "drop",
+      "name": "Konata Mumpfield",
+      "pos": "WR",
+      "team": "LAR",
+      "from": 338,
+      "to": 342
+    },
+    {
+      "type": "drop",
+      "name": "Trey McBride",
+      "pos": "TE",
+      "team": "ARI",
+      "from": 18,
+      "to": 21
+    },
+    {
+      "type": "rise",
+      "name": "Chris Olave",
       "pos": "WR",
       "team": "NO",
-      "from": 234,
-      "to": 237
-    },
-    {
-      "type": "drop",
-      "name": "Jacob Saylors",
-      "pos": "RB",
-      "team": "DET",
-      "from": 296,
-      "to": 299
+      "from": 21,
+      "to": 18
     }
   ],
   "injuryHighlights": [],
