@@ -1,76 +1,76 @@
 {
-  "generatedAt": "2026-11-24T23:23:22.653Z",
-  "previousGeneratedAt": "2026-11-24T01:29:32.696Z",
-  "summary": "Top-350 re-ranked from FantasyPros · 168 rank moves · 0 in · 0 out",
-  "rankChanges": 168,
+  "generatedAt": "2026-11-25T22:57:35.934Z",
+  "previousGeneratedAt": "2026-11-24T23:23:22.653Z",
+  "summary": "Top-350 re-ranked from FantasyPros · 29 rank moves · 0 in · 0 out",
+  "rankChanges": 29,
   "enteredCount": 0,
   "exitedCount": 0,
   "injuryAdjustments": 30,
   "count": 350,
   "highlights": [
     {
+      "type": "rise",
+      "name": "Ka'imi Fairbairn",
+      "pos": "K",
+      "team": "HOU",
+      "from": 181,
+      "to": 178
+    },
+    {
+      "type": "rise",
+      "name": "Makai Lemon",
+      "pos": "WR",
+      "team": "PHI",
+      "from": 118,
+      "to": 116
+    },
+    {
       "type": "drop",
-      "name": "Jerry Jeudy",
+      "name": "Ja'Kobi Lane",
       "pos": "WR",
-      "team": "CLE",
-      "from": 165,
-      "to": 169
+      "team": "BAL",
+      "from": 179,
+      "to": 181
     },
     {
       "type": "rise",
-      "name": "Travis Hunter",
-      "pos": "WR",
-      "team": "JAC",
-      "from": 203,
-      "to": 199
-    },
-    {
-      "type": "rise",
-      "name": "Zachariah Branch",
-      "pos": "WR",
-      "team": "ATL",
+      "name": "Cairo Santos",
+      "pos": "K",
+      "team": "CHI",
       "from": 219,
-      "to": 215
+      "to": 217
     },
     {
       "type": "drop",
-      "name": "Kaleb Johnson",
-      "pos": "RB",
-      "team": "GB",
-      "from": 222,
-      "to": 226
+      "name": "Mac Jones",
+      "pos": "QB",
+      "team": "SF",
+      "from": 333,
+      "to": 335
     },
     {
       "type": "rise",
-      "name": "KaVontae Turpin",
+      "name": "Jalen Royals",
       "pos": "WR",
-      "team": "DAL",
+      "team": "KC",
       "from": 335,
-      "to": 331
+      "to": 333
     },
     {
       "type": "drop",
-      "name": "Konata Mumpfield",
-      "pos": "WR",
-      "team": "LAR",
-      "from": 338,
-      "to": 342
-    },
-    {
-      "type": "drop",
-      "name": "Trey McBride",
-      "pos": "TE",
-      "team": "ARI",
-      "from": 18,
-      "to": 21
+      "name": "Kenny Gainwell",
+      "pos": "RB",
+      "team": "TB",
+      "from": 107,
+      "to": 108
     },
     {
       "type": "rise",
-      "name": "Chris Olave",
+      "name": "Jordan Addison",
       "pos": "WR",
-      "team": "NO",
-      "from": 21,
-      "to": 18
+      "team": "MIN",
+      "from": 108,
+      "to": 107
     }
   ],
   "injuryHighlights": [],
