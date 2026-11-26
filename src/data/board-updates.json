@@ -1,8 +1,8 @@
 {
-  "generatedAt": "2026-11-25T22:57:35.934Z",
-  "previousGeneratedAt": "2026-11-24T23:23:22.653Z",
-  "summary": "Top-350 re-ranked from FantasyPros · 29 rank moves · 0 in · 0 out",
-  "rankChanges": 29,
+  "generatedAt": "2026-11-26T22:49:57.754Z",
+  "previousGeneratedAt": "2026-11-25T22:57:35.934Z",
+  "summary": "Top-350 re-ranked from FantasyPros · 65 rank moves · 0 in · 0 out",
+  "rankChanges": 65,
   "enteredCount": 0,
   "exitedCount": 0,
   "injuryAdjustments": 30,
@@ -10,67 +10,67 @@
   "highlights": [
     {
       "type": "rise",
-      "name": "Ka'imi Fairbairn",
-      "pos": "K",
-      "team": "HOU",
-      "from": 181,
-      "to": 178
-    },
-    {
-      "type": "rise",
-      "name": "Makai Lemon",
+      "name": "Konata Mumpfield",
       "pos": "WR",
-      "team": "PHI",
-      "from": 118,
-      "to": 116
+      "team": "LAR",
+      "from": 342,
+      "to": 338
     },
     {
       "type": "drop",
-      "name": "Ja'Kobi Lane",
+      "name": "Chris Olave",
       "pos": "WR",
-      "team": "BAL",
-      "from": 179,
-      "to": 181
+      "team": "NO",
+      "from": 18,
+      "to": 21
     },
     {
       "type": "rise",
-      "name": "Cairo Santos",
-      "pos": "K",
-      "team": "CHI",
-      "from": 219,
-      "to": 217
+      "name": "Trey McBride",
+      "pos": "TE",
+      "team": "ARI",
+      "from": 21,
+      "to": 18
     },
     {
       "type": "drop",
-      "name": "Mac Jones",
-      "pos": "QB",
+      "name": "Deebo Samuel Sr.",
+      "pos": "WR",
       "team": "SF",
-      "from": 333,
-      "to": 335
+      "from": 140,
+      "to": 143
     },
     {
       "type": "rise",
-      "name": "Jalen Royals",
-      "pos": "WR",
-      "team": "KC",
-      "from": 335,
-      "to": 333
+      "name": "Tyjae Spears",
+      "pos": "RB",
+      "team": "TEN",
+      "from": 143,
+      "to": 140
     },
     {
       "type": "drop",
-      "name": "Kenny Gainwell",
-      "pos": "RB",
-      "team": "TB",
-      "from": 107,
-      "to": 108
+      "name": "Zachariah Branch",
+      "pos": "WR",
+      "team": "ATL",
+      "from": 215,
+      "to": 218
     },
     {
-      "type": "rise",
-      "name": "Jordan Addison",
+      "type": "drop",
+      "name": "Seth McGowan",
+      "pos": "RB",
+      "team": "IND",
+      "from": 246,
+      "to": 249
+    },
+    {
+      "type": "drop",
+      "name": "Tre' Harris",
       "pos": "WR",
-      "team": "MIN",
-      "from": 108,
-      "to": 107
+      "team": "LAC",
+      "from": 167,
+      "to": 169
     }
   ],
   "injuryHighlights": [],
